@@ -1,0 +1,19 @@
+Package: syntheticbench
+Type: Package
+Title: A package for benchmarking serialization of data frames and equivalents
+Version: 0.0.1
+Date: 2019-08-27
+Authors@R: c(
+    person("Mark", "Klik", email = "markklik@gmail.com", role = c("aut", "cre", "cph")))
+Description: Package for benchmarking serialization of data frames and equivalents.
+Depends:
+    R (>= 3.5.0)
+License: AGPL-3 | file LICENSE
+Imports:
+    crayon
+Suggests:
+    testthat,
+    lintr
+RoxygenNote: 6.1.1
+URL: https://fstpackage.github.io/syntheticbench
+BugReports: https://github.com/fstpackage/syntheticbench/issues

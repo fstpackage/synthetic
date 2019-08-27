@@ -1,0 +1,24 @@
+language: R
+cache: packages
+sudo: false
+warnings_are_errors: false
+
+r:
+  - oldrel
+  - release
+  - devel
+os:
+  - linux
+  - osx
+
+r_packages:
+  - covr
+  - testthat
+  - lintr
+
+after_success:
+  - Rscript -e 'library(covr); codecov(quiet = FALSE)'
+
+env:
+  global:
+    - PKG_CFLAGS="-Wall -pedantic"
