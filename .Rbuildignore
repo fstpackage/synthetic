@@ -3,3 +3,4 @@
 ^.*\.yml$
 ^.*\.Rmd$
 ^.*\.md$
+^benchmarks

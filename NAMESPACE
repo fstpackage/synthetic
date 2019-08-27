@@ -2,5 +2,7 @@
 
 export(sample_integer)
 export(sample_string)
-export(syntheticbench)
+export(synthetic_bench)
+importFrom(data.table,data.table)
+importFrom(data.table,rbindlist)
 importFrom(utils,packageVersion)

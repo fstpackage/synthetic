@@ -4,3 +4,5 @@
 .Ruserdata
 *.rds
 .Rproj.user
+/benchmarks/results/*
+/tests/testthat/results/dataset*

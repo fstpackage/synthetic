@@ -10,7 +10,8 @@ Depends:
     R (>= 3.5.0)
 License: AGPL-3 | file LICENSE
 Imports:
-    crayon
+    crayon,
+    data.table
 Suggests:
     testthat,
     lintr

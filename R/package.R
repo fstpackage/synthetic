@@ -21,4 +21,6 @@
 
 
 #' @importFrom utils packageVersion
+#' @importFrom data.table rbindlist
+#' @importFrom data.table data.table
 NULL
