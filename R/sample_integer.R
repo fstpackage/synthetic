@@ -24,15 +24,22 @@
 #'
 #' @param length length of the vector
 #' @param max_distict_values maximum number of disctict values in the vector
+#' @param min_value minimum value in the vector
+#' @param max_value maximum value in the vector
 #'
 #' @return integer vector
 #' @export
-sample_integer <- function(length, max_distict_values = NULL, min_value = 1 - .Machine$integer.max, max_value = .Machine$integer.max) {
-  
+sample_integer <- function(length, max_distict_values = NULL, min_value = 1 - .Machine$integer.max,
+  max_value = .Machine$integer.max) {
+
   if (is.null(max_distict_values)) {
-    return(as.integer(runif(length, min_value, max_value)))
+    return(sample(min_value : max_value, length, replace = TRUE))
   }
-  
-  x <- as.integer(runif(max_distict_values, min_value, max_value))
+
+  if (max_distict_values > (1 + abs(max_value - min_value))) {
+    stop("Cannot have more distinct values than max_value - min_value")
+  }
+
+  x <- sample(min_value : max_value, max_distict_values)  # unique values
   sample(x, length, replace = TRUE)
 }
