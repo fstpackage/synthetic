@@ -4,17 +4,17 @@
 \alias{sample_integer}
 \title{Generate a integer vector with certain distribution}
 \usage{
-sample_integer(length, max_distict_values = NULL, min_value = 1 -
-  .Machine$integer.max, max_value = .Machine$integer.max)
+sample_integer(length, min_value = 1 - .Machine$integer.max,
+  max_value = .Machine$integer.max, max_distict_values = NULL)
 }
 \arguments{
 \item{length}{length of the vector}
 
-\item{max_distict_values}{maximum number of disctict values in the vector}
-
 \item{min_value}{minimum value in the vector}
 
 \item{max_value}{maximum value in the vector}
+
+\item{max_distict_values}{maximum number of disctict values in the vector}
 }
 \value{
 integer vector

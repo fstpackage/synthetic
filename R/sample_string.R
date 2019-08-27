@@ -20,22 +20,32 @@
 #  - syntheticbench R package source repository : https://github.com/fstpackage/syntheticbench
 
 
-#' Generate a integer vector with certain distribution
+# predefined allowed characters
+char_pool <- c(LETTERS, letters, 0:9)
+
+
+generate_string <- function(size) {
+  paste0(sample(char_pool, size), collapse = "")
+}
+
+
+#' Generate a character vector with certain distribution of string lengths
 #'
 #' @param length length of the vector
 #' @param max_distict_values maximum number of disctict values in the vector
-#' @param min_value minimum value in the vector
-#' @param max_value maximum value in the vector
+#' @param min_str_size minimum string length
+#' @param max_str_size maximum string length
 #'
-#' @return integer vector
+#' @return character vector
 #' @export
-sample_integer <- function(length, min_value = 1 - .Machine$integer.max, max_value = .Machine$integer.max,
-  max_distict_values = NULL) {
+sample_string <- function(length, min_str_size = 1, max_str_size = 10, max_distict_values = NULL) {
 
   if (is.null(max_distict_values)) {
-    return(sample(min_value : max_value, length, replace = TRUE))
+    sizes <- sample(min_str_size:max_str_size, length, replace = TRUE)
+    return(sapply(sizes, generate_string))
   }
 
-  x <- sample(min_value : max_value, max_distict_values)  # unique values
+  sizes <- sample(min_str_size:max_str_size, max_distict_values, replace = TRUE)
+  x <- sapply(sizes, generate_string)  # unique values
   sample(x, length, replace = TRUE)
 }
