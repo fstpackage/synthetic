@@ -23,4 +23,5 @@
 #' @importFrom utils packageVersion
 #' @importFrom data.table rbindlist
 #' @importFrom data.table data.table
+#' @importFrom microbenchmark microbenchmark
 NULL

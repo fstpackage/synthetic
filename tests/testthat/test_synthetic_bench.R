@@ -1,9 +1,7 @@
 
 require(testthat)
-require(data.table)
 
 context("synthetic bench")
-
 
 
 table_writer <- function(x, file_name, compress) {
@@ -11,7 +9,7 @@ table_writer <- function(x, file_name, compress) {
     saveRDS(x, file_name, compress = FALSE)
     return()
   }
-  
+
   saveRDS(x, file_name)
 }
 

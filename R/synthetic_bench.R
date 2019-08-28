@@ -27,7 +27,7 @@ observation <- function(bench, mode, id, compression, size, time) {
     ID = id,
     Compression = compression,
     Size = size,
-    Time = res$time)))
+    Time = time)))
 }
 
 
@@ -58,34 +58,34 @@ synthetic_bench <- function(table_generator, table_writer, table_reader, nr_of_r
       # write to disk
 
       # write cycle_size files
-      for (id in 1:cycle_size)
-      {
+      for (id in 1:cycle_size) {
         # generate dataset
         x <- table_generator(nr_of_rows)
 
-        file_name <- paste(result_folder, "/", "dataset_", id, sep = "")
+        file_name <- paste0(result_folder, "/", "dataset_", id)
 
-        # disk warmup (to avoid a sleeping disk)
-        saveRDS("warmup disk", "warmup.rds")
+        # disk warmup (to avoid a sleeping disk after datacreation)
+        saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
 
         # Only a single iteration is used to avoid disk caching effects
         # Due to caching measured speeds are higher and create a unrealistic benchmark
         res <- microbenchmark({
             table_writer(x, file_name, compress)
-          }, times = 1)
+          },
+          times = 1)
 
         results <- observation(results, "write", "rds", compress, file.info(file_name)$size, res$time)
       }
 
       # read from disk
 
-      for (id in 1:cycle_size)
-      {
+      for (id in 1:cycle_size) {
         file_name <- paste(result_folder, "/", "dataset_", id, sep = "")
 
         res <- microbenchmark({
             table_reader(file_name)
-          }, times = 1)
+          },
+          times = 1)
 
         results <- observation(results, "read", "rds", compress, file.info(file_name)$size, res$time)
       }
