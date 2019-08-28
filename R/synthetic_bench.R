@@ -107,7 +107,7 @@ synthetic_bench <- function(generator, table_streamers, nr_of_rows,
       }
 
       # read from disk
-      cat("\nreading ...")
+      cat("   reading ...")
 
       for (id in 1:cycle_size) {
 
