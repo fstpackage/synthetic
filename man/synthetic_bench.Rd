@@ -4,16 +4,15 @@
 \alias{synthetic_bench}
 \title{Runs benchmarks}
 \usage{
-synthetic_bench(bench_id, table_generator, table_writer, table_reader,
-  nr_of_rows, compression, nr_of_runs = 100, cycle_size = 10,
+synthetic_bench(bench_id, table_generator, table_streamer, nr_of_rows,
+  compression, nr_of_runs = 100, cycle_size = 10,
   result_folder = "results")
 }
 \arguments{
 \item{table_generator}{function f(nr_of_rows) that generates the data.frame}
 
-\item{table_writer}{function f(x, file_name, compress) that writes a data.frame x to file file_name with compression compress}
-
-\item{table_reader}{function f(file_name) that reads a file into a data.frame}
+\item{table_streamer}{object of class tablestreamer that defines the streaming
+methods, generated with table_streamer().}
 
 \item{nr_of_rows}{number of rows to use in the benchmark}
 
@@ -26,6 +25,8 @@ synthetic_bench(bench_id, table_generator, table_writer, table_reader,
 \item{result_folder}{folder to use for temporal storage of results}
 
 \item{id}{benchmark id (e.g. 'fst', 'rds', 'arrow')}
+
+\item{table_reader}{function f(file_name) that reads a file into a data.frame}
 }
 \value{
 benchmarks results
