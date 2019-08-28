@@ -84,7 +84,7 @@ synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
         saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
 
         # iterate
-        for (table_streamer in table_streamers) {
+        for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
           file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
 
           # Only a single iteration is used to avoid disk caching effects
@@ -107,7 +107,7 @@ synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
         cat(".")
 
         # iterate
-        for (table_streamer in table_streamers) {
+        for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
           file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
 
           res <- microbenchmark({
