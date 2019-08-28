@@ -68,12 +68,14 @@ synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
 
     for (run_id in 1:nr_of_runs) {
 
-      cat(".")
+      cat("writing ...")
 
       # write to disk
 
       # write cycle_size files
       for (id in 1:cycle_size) {
+
+        cat(".")
 
         # generate dataset once for all generators
         x <- table_generator(nr_of_rows)
@@ -98,8 +100,11 @@ synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
       }
 
       # read from disk
+      cat("\nreading ...")
 
       for (id in 1:cycle_size) {
+
+        cat(".")
 
         # iterate
         for (table_streamer in table_streamers) {

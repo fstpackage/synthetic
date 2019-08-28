@@ -9,41 +9,55 @@ library(fst)
 library(arrow)
 
 
-# define stream writers
+# define streamers
 
-# rds writer
-rds_table_writer <- function(x, file_name, compress) {
-  if (compress == 0) {
-    saveRDS(x, file_name, compress = FALSE)
-    return()
-  }
-  
-  saveRDS(x, file_name)
-}
+# rds streamer
+rds_streamer <- table_streamer(
+  id = "rds",
+  table_writer = function(x, file_name, compress) {
+    if (compress == 0) {
+      saveRDS(x, file_name, compress = FALSE)
+      return()
+    }
+    saveRDS(x, file_name)
+  },
+  table_reader = function(x) readRDS(x),
+  can_select_threads = FALSE,
+  can_select_compression = FALSE
+)
 
-# fst writer
-fst_table_writer <- function(x, file_name, compress) {
-  fst::write_fst(x, file_name, compress)
-}
+# fst streamer
+fst_streamer <- table_streamer(
+  id = "fst",
+  table_writer = function(x, file_name, compress) {
+    fst::write_fst(x, file_name, compress)
+  },
+  table_reader = function(x) read_fst(x),
+  can_select_threads = TRUE,
+  can_select_compression = TRUE
+)
 
-# parguet writer
-parguet_table_writer <- function(x, file_name, compress) {
-  arrow::write_parquet(x, file_name)
-}
+# parguet streamer
+parguet_streamer <- table_streamer(
+  id = "parguet",
+  table_writer = function(x, file_name, compress) {
+    arrow::write_parquet(x, file_name)
+  },
+  table_reader = function(x) read_parquet(x),
+  can_select_threads = FALSE,
+  can_select_compression = FALSE
+)
 
-# feather writer
-feather_table_writer <- function(x, file_name, compress) {
-  arrow::write_feather(x, file_name)
-}
-
-
-# define stream readers
-
-rds_table_reader <- function(x) readRDS(x)  # rds
-fst_table_reader <- function(x) read_fst(x)  # fst
-parguet_table_reader <- function(x) read_parquet(x)  # parguet
-feather_table_reader <- function(x) read_feather(x)  # feather
-
+# feather streamer
+feather_streamer <- table_streamer(
+  id = "feather",
+  table_writer = function(x, file_name, compress) {
+    arrow::write_feather(x, file_name)
+  },
+  table_reader = function(x) read_feather(x),
+  can_select_threads = FALSE,
+  can_select_compression = FALSE
+)
 
 
 # single integer column with 100 distinct values in the range 1 - 10000
@@ -53,15 +67,18 @@ integer_100 <- function(nr_of_rows) {
   )
 }
 
-
-x <- synthetic_bench("fst", integer_100, fst_table_writer, fst_table_reader, 1e8, 90, 1, 10, "res_fst")
-y <- synthetic_bench("parguet", integer_100, parguet_table_writer, parguet_table_reader, 1e8, 50, 1, 10)
+x <- synthetic_bench(integer_100, list(
+  rds_streamer,
+  fst_streamer,
+  parguet_streamer,
+  feather_streamer
+  ), 1e8, 100, 1, 10)
 
 
 library(dplyr)
 
 x %>%
-  group_by(Mode) %>%
+  group_by(ID, Mode) %>%
   summarise(Time = 1e-9 * median(Time))
 
 
