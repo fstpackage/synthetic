@@ -6,7 +6,7 @@
 serializing of datasets}
 \usage{
 table_streamer(id, table_writer, table_reader, can_select_threads,
-  can_select_compression)
+  variable_compression)
 }
 \arguments{
 \item{id}{ID of the table streamer (e.g. 'fst' or 'parguet')}
@@ -18,7 +18,7 @@ compression should be a percentage (0.0 to 100.0).}
 
 \item{can_select_threads}{TRUE of FALSE depending on the ability to select the number of threads}
 
-\item{can_select_compression}{TRUE of FALSE depending on the ability to select compression}
+\item{variable_compression}{TRUE of FALSE depending on the ability to select compression}
 }
 \value{
 a tablestreamer object

@@ -21,7 +21,7 @@ rds_streamer <- table_streamer(
   },
   table_reader = function(x) readRDS(x),
   can_select_threads = FALSE,
-  can_select_compression = FALSE
+  variable_compression = FALSE
 )
 
 # fst streamer
@@ -32,7 +32,7 @@ fst_streamer <- table_streamer(
   },
   table_reader = function(x) read_fst(x),
   can_select_threads = TRUE,
-  can_select_compression = TRUE
+  variable_compression = TRUE
 )
 
 # parguet streamer
@@ -43,7 +43,7 @@ parguet_streamer <- table_streamer(
   },
   table_reader = function(x) read_parquet(x),
   can_select_threads = FALSE,
-  can_select_compression = FALSE
+  variable_compression = FALSE
 )
 
 # feather streamer
@@ -54,7 +54,7 @@ feather_streamer <- table_streamer(
   },
   table_reader = function(x) read_feather(x),
   can_select_threads = FALSE,
-  can_select_compression = FALSE
+  variable_compression = FALSE
 )
 
 generator <- table_generator(

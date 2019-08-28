@@ -65,11 +65,13 @@ synthetic_bench <- function(generator, table_streamers, nr_of_rows,
 
   results <- NULL
 
-  for (compress in compression) {
+  for (compress_count in 1:length(compression)) {
+
+    cat("\ncompression", compression[compress_count])
 
     for (run_id in 1:nr_of_runs) {
 
-      cat("writing ...")
+      cat("\nwriting ...")
 
       # write to disk
 
@@ -86,17 +88,21 @@ synthetic_bench <- function(generator, table_streamers, nr_of_rows,
 
         # iterate
         for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
+
+          # don't repeat identical measurements
+          if (!table_streamer$variable_compression && compress_count > 1) next
+
           file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
 
           # Only a single iteration is used to avoid disk caching effects
           # Due to caching measured speeds are higher and create a unrealistic benchmark
           res <- microbenchmark({
-            table_streamer$table_writer(x, file_name, compress)
+            table_streamer$table_writer(x, file_name, compression[compress_count])
           },
           times = 1)
 
-          results <- observation(results, "write", table_streamer$id, generator$id, compress,
-            file.info(file_name)$size, res$time, object.size(x))
+          results <- observation(results, "write", table_streamer$id, generator$id,
+            compression[compress_count], file.info(file_name)$size, res$time, object.size(x))
         }
       }
 
@@ -109,6 +115,10 @@ synthetic_bench <- function(generator, table_streamers, nr_of_rows,
 
         # iterate
         for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
+
+          # don't repeat identical measurements
+          if (!table_streamer$variable_compression && compress_count > 1) next
+
           file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
 
           res <- microbenchmark({
@@ -116,8 +126,8 @@ synthetic_bench <- function(generator, table_streamers, nr_of_rows,
             },
             times = 1)
 
-          results <- observation(results, "read", table_streamer$id, generator$id, compress,
-            file.info(file_name)$size, res$time, object.size(y))
+          results <- observation(results, "read", table_streamer$id, generator$id,
+            compression[compress_count], file.info(file_name)$size, res$time, object.size(y))
         }
       }
     }

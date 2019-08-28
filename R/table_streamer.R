@@ -28,17 +28,17 @@
 #' compression should be a percentage (0.0 to 100.0).
 #' @param table_reader method for reading with signature f(file_name, threads)
 #' @param can_select_threads TRUE of FALSE depending on the ability to select the number of threads
-#' @param can_select_compression TRUE of FALSE depending on the ability to select compression
+#' @param variable_compression TRUE of FALSE depending on the ability to select compression
 #'
 #' @return a tablestreamer object
 #' @export
-table_streamer <- function(id, table_writer, table_reader, can_select_threads, can_select_compression) {
+table_streamer <- function(id, table_writer, table_reader, can_select_threads, variable_compression) {
   x <- list(
     id = id,
     table_writer = table_writer,
     table_reader = table_reader,
     can_select_threads = can_select_threads,
-    can_select_compression = can_select_compression
+    variable_compression = variable_compression
   )
 
   class(x) <- "tablestreamer"
