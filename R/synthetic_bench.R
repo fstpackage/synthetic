@@ -21,10 +21,11 @@
 
 
 # Add a single observation to benchmark
-observation <- function(bench, mode, id, compression, size, time, orig_size) {
+observation <- function(bench, mode, format_id, data_id, compression, size, time, orig_size) {
   rbindlist(list(bench, data.table(
     Mode = mode,
-    ID = id,
+    ID = format_id,
+    DataID = data_id,
     Compression = compression,
     Size = size,
     Time = time,
@@ -36,7 +37,7 @@ observation <- function(bench, mode, id, compression, size, time, orig_size) {
 #'
 #' @param nr_of_runs repeat the benchmark for statistics
 #' @param cycle_size create cycly_size files before overwriting
-#' @param table_generator function f(nr_of_rows) that generates the data.frame
+#' @param generator function f(nr_of_rows) that generates the data.frame
 #' @param nr_of_rows number of rows to use in the benchmark
 #' @param compression vector of compression values to use for benchmarking
 #' @param result_folder folder to use for temporal storage of results
@@ -46,7 +47,7 @@ observation <- function(bench, mode, id, compression, size, time, orig_size) {
 #'
 #' @return benchmarks results
 #' @export
-synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
+synthetic_bench <- function(generator, table_streamers, nr_of_rows,
   compression, nr_of_runs = 100, cycle_size = 10, result_folder = "results") {
 
   # verify table streamers
@@ -78,7 +79,7 @@ synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
         cat(".")
 
         # generate dataset once for all generators
-        x <- table_generator(nr_of_rows)
+        x <- generator$generator(nr_of_rows)
 
         # disk warmup (to avoid a sleeping disk after data creation)
         saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
@@ -94,7 +95,7 @@ synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
           },
           times = 1)
 
-          results <- observation(results, "write", table_streamer$id, compress,
+          results <- observation(results, "write", table_streamer$id, generator$id, compress,
             file.info(file_name)$size, res$time, object.size(x))
         }
       }
@@ -115,7 +116,7 @@ synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
             },
             times = 1)
 
-          results <- observation(results, "read", table_streamer$id, compress,
+          results <- observation(results, "read", table_streamer$id, generator$id, compress,
             file.info(file_name)$size, res$time, object.size(y))
         }
       }

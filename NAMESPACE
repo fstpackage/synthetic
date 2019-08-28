@@ -3,6 +3,7 @@
 export(sample_integer)
 export(sample_string)
 export(synthetic_bench)
+export(table_generator)
 export(table_streamer)
 importFrom(data.table,data.table)
 importFrom(data.table,rbindlist)

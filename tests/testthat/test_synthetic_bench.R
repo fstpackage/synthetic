@@ -57,17 +57,18 @@ feather_streamer <- table_streamer(
   can_select_compression = FALSE
 )
 
-table_generator <- function(nr_of_rows) {
+generator <- table_generator(
+  "integer sparse",
+  function(nr_of_rows) {
   data.frame(
     Integers = sample_integer(nr_of_rows, 1, nr_of_rows)
   )
-}
-
+})
 
 test_that("benchmark single streamer", {
 
   # single streamer
-  x <- synthetic_bench(table_generator, list(
+  x <- synthetic_bench(generator, list(
     fst_streamer
   ), 10, 1, 1, 1)
 
@@ -78,13 +79,13 @@ test_that("benchmark single streamer", {
 
 test_that("benchmark multiple streamers", {
 
-  x <- synthetic_bench(table_generator, list(
+  x <- synthetic_bench(generator, list(
     rds_streamer,
     fst_streamer,
     parguet_streamer,
     feather_streamer
-    ), 100, 1, 2, 10)
+    ), 100, 1, 2, 5)
 
-  expect_equal(x$ID, rep(c("rds", "fst", "parguet", "feather"), 40))
-  expect_equal(x$Mode, c(rep("write", 40), rep("read", 40), rep("write", 40), rep("read", 40)))
+  expect_equal(sort(unique(x$ID)), c("feather", "fst", "parguet", "rds"))
+  expect_equal(x$Mode, c(rep("write", 20), rep("read", 20), rep("write", 20), rep("read", 20)))
 })
