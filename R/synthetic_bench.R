@@ -33,6 +33,7 @@ observation <- function(bench, mode, id, compression, size, time) {
 
 #' Runs benchmarks
 #'
+#' @param id benchmark id (e.g. 'fst', 'rds', 'arrow')
 #' @param table_writer function f(x, file_name, compress) that writes a data.frame x to file file_name with compression compress
 #' @param table_reader function f(file_name) that reads a file into a data.frame
 #' @param nr_of_runs repeat the benchmark for statistics
@@ -44,7 +45,7 @@ observation <- function(bench, mode, id, compression, size, time) {
 #'
 #' @return benchmarks results
 #' @export
-synthetic_bench <- function(table_generator, table_writer, table_reader, nr_of_rows,
+synthetic_bench <- function(bench_id, table_generator, table_writer, table_reader, nr_of_rows,
   compression, nr_of_runs = 100, cycle_size = 10, result_folder = "results") {
 
   results <- NULL
@@ -74,7 +75,7 @@ synthetic_bench <- function(table_generator, table_writer, table_reader, nr_of_r
           },
           times = 1)
 
-        results <- observation(results, "write", "rds", compress, file.info(file_name)$size, res$time)
+        results <- observation(results, "write", bench_id, compress, file.info(file_name)$size, res$time)
       }
 
       # read from disk
@@ -87,7 +88,7 @@ synthetic_bench <- function(table_generator, table_writer, table_reader, nr_of_r
           },
           times = 1)
 
-        results <- observation(results, "read", "rds", compress, file.info(file_name)$size, res$time)
+        results <- observation(results, "read", bench_id, compress, file.info(file_name)$size, res$time)
       }
     }
   }

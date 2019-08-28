@@ -4,8 +4,8 @@
 \alias{synthetic_bench}
 \title{Runs benchmarks}
 \usage{
-synthetic_bench(table_generator, table_writer, table_reader, nr_of_rows,
-  compression, nr_of_runs = 100, cycle_size = 10,
+synthetic_bench(bench_id, table_generator, table_writer, table_reader,
+  nr_of_rows, compression, nr_of_runs = 100, cycle_size = 10,
   result_folder = "results")
 }
 \arguments{
@@ -24,6 +24,8 @@ synthetic_bench(table_generator, table_writer, table_reader, nr_of_rows,
 \item{cycle_size}{create cycly_size files before overwriting}
 
 \item{result_folder}{folder to use for temporal storage of results}
+
+\item{id}{benchmark id (e.g. 'fst', 'rds', 'arrow')}
 }
 \value{
 benchmarks results

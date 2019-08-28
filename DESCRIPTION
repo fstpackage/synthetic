@@ -15,7 +15,9 @@ Imports:
     microbenchmark
 Suggests:
     testthat,
-    lintr
+    lintr,
+    fst,
+    arrow
 RoxygenNote: 6.1.1
 URL: https://fstpackage.github.io/syntheticbench
 BugReports: https://github.com/fstpackage/syntheticbench/issues
