@@ -10,6 +10,7 @@ context("synthetic bench")
 
 # rds streamer
 rds_streamer <- table_streamer(
+  id = "rds",
   table_writer = function(x, file_name, compress) {
     if (compress == 0) {
       saveRDS(x, file_name, compress = FALSE)
@@ -25,6 +26,7 @@ rds_streamer <- table_streamer(
 
 # fst streamer
 fst_streamer <- table_streamer(
+  id = "fst",
   table_writer = function(x, file_name, compress) {
     fst::write_fst(x, file_name, compress)
   },
@@ -35,6 +37,7 @@ fst_streamer <- table_streamer(
 
 # parguet streamer
 parguet_streamer <- table_streamer(
+  id = "parguet",
   table_writer = function(x, file_name, compress) {
     arrow::write_parquet(x, file_name)
   },
@@ -45,6 +48,7 @@ parguet_streamer <- table_streamer(
 
 # feather streamer
 feather_streamer <- table_streamer(
+  id = "feather",
   table_writer = function(x, file_name, compress) {
     arrow::write_feather(x, file_name)
   },
@@ -61,7 +65,7 @@ table_generator <- function(nr_of_rows) {
 
 
 test_that("rds benchmark", {
-  x <- synthetic_bench("rds", table_generator, rds_streamer, 100, 1, 2, 10)
+  x <- synthetic_bench(table_generator, rds_streamer, 100, 1, 2, 10)
 
   expect_equal(x$ID[1], "rds")
   expect_equal(nrow(x), 40)
@@ -70,7 +74,7 @@ test_that("rds benchmark", {
 
 
 test_that("fst benchmark", {
-  x <- synthetic_bench("fst", table_generator, fst_streamer, 100, 1, 2, 10)
+  x <- synthetic_bench(table_generator, fst_streamer, 100, 1, 2, 10)
 
   expect_equal(x$ID[1], "fst")
   expect_equal(nrow(x), 40)
@@ -79,7 +83,7 @@ test_that("fst benchmark", {
 
 
 test_that("parguet benchmark", {
-  x <- synthetic_bench("parguet", table_generator, parguet_streamer, 100, 1, 2, 10)
+  x <- synthetic_bench(table_generator, parguet_streamer, 100, 1, 2, 10)
 
   expect_equal(x$ID[1], "parguet")
   expect_equal(nrow(x), 40)
@@ -88,7 +92,7 @@ test_that("parguet benchmark", {
 
 
 test_that("feather benchmark", {
-  x <- synthetic_bench("feather", table_generator, feather_streamer, 100, 1, 2, 10)
+  x <- synthetic_bench(table_generator, feather_streamer, 100, 1, 2, 10)
 
   expect_equal(x$ID[1], "feather")
   expect_equal(nrow(x), 40)

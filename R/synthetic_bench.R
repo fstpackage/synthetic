@@ -34,21 +34,33 @@ observation <- function(bench, mode, id, compression, size, time, orig_size) {
 
 #' Runs benchmarks
 #'
-#' @param id benchmark id (e.g. 'fst', 'rds', 'arrow')
-#' @param table_streamer object of class tablestreamer that defines the streaming
-#' methods, generated with table_streamer().
-#' @param table_reader function f(file_name) that reads a file into a data.frame
 #' @param nr_of_runs repeat the benchmark for statistics
 #' @param cycle_size create cycly_size files before overwriting
 #' @param table_generator function f(nr_of_rows) that generates the data.frame
 #' @param nr_of_rows number of rows to use in the benchmark
 #' @param compression vector of compression values to use for benchmarking
 #' @param result_folder folder to use for temporal storage of results
+#' @param bench_id 
+#' @param table_streamers a single tablestreamer object generated with table_streamer().
+#' Could also be a list of tablestreamer objects to benchmark various streamers.
 #'
 #' @return benchmarks results
 #' @export
-synthetic_bench <- function(bench_id, table_generator, table_streamer, nr_of_rows,
+synthetic_bench <- function(table_generator, table_streamers, nr_of_rows,
   compression, nr_of_runs = 100, cycle_size = 10, result_folder = "results") {
+
+  # verify table streamers
+  if (class(table_streamers) == "tablestreamer") {
+    table_streamers <- list(table_streamers)
+  } else {
+    if (!is.list(table_streamers)) stop("Expected a single tablestreamer object or a list",
+    " of tablestreamer objects")
+
+    lapply(table_streamers, function(x) {
+      if (class(x) != "tablestreamer") stop("One or more of the tablestreamer objects was not",
+      " of the correct class")
+    })
+  }
 
   results <- NULL
 
@@ -62,37 +74,45 @@ synthetic_bench <- function(bench_id, table_generator, table_streamer, nr_of_row
 
       # write cycle_size files
       for (id in 1:cycle_size) {
-        # generate dataset
+
+        # generate dataset once for all generators
         x <- table_generator(nr_of_rows)
 
-        file_name <- paste0(result_folder, "/", "dataset_", id)
-
-        # disk warmup (to avoid a sleeping disk after datacreation)
+        # disk warmup (to avoid a sleeping disk after data creation)
         saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
 
-        # Only a single iteration is used to avoid disk caching effects
-        # Due to caching measured speeds are higher and create a unrealistic benchmark
-        res <- microbenchmark({
-          table_streamer$table_writer(x, file_name, compress)
+        # iterate
+        for (table_streamer in table_streamers) {
+          file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
+
+          # Only a single iteration is used to avoid disk caching effects
+          # Due to caching measured speeds are higher and create a unrealistic benchmark
+          res <- microbenchmark({
+            table_streamer$table_writer(x, file_name, compress)
           },
           times = 1)
 
-        results <- observation(results, "write", bench_id, compress, file.info(file_name)$size,
-          res$time, object.size(x))
+          results <- observation(results, "write", table_streamer$id, compress,
+            file.info(file_name)$size, res$time, object.size(x))
+        }
       }
 
       # read from disk
 
       for (id in 1:cycle_size) {
-        file_name <- paste(result_folder, "/", "dataset_", id, sep = "")
 
-        res <- microbenchmark({
-            y <- table_streamer$table_reader(file_name)
-          },
-          times = 1)
+        # iterate
+        for (table_streamer in table_streamers) {
+          file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
 
-        results <- observation(results, "read", bench_id, compress, file.info(file_name)$size, res$time,
-          object.size(y))
+          res <- microbenchmark({
+              y <- table_streamer$table_reader(file_name)
+            },
+            times = 1)
+
+          results <- observation(results, "read", table_streamer$id, compress,
+            file.info(file_name)$size, res$time, object.size(y))
+        }
       }
     }
   }

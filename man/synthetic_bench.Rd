@@ -4,15 +4,14 @@
 \alias{synthetic_bench}
 \title{Runs benchmarks}
 \usage{
-synthetic_bench(bench_id, table_generator, table_streamer, nr_of_rows,
-  compression, nr_of_runs = 100, cycle_size = 10,
-  result_folder = "results")
+synthetic_bench(table_generator, table_streamers, nr_of_rows, compression,
+  nr_of_runs = 100, cycle_size = 10, result_folder = "results")
 }
 \arguments{
 \item{table_generator}{function f(nr_of_rows) that generates the data.frame}
 
-\item{table_streamer}{object of class tablestreamer that defines the streaming
-methods, generated with table_streamer().}
+\item{table_streamers}{a single tablestreamer object generated with table_streamer().
+Could also be a list of tablestreamer objects to benchmark various streamers.}
 
 \item{nr_of_rows}{number of rows to use in the benchmark}
 
@@ -24,9 +23,7 @@ methods, generated with table_streamer().}
 
 \item{result_folder}{folder to use for temporal storage of results}
 
-\item{id}{benchmark id (e.g. 'fst', 'rds', 'arrow')}
-
-\item{table_reader}{function f(file_name) that reads a file into a data.frame}
+\item{bench_id}{}
 }
 \value{
 benchmarks results

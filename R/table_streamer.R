@@ -23,6 +23,7 @@
 #' Define an object of class 'tablestreamer' that defines specific methods for
 #' serializing of datasets
 #'
+#' @param id ID of the table streamer (e.g. 'fst' or 'parguet')
 #' @param table_writer method for writing with signature f(x, file_name, compress, threads). Parameter
 #' compression should be a percentage (0.0 to 100.0).
 #' @param table_reader method for reading with signature f(file_name, threads)
@@ -31,8 +32,9 @@
 #'
 #' @return a tablestreamer object
 #' @export
-table_streamer <- function(table_writer, table_reader, can_select_threads, can_select_compression) {
+table_streamer <- function(id, table_writer, table_reader, can_select_threads, can_select_compression) {
   x <- list(
+    id = id,
     table_writer = table_writer,
     table_reader = table_reader,
     can_select_threads = can_select_threads,
