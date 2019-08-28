@@ -64,37 +64,27 @@ table_generator <- function(nr_of_rows) {
 }
 
 
-test_that("rds benchmark", {
-  x <- synthetic_bench(table_generator, rds_streamer, 100, 1, 2, 10)
+test_that("benchmark single streamer", {
 
-  expect_equal(x$ID[1], "rds")
-  expect_equal(nrow(x), 40)
-  expect_equal(x$Mode, c(rep("write", 10), rep("read", 10), rep("write", 10), rep("read", 10)))
+  # single streamer
+  x <- synthetic_bench(table_generator, list(
+    fst_streamer
+  ), 10, 1, 1, 1)
+
+  expect_equal(x$ID, c("fst", "fst"))
+  expect_equal(x$Mode, c("write", "read"))
 })
 
 
-test_that("fst benchmark", {
-  x <- synthetic_bench(table_generator, fst_streamer, 100, 1, 2, 10)
+test_that("benchmark multiple streamers", {
 
-  expect_equal(x$ID[1], "fst")
-  expect_equal(nrow(x), 40)
-  expect_equal(x$Mode, c(rep("write", 10), rep("read", 10), rep("write", 10), rep("read", 10)))
-})
+  x <- synthetic_bench(table_generator, list(
+    rds_streamer,
+    fst_streamer,
+    parguet_streamer,
+    feather_streamer
+    ), 100, 1, 2, 10)
 
-
-test_that("parguet benchmark", {
-  x <- synthetic_bench(table_generator, parguet_streamer, 100, 1, 2, 10)
-
-  expect_equal(x$ID[1], "parguet")
-  expect_equal(nrow(x), 40)
-  expect_equal(x$Mode, c(rep("write", 10), rep("read", 10), rep("write", 10), rep("read", 10)))
-})
-
-
-test_that("feather benchmark", {
-  x <- synthetic_bench(table_generator, feather_streamer, 100, 1, 2, 10)
-
-  expect_equal(x$ID[1], "feather")
-  expect_equal(nrow(x), 40)
-  expect_equal(x$Mode, c(rep("write", 10), rep("read", 10), rep("write", 10), rep("read", 10)))
+  expect_equal(x$ID, rep(c("rds", "fst", "parguet", "feather"), 40))
+  expect_equal(x$Mode, c(rep("write", 40), rep("read", 40), rep("write", 40), rep("read", 40)))
 })
