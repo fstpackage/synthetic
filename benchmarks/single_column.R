@@ -23,7 +23,7 @@ rds_streamer <- table_streamer(
   },
   table_reader = function(x) readRDS(x),
   can_select_threads = FALSE,
-  can_select_compression = FALSE
+  variable_compression = FALSE
 )
 
 # fst streamer
@@ -34,7 +34,7 @@ fst_streamer <- table_streamer(
   },
   table_reader = function(x) read_fst(x),
   can_select_threads = TRUE,
-  can_select_compression = TRUE
+  variable_compression = TRUE
 )
 
 # parguet streamer
@@ -45,7 +45,7 @@ parguet_streamer <- table_streamer(
   },
   table_reader = function(x) read_parquet(x),
   can_select_threads = FALSE,
-  can_select_compression = FALSE
+  variable_compression = FALSE
 )
 
 # feather streamer
@@ -56,29 +56,79 @@ feather_streamer <- table_streamer(
   },
   table_reader = function(x) read_feather(x),
   can_select_threads = FALSE,
-  can_select_compression = FALSE
+  variable_compression = FALSE
 )
 
 
 # single integer column with 100 distinct values in the range 1 - 10000
-integer_100 <- function(nr_of_rows) {
-  data.frame(
-    Integers = sample_integer(nr_of_rows, 1, 10000, 100)
-  )
-}
+integer_50 <- table_generator(
+  id = "integer sparse",
+  generator = function(nr_of_rows) {
+    data.frame(
+      Integers = sample_integer(nr_of_rows, 1, 10000, 50)
+    )
+  }
+)
 
-x <- synthetic_bench(integer_100, list(
-  rds_streamer,
+# single integer column with 100 distinct values in the range 1 - 10000
+integer_10 <- table_generator(
+  id = "integer sparse",
+  generator = function(nr_of_rows) {
+    data.frame(
+      Integers = sample_integer(nr_of_rows, 1, 10000, 10)
+    )
+  }
+)
+
+# single integer column with 100 distinct values in the range 1 - 10000
+integer_random <- table_generator(
+  id = "integer sparse",
+  generator = function(nr_of_rows) {
+    data.frame(
+      Integers = sample_integer(nr_of_rows)
+    )
+  }
+)
+
+# run benchmark for multiple streamers and compression settings
+x <- synthetic_bench(integer_50, list(
   fst_streamer,
   parguet_streamer,
   feather_streamer
-  ), 1e8, 100, 1, 10)
+  ), 1e8, c(25, 50, 75, 100), 1, 10)
 
+
+# run benchmark for multiple streamers and compression settings
+y <- synthetic_bench(integer_10, list(
+  fst_streamer,
+  parguet_streamer,
+  feather_streamer
+), 1e8, c(25, 50, 75, 100), 1, 10)
+
+
+# run benchmark for multiple streamers and compression settings
+z <- synthetic_bench(integer_random, list(
+  fst_streamer,
+  parguet_streamer,
+  feather_streamer
+), 1e8, c(25, 50, 75, 100), 1, 10)
+
+
+# report results
 
 library(dplyr)
 
 x %>%
-  group_by(ID, Mode) %>%
-  summarise(Time = 1e-9 * median(Time))
+  group_by(ID, Mode, Compression) %>%
+  summarise(Time = 1e-9 * median(Time)) %>%
+  print(n = 100)
 
+y %>%
+  group_by(ID, Mode, Compression) %>%
+  summarise(Time = 1e-9 * median(Time)) %>%
+  print(n = 100)
 
+z %>%
+  group_by(ID, Mode, Compression) %>%
+  summarise(Time = 1e-9 * median(Time)) %>%
+  print(n = 100)
