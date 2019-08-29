@@ -7,7 +7,8 @@
 library(syntheticbench)  # benchmark infrastructure
 library(fst)
 library(arrow)
-
+library(dplyr)
+library(ggplot2)
 
 # define streamers
 
@@ -95,7 +96,7 @@ x <- synthetic_bench(integer_50, list(
   fst_streamer,
   parguet_streamer,
   feather_streamer
-  ), 1e8, c(25, 50, 75, 100), 1, 10)
+  ), 25e7, c(1, 25, 50, 75, 100), 1, 10)
 
 
 # run benchmark for multiple streamers and compression settings
@@ -103,7 +104,7 @@ y <- synthetic_bench(integer_10, list(
   fst_streamer,
   parguet_streamer,
   feather_streamer
-), 1e8, c(25, 50, 75, 100), 1, 10)
+), 25e7, c(1, 25, 50, 75, 100), 1, 10)
 
 
 # run benchmark for multiple streamers and compression settings
@@ -111,24 +112,20 @@ z <- synthetic_bench(integer_random, list(
   fst_streamer,
   parguet_streamer,
   feather_streamer
-), 1e8, c(25, 50, 75, 100), 1, 10)
+), 25e7, c(1, 25, 50, 75, 100), 1, 10)
 
 
 # report results
 
-library(dplyr)
-
 x %>%
+  mutate(Speed = OrigSize / Time) %>%
   group_by(ID, Mode, Compression) %>%
-  summarise(Time = 1e-9 * median(Time)) %>%
-  print(n = 100)
+  summarise(Speed = median(Speed))
 
 y %>%
   group_by(ID, Mode, Compression) %>%
-  summarise(Time = 1e-9 * median(Time)) %>%
-  print(n = 100)
+  summarise(Time = 1e-9 * median(Time))
 
 z %>%
   group_by(ID, Mode, Compression) %>%
-  summarise(Time = 1e-9 * median(Time)) %>%
-  print(n = 100)
+  summarise(Time = 1e-9 * median(Time))
