@@ -3,18 +3,23 @@ cache: packages
 sudo: false
 warnings_are_errors: false
 
-r:
-  - oldrel
-  - release
-  - devel
-os:
-  - linux
-  - osx
+matrix:
+  include:
+    - os: linux
+      r : release
+    - os: linux
+      r : devel
+    - os: osx
+      brew_packages: apache-arrow
+      r : release
 
 r_packages:
   - covr
   - testthat
   - lintr
+  - data.table
+  - arrow
+  - fst
 
 after_success:
   - Rscript -e 'library(covr); codecov(quiet = FALSE)'
@@ -22,3 +27,12 @@ after_success:
 env:
   global:
     - PKG_CFLAGS="-Wall -pedantic"
+
+# copied from https://github.com/jeroen/arrow-r-dev
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: 'deb [arch=amd64] http://dl.bintray.com/apache/arrow/ubuntu xenial main'
+        key_url: 'https://dist.apache.org/repos/dist/dev/arrow/KEYS'
+    packages: 'libarrow-dev libparquet-dev'

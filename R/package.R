@@ -21,6 +21,7 @@
 
 
 #' @importFrom utils packageVersion
+#' @importFrom utils object.size
 #' @importFrom data.table rbindlist
 #' @importFrom data.table data.table
 #' @importFrom microbenchmark microbenchmark

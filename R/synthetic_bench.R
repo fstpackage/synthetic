@@ -41,7 +41,6 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 #' @param nr_of_rows number of rows to use in the benchmark
 #' @param compression vector of compression values to use for benchmarking
 #' @param result_folder folder to use for temporal storage of results
-#' @param bench_id 
 #' @param table_streamers a single tablestreamer object generated with table_streamer().
 #' Could also be a list of tablestreamer objects to benchmark various streamers.
 #'
