@@ -5,8 +5,8 @@
 
 [![Linux/OSX Build
 Status](https://travis-ci.org/fstpackage/syntheticbench.svg?branch=develop)](https://travis-ci.org/fstpackage/syntheticbench)
-[![WIndows Build
-status](https://ci.appveyor.com/api/projects/status/bfm7amtkyjvc2rk9?svg=true)](https://ci.appveyor.com/project/fstpackage/syntheticbench)
+[![Windows Build
+status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/syntheticbench)
 [![License: AGPL
 v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Lifecycle:
