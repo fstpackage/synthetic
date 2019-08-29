@@ -36,6 +36,7 @@ build_script:
   - travis-tool.sh r_install data.table
   - travis-tool.sh r_install fst
   - travis-tool.sh r_install arrow
+  - travis-tool.sh r_install microbenchmark
 
 test_script:
   - travis-tool.sh run_tests
