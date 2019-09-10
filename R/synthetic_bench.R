@@ -46,7 +46,7 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 #'
 #' @return benchmarks results
 #' @export
-synthetic_bench <- function(generator, table_streamers, nr_of_rows,
+synthetic_bench <- function(generators, table_streamers, nr_of_rows,
   compression, nr_of_runs = 100, cycle_size = 10, result_folder = "results") {
 
   # verify table streamers
@@ -62,46 +62,68 @@ synthetic_bench <- function(generator, table_streamers, nr_of_rows,
     })
   }
 
+  # we need a list
+  if (class(generators) == "tablegenerator") {
+    generators <- list(generators)
+  } else {
+    if (!is.list(generators)) {
+      stop("Incorrect argument: generators should be a single generator or a list of generators",
+        " each created with method table_generator()")
+    }
+  }
+
+  # check each element for correct generator class
+  lapply(generators, function(x) {
+    if (class(x) != "tablegenerator") stop("One or more of the generator objects was not",
+      " of the correct class, please use method table_generator() to create generators")
+  })
+
   results <- NULL
 
-  for (compress_count in 1:length(compression)) {
+  for (run_id in 1:nr_of_runs) {
 
-    cat("\ncompression", compression[compress_count])
+    # loop over compression settings
+    for (compress_count in 1:length(compression)) {
 
-    for (run_id in 1:nr_of_runs) {
-
-      cat("\nwriting ...")
+      cat("\ncompression", compression[compress_count])
 
       # write to disk
+      cat("\nwriting ...")
 
       # write cycle_size files
       for (id in 1:cycle_size) {
 
-        cat(".")
+        # loop over datasets
+        for (generator_count in 1:length(generators)) {
 
-        # generate dataset once for all generators
-        x <- generator$generator(nr_of_rows)
+          generator <- generators[[generator_count]]
+          cat(".")
 
-        # disk warmup (to avoid a sleeping disk after data creation)
-        saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
+          # generate dataset once for all generators
+          x <- generator$generator(nr_of_rows)
 
-        # iterate
-        for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
+          # disk warmup (to avoid a sleeping disk after data creation)
+          saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
 
-          # don't repeat identical measurements
-          if (!table_streamer$variable_compression && compress_count > 1) next
+          # iterate
+          for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
 
-          file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
+            # don't repeat identical measurements
+            if (!table_streamer$variable_compression && compress_count > 1) next
 
-          # Only a single iteration is used to avoid disk caching effects
-          # Due to caching measured speeds are higher and create a unrealistic benchmark
-          res <- microbenchmark({
-            table_streamer$table_writer(x, file_name, compression[compress_count])
-          },
-          times = 1)
+            file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_",
+              generator_count, "_", id)
 
-          results <- observation(results, "write", table_streamer$id, generator$id,
-            compression[compress_count], file.info(file_name)$size, res$time, object.size(x))
+            # Only a single iteration is used to avoid disk caching effects
+            # Due to caching measured speeds are higher and create a unrealistic benchmark
+            res <- microbenchmark({
+              table_streamer$table_writer(x, file_name, compression[compress_count])
+            },
+            times = 1)
+
+            results <- observation(results, "write", table_streamer$id, generator$id,
+              compression[compress_count], file.info(file_name)$size, res$time, object.size(x))
+          }
         }
       }
 
@@ -110,23 +132,29 @@ synthetic_bench <- function(generator, table_streamers, nr_of_rows,
 
       for (id in 1:cycle_size) {
 
-        cat(".")
+        # loop over datasets
+        for (generator_count in 1:length(generators)) {
 
-        # iterate
-        for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
+          generator <- generators[[generator_count]]
+          cat(".")
 
-          # don't repeat identical measurements
-          if (!table_streamer$variable_compression && compress_count > 1) next
+          # iterate
+          for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
 
-          file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_", id)
+            # don't repeat identical measurements
+            if (!table_streamer$variable_compression && compress_count > 1) next
 
-          res <- microbenchmark({
+            file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_",
+              generator_count, "_", id)
+
+            res <- microbenchmark({
               y <- table_streamer$table_reader(file_name)
             },
             times = 1)
 
-          results <- observation(results, "read", table_streamer$id, generator$id,
-            compression[compress_count], file.info(file_name)$size, res$time, object.size(y))
+            results <- observation(results, "read", table_streamer$id, generator$id,
+              compression[compress_count], file.info(file_name)$size, res$time, object.size(y))
+          }
         }
       }
     }
