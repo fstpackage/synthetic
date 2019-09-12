@@ -6,3 +6,6 @@
 .Rproj.user
 /benchmarks/results/*
 /tests/testthat/results/dataset*
+/tests/testthat/*.arrow
+/tests/testthat/*.feather
+/tests/testthat/*.fst
