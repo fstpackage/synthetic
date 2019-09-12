@@ -33,7 +33,7 @@ fst_streamer <- table_streamer(
   table_writer = function(x, file_name, compress) {
     fst::write_fst(x, file_name, compress)
   },
-  table_reader = function(x) read_fst(x),
+  table_reader = function(x) read_fst(x, as.data.table = TRUE),
   can_select_threads = TRUE,
   variable_compression = TRUE
 )
