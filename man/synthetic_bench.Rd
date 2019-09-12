@@ -8,6 +8,8 @@ synthetic_bench(generators, table_streamers, nr_of_rows, compression,
   nr_of_runs = 100, cycle_size = 10, result_folder = "results")
 }
 \arguments{
+\item{generators}{function f(nr_of_rows) that generates the data.frame}
+
 \item{table_streamers}{a single tablestreamer object generated with table_streamer().
 Could also be a list of tablestreamer objects to benchmark various streamers.}
 
@@ -20,8 +22,6 @@ Could also be a list of tablestreamer objects to benchmark various streamers.}
 \item{cycle_size}{create cycly_size files before overwriting}
 
 \item{result_folder}{folder to use for temporal storage of results}
-
-\item{generator}{function f(nr_of_rows) that generates the data.frame}
 }
 \value{
 benchmarks results

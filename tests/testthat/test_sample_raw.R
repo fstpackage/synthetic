@@ -22,7 +22,7 @@ test_that("sample raw", {
   x <- sample_raw(10, 10, 12)
   expect_true(sum(as.integer(x) < 10) == 0)
   expect_true(sum(as.integer(x) > 12) == 0)
-  
+
   # set distinct values
   x <- sample_raw(10, max_distict_values = 2)
   expect_true(length(unique(x)) <= 2)

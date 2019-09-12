@@ -37,7 +37,7 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 #'
 #' @param nr_of_runs repeat the benchmark for statistics
 #' @param cycle_size create cycly_size files before overwriting
-#' @param generator function f(nr_of_rows) that generates the data.frame
+#' @param generators function f(nr_of_rows) that generates the data.frame
 #' @param nr_of_rows number of rows to use in the benchmark
 #' @param compression vector of compression values to use for benchmarking
 #' @param result_folder folder to use for temporal storage of results

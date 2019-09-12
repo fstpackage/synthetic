@@ -47,7 +47,7 @@ sample_raw <- function(length, min_value = 0, max_value = 255,
   if (max_distict_values > 256) {
     stop("Parameter max_distinct_values should be in the range 1 to 256 or NULL")
   }
-  
+
   max_distict_values <- min(max_distict_values, 1 + max_value - min_value)
   x <- sample(min_value:max_value, max_distict_values)  # unique values
   as.raw(sample(x, length, replace = TRUE))
