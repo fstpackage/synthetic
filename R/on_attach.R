@@ -20,7 +20,7 @@
 #  - syntheticbench R package source repository : https://github.com/fstpackage/syntheticbench
 
 
-.onAttach <- function(libname, pkgname) {
+.onAttach <- function(libname, pkgname) {  # nolint
 
   # executed when attached to search() path such as by library() or require()
   if (!interactive()) return()

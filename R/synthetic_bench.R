@@ -49,7 +49,7 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 #' @export
 synthetic_bench <- function(generators, table_streamers, nr_of_rows,
   nr_of_runs = 10, cycle_size = 10, compression = NULL, result_folder = "results", progress = TRUE) {
-  
+
   # verify table streamers
   if (class(table_streamers) == "tablestreamer") {
     table_streamers <- list(table_streamers)
@@ -71,13 +71,13 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
       stop("Incorrect argument: generators should be a single generator or a list of generators",
         " each created with method table_generator()")
     }
-  }
 
-  # check each element for correct generator class
-  lapply(generators, function(x) {
-    if (class(x) != "tablegenerator") stop("One or more of the generator objects was not",
-      " of the correct class, please use method table_generator() to create generators")
-  })
+    # check each element for correct generator class
+    lapply(generators, function(x) {
+      if (class(x) != "tablegenerator") stop("One or more of the generator objects was not",
+        " of the correct class, please use method table_generator() to create generators")
+    })
+  }
 
   # define progress bar
   if (progress) {
@@ -107,23 +107,23 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
 
   results <- NULL
 
-  for (nr_of_rows_index in 1:length(nr_of_rows)) {
+  for (nr_of_rows_index in seq_len(length(nr_of_rows))) {
 
     cur_nr_of_rows <- nr_of_rows[nr_of_rows_index]
 
-    for (run_id in 1:nr_of_runs) {
+    for (run_id in seq_len(nr_of_runs)) {
 
       # loop over compression settings
-      for (compress_count in 1:length(compression)) {
+      for (compress_count in seq_len(length(compression))) {
 
         write_compression <- compression[compress_count]
         if (write_compression == -1) write_compression <- NULL
 
         # write cycle_size files
-        for (id in 1:cycle_size) {
+        for (id in seq_len(cycle_size)) {
 
           # loop over datasets
-          for (generator_count in 1:length(generators)) {
+          for (generator_count in seq_len(length(generators))) {
 
             generator <- generators[[generator_count]]
 
@@ -134,7 +134,7 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
             saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
 
             # iterate
-            for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
+            for (table_streamer in table_streamers[sample(seq_len(length(table_streamers)))]) {
 
               # don't repeat identical measurements
               if (!table_streamer$variable_compression && compress_count > 1) next
@@ -154,21 +154,21 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
 
               if (progress) {
                 measurement_count <- measurement_count + row_weights[nr_of_rows_index]
-                pb$update(measurement_count / nr_of_measurements)
+                pb$update(measurement_count / nr_of_measurements - 0.0001)
               }
             }
           }
         }
 
-        for (id in 1:cycle_size) {
+        for (id in seq_len(cycle_size)) {
 
           # loop over datasets
-          for (generator_count in 1:length(generators)) {
+          for (generator_count in seq_len(length(generators))) {
 
             generator <- generators[[generator_count]]
 
             # iterate
-            for (table_streamer in table_streamers[sample(1:length(table_streamers))]) {
+            for (table_streamer in table_streamers[sample(seq_len(length(table_streamers)))]) {
 
               # don't repeat identical measurements
               if (!table_streamer$variable_compression && compress_count > 1) next
@@ -186,13 +186,17 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
 
               if (progress) {
                 measurement_count <- measurement_count + row_weights[nr_of_rows_index]
-                pb$update(measurement_count / nr_of_measurements)
+                pb$update(measurement_count / nr_of_measurements - 0.0001)
               }
             }
           }
         }
       }
     }
+  }
+
+  if (progress) {
+    pb$update(1)
   }
 
   results

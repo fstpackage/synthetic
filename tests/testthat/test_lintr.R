@@ -5,7 +5,9 @@ library(lintr)
 
 
 test_that("Package Style", {
-  lints <- with_defaults(line_length_linter = line_length_linter(120))
+  lints <- with_defaults(
+    line_length_linter = line_length_linter(120),
+    cyclocomp_linter = cyclocomp_linter(200))
 
   code_files <- list.files(
     c("../../R", "../../tests", "../../prepare"), "R$",

@@ -8,11 +8,6 @@ require(arrow)
 rds_streamer <- table_streamer(
   id = "rds",
   table_writer = function(x, file_name, compress) {
-    if (compress == 0) {
-      saveRDS(x, file_name, compress = FALSE)
-      return()
-    }
-
     saveRDS(x, file_name)
   },
   table_reader = function(x) readRDS(x),
