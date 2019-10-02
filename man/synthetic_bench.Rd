@@ -4,8 +4,9 @@
 \alias{synthetic_bench}
 \title{Runs benchmarks}
 \usage{
-synthetic_bench(generators, table_streamers, nr_of_rows, compression,
-  nr_of_runs = 100, cycle_size = 10, result_folder = "results")
+synthetic_bench(generators, table_streamers, nr_of_rows, nr_of_runs = 10,
+  cycle_size = 10, compression = NULL, result_folder = "results",
+  progress = TRUE)
 }
 \arguments{
 \item{generators}{function f(nr_of_rows) that generates the data.frame}
@@ -13,13 +14,13 @@ synthetic_bench(generators, table_streamers, nr_of_rows, compression,
 \item{table_streamers}{a single tablestreamer object generated with table_streamer().
 Could also be a list of tablestreamer objects to benchmark various streamers.}
 
-\item{nr_of_rows}{number of rows to use in the benchmark}
-
-\item{compression}{vector of compression values to use for benchmarking}
+\item{nr_of_rows}{vector of number of rows values to use in the benchmark}
 
 \item{nr_of_runs}{repeat the benchmark for statistics}
 
 \item{cycle_size}{create cycly_size files before overwriting}
+
+\item{compression}{vector of compression values to use for benchmarking}
 
 \item{result_folder}{folder to use for temporal storage of results}
 }

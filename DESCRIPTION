@@ -12,7 +12,8 @@ License: AGPL-3 | file LICENSE
 Imports:
     crayon,
     data.table,
-    microbenchmark
+    microbenchmark,
+    progress
 Suggests:
     testthat,
     lintr,
