@@ -24,4 +24,5 @@
 #' @importFrom data.table rbindlist
 #' @importFrom data.table data.table
 #' @importFrom microbenchmark microbenchmark
+#' @importFrom progress progress_bar
 NULL
