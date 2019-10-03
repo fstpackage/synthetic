@@ -10,7 +10,7 @@ matrix:
     - os: linux
       r : devel
     - os: osx
-      brew_packages: apache-arrow
+      brew_packages: apache-arrow llvm
       r : release
 
 r_packages:
@@ -25,8 +25,7 @@ r_packages:
   - progress
 
 before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install llvm &&
-    export PATH="/usr/local/opt/llvm/bin:$PATH" &&
+  - export PATH="/usr/local/opt/llvm/bin:$PATH" &&
     export LDFLAGS="-L/usr/local/opt/llvm/lib" &&
     export CPPFLAGS="-I/usr/local/opt/llvm/include"; fi
 

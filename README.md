@@ -22,9 +22,37 @@ results become more reliable and more easy to compare.
 
 ## Features
 
-Some of the optimizations used in `syntheticbench`:
+Benchmarks performed With `syntheticbench` have the following features:
 
-## Reproducing benchmark on fst homepage using syntheticbench
+  - Each measurement of serialization speed uses a unique dataset
+    (*avoid disk caching*)
+  - A read is not executed immediately after a write of the same dataset
+    (*avoid disk caching*)
+  - All (column-) data is generated on the fly using predefined
+    generators (*no need to download large test sets*)
+  - A wide range of data profiles can be used for the creation of
+    synthetic data (*understand dependencies on data format and
+    profile*)
+  - Object- en file sizes are recorded and speeds automatically
+    calculated (*reproducible results*)
+  - A progress bar shows percentage done and time remaining (*know when
+    to go and get a cup of coffee*)
+  - Only the actual serialization speed is benchmarked (*measure only
+    what must be measured*)
+  - Multithreaded solutions are correctly measured (*unlike some
+    benchmark techniques*)
+
+But most importantly, with the use of `syntheticbench`, complex
+benchmarks are reduced to a few simple statements, increasing your
+productivity and reproducibility\!
+
+## Walkthrough: reproduce benchmarks shown on fst homepage
+
+A lot of statements are made on the performance of serializers and
+databases, but the thruth is that all solutions have their own strenghts
+and weaknesses.
+
+Define the template of a test dataset:
 
 ``` r
 library(syntheticbench)
@@ -45,20 +73,11 @@ generator <- table_generator(
       Factor  = as.factor(sample(labels(UScitiesD), nr_of_rows, replace = TRUE))
     )}
 )
+```
 
+Define a *streamer* for `fst`:
 
-# baseR streamer
-rds_streamer <- table_streamer(
-  id = "rds",
-  table_writer = function(x, file_name, compress) {
-    saveRDS(x, file_name)
-  },
-  table_reader = function(x) readRDS(x),
-  can_select_threads = FALSE,
-  variable_compression = FALSE
-)
-
-
+``` r
 # fst streamer
 fst_streamer <- table_streamer(
   id = "fst",
@@ -72,8 +91,21 @@ fst_streamer <- table_streamer(
   can_select_threads = TRUE,
   variable_compression = TRUE
 )
+```
 
+Do some
+benchmarking:
 
+``` r
+bench_result <- syntheticbench::synthetic_bench(generator, fst_streamer, 1e7)
+```
+
+Congratulations, thats your first structured benchmark :-)
+
+Now, let´s add a second *streamer* and allow for two different sizes of
+datasets:
+
+``` r
 # parguet streamer
 parguet_streamer <- table_streamer(
   id = "parguet",
@@ -81,6 +113,31 @@ parguet_streamer <- table_streamer(
     arrow::write_parquet(x, file_name)
   },
   table_reader = function(x) read_parquet(x),
+  can_select_threads = FALSE,
+  variable_compression = FALSE
+)
+
+bench_result <- syntheticbench::synthetic_bench(
+  generator,
+  list(fst_streamer, parguet_streamer),  # two streamers
+  c(1e7, 5e7)  # two sizes
+)
+```
+
+As you can see, although benchmarking two solutions at different sizes
+is more complex than the single solution benchmark, with
+`syntheticbench` it´s just a matter of expanding some of the arguments.
+
+Let´s add two more *streamers* and add compression settings to the mix:
+
+``` r
+# baseR streamer
+rds_streamer <- table_streamer(
+  id = "rds",
+  table_writer = function(x, file_name, compress) {
+    saveRDS(x, file_name)
+  },
+  table_reader = function(x) readRDS(x),
   can_select_threads = FALSE,
   variable_compression = FALSE
 )
@@ -97,13 +154,13 @@ feather_streamer <- table_streamer(
   variable_compression = FALSE
 )
 
-
 table_streamers <- list(rds_streamer, fst_streamer, parguet_streamer, feather_streamer)
 
 
-bench_result <- syntheticbench::synthetic_bench(
+bench_result <- synthetic_bench(
   generator,
   table_streamers,
-  1e7
+  c(1e7, 5e7),
+  compression = c(50, 80)
 )
 ```
