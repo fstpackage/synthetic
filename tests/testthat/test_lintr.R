@@ -5,9 +5,17 @@ library(lintr)
 
 
 test_that("Package Style", {
-  lints <- with_defaults(
-    line_length_linter = line_length_linter(120),
-    cyclocomp_linter = cyclocomp_linter(200))
+
+  major_lintr_version <- strsplit(as.character(packageVersion("lintr")), ".", fixed = TRUE)[[1]]
+
+  if (as.integer(major_lintr_version[1]) >= 2) {
+    lints <- with_defaults(
+      line_length_linter = line_length_linter(120),
+      cyclocomp_linter = cyclocomp_linter(200))
+  } else {
+    lints <- with_defaults(
+      line_length_linter = line_length_linter(120))
+  }
 
   code_files <- list.files(
     c("../../R", "../../tests", "../../prepare"), "R$",
