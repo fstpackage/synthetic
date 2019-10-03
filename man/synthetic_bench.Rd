@@ -23,6 +23,9 @@ Could also be a list of tablestreamer objects to benchmark various streamers.}
 \item{compression}{vector of compression values to use for benchmarking}
 
 \item{result_folder}{folder to use for temporal storage of results}
+
+\item{progress}{if TRUE, a progress bar is displayed with the progress and estimated
+remaining time for the benchmark}
 }
 \value{
 benchmarks results

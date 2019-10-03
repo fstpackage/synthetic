@@ -20,10 +20,9 @@
 #  - syntheticbench R package source repository : https://github.com/fstpackage/syntheticbench
 
 
-#' @importFrom utils packageVersion
-#' @importFrom utils object.size
-#' @importFrom data.table rbindlist
-#' @importFrom data.table data.table
+#' @importFrom utils packageVersion object.size
+#' @importFrom data.table rbindlist data.table
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
+#' @importFrom stats rnorm runif
 NULL

@@ -20,6 +20,9 @@ r_packages:
   - data.table
   - arrow
   - fst
+  - crayon
+  - microbenchmark
+  - progress
 
 after_success:
   - Rscript -e 'library(covr); codecov(quiet = FALSE)'

@@ -27,7 +27,7 @@
 #'
 #' @return logical vector
 #' @export
-sample_logical <- function(length, true_false_na_ratio = c(7, 3, 0)) {
+sample_logical <- function(length, true_false_na_ratio = c(1, 1, 0)) {
 
   # normalize
   true_false_na_ratio <- true_false_na_ratio / sum(true_false_na_ratio)

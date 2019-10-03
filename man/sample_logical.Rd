@@ -4,7 +4,7 @@
 \alias{sample_logical}
 \title{Generate a logical vector with certain distribution of TRUE, FALSE and NA}
 \usage{
-sample_logical(length, true_false_na_ratio = c(7, 3, 0))
+sample_logical(length, true_false_na_ratio = c(1, 1, 0))
 }
 \arguments{
 \item{length}{length of the vector}

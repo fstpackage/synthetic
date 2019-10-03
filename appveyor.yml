@@ -37,7 +37,9 @@ build_script:
   - travis-tool.sh r_install fst
   - travis-tool.sh r_install arrow
   - travis-tool.sh r_install microbenchmark
-
+  - travis-tool.sh r_install crayon
+  - travis-tool.sh r_install progress
+ 
 test_script:
   - travis-tool.sh run_tests
 

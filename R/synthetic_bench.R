@@ -44,6 +44,8 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 #' @param cycle_size create cycly_size files before overwriting
 #' @param compression vector of compression values to use for benchmarking
 #' @param result_folder folder to use for temporal storage of results
+#' @param progress if TRUE, a progress bar is displayed with the progress and estimated
+#' remaining time for the benchmark
 #'
 #' @return benchmarks results
 #' @export

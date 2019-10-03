@@ -23,4 +23,8 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-Home to the syntheticbench R package
+The `syntheticbenchmark` package provides tooling to greatly symplify benchmarking of serialization solutions such as `fst`, `arrow`, `feather` or `sqlite`. By using a standardized method of benchmarking, results become more reliable and more easy to compare.
+
+## Features
+
+Some of the optimizations used in `syntheticbench`:
