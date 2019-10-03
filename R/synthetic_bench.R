@@ -99,7 +99,7 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
     row_weights <- length(nr_of_rows) * nr_of_rows / sum(nr_of_rows)
     measurement_count <- 0
 
-    pb <- progress_bar$new("[:bar] :percent :eta", total = 100)
+    pb <- progress_bar$new("[:bar] :percent remaining: :eta", total = 100)
   }
 
   # create a length 1 vector

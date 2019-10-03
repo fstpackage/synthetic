@@ -4,7 +4,7 @@ require(arrow)
 
 # define streamers used in tests
 
-# rds streamer
+# baseR streamer
 rds_streamer <- table_streamer(
   id = "rds",
   table_writer = function(x, file_name, compress) {
@@ -19,6 +19,9 @@ rds_streamer <- table_streamer(
 fst_streamer <- table_streamer(
   id = "fst",
   table_writer = function(x, file_name, compress) {
+    if (is.null(compress)) {
+      return(fst::write_fst(x, file_name))
+    }
     fst::write_fst(x, file_name, compress)
   },
   table_reader = function(x) read_fst(x),
