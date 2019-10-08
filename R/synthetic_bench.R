@@ -34,17 +34,17 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 }
 
 
-#' Constructs a synth_bench class
+#' Define a benchmark
 #'
 #' @param nr_of_runs repeat the benchmark for statistics
-#' @param cycle_size create cycly_size files before overwriting
+#' @param cycle_size create cycle_size files before overwriting
 #' @param result_folder folder to use for temporal storage of results
 #' @param progress if TRUE, a progress bar is displayed with the progress and estimated
 #' remaining time for the benchmark
 #'
-#' @return A synth_bench class
+#' @return A synth_bench class that can be used in pipes
 #' @export
-construct_synth_bench <- function(nr_of_runs = 10, cycle_size = 10, result_folder = "results", progress = TRUE) {
+synthetic_bench <- function(nr_of_runs = 10, cycle_size = 10, result_folder = "results", progress = TRUE) {
 
   if (!dir.exists(result_folder)) {
     dir.create(result_folder)
@@ -76,7 +76,9 @@ print.benchmark_definition <- function(x) {
 
   if (!is.null(x$generators)) {
     cat("synthetic datasets: '",
-      paste0(sapply(x$generators, function(generator) {generator$id}), collapse ="', '"), "'", sep = "")
+      paste0(sapply(x$generators, function(generator) {
+        generator$id
+      }), collapse = "', '"), "'", sep = "")
   }
 }
 
@@ -91,91 +93,158 @@ print.benchmark_definition <- function(x) {
 bench_generators <- function(bench_obj, ...) {
 
   generators <- list(...)
+
+  # check each element for correct generator class
+  lapply(generators, function(x) {
+    if (class(x) != "tablegenerator") stop("Incorrectly defined generator, please use method",
+      " table_generator() to create generators")
+  })
+
   bench_obj[["generators"]] <- generators
 
   bench_obj
 }
 
-#' Runs benchmarks
+
+#' Add table size to the benchmark
 #'
-#' @param generators function f(nr_of_rows) that generates the data.frame
-#' @param table_streamers a single tablestreamer object generated with table_streamer().
-#' Could also be a list of tablestreamer objects to benchmark various streamers.
-#' @param nr_of_rows vector of number of rows values to use in the benchmark
-#' @param nr_of_runs repeat the benchmark for statistics
-#' @param cycle_size create cycly_size files before overwriting
-#' @param compression vector of compression values to use for benchmarking
-#' @param result_folder folder to use for temporal storage of results
-#' @param progress if TRUE, a progress bar is displayed with the progress and estimated
-#' remaining time for the benchmark
+#' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param ... One or more numerical vectors defining the number of rows to use for benchmarking
 #'
-#' @return benchmarks results
+#' @return An updated benchmark definition object
 #' @export
-synthetic_bench <- function(generators, table_streamers, nr_of_rows,
-  nr_of_runs = 10, cycle_size = 10, compression = NULL, result_folder = "results", progress = TRUE) {
+bench_rows <- function(bench_obj, ...) {
+
+  row_vectors <- list(...)
 
   # verify table streamers
-  if (class(table_streamers) == "tablestreamer") {
-    table_streamers <- list(table_streamers)
-  } else {
-    if (!is.list(table_streamers)) stop("Expected a single tablestreamer object or a list",
-    " of tablestreamer objects")
+  lapply(row_vectors, function(x) {
+    if (!is.numeric(x)) stop("Incorrectly defined number of rows, please use one or more numerical",
+      " vectors to define the number of rows you need for benchmarking")
+  })
 
-    lapply(table_streamers, function(x) {
-      if (class(x) != "tablestreamer") stop("One or more of the tablestreamer objects was not",
-      " of the correct class")
-    })
-  }
+  bench_obj[["nr_of_rows"]] <- unique(as.integer(unlist(row_vectors)))
 
-  # we need a list
-  if (class(generators) == "tablegenerator") {
-    generators <- list(generators)
-  } else {
-    if (!is.list(generators)) {
-      stop("Incorrect argument: generators should be a single generator or a list of generators",
-        " each created with method table_generator()")
-    }
+  bench_obj
+}
 
-    # check each element for correct generator class
-    lapply(generators, function(x) {
-      if (class(x) != "tablegenerator") stop("One or more of the generator objects was not",
-        " of the correct class, please use method table_generator() to create generators")
-    })
+
+#' Add streamers to the benchmark
+#'
+#' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param ... One or more table streamers created with table_streamer()
+#'
+#' @return An updated benchmark definition object
+#' @export
+bench_streamers <- function(bench_obj, ...) {
+
+  table_streamers <- list(...)
+
+  # verify table streamers
+  lapply(table_streamers, function(x) {
+    if (class(x) != "tablestreamer") stop("Incorrectly defined streamer, please use method",
+      " table_streamer() to create streamers")
+  })
+
+  bench_obj[["streamers"]] <- table_streamers
+
+  bench_obj
+}
+
+
+#' Add compression to the benchmark
+#'
+#' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param ... One or more numerical vectors defining the compression percentage to use for benchmarking
+#'
+#' @return An updated benchmark definition object
+#' @export
+bench_compression <- function(bench_obj, ...) {
+
+  compress_vectors <- list(...)
+
+  # verify table streamers
+  lapply(compress_vectors, function(x) {
+    if (!is.numeric(x)) stop("Incorrectly defined compression, please use one or more numerical",
+      " vectors to define the compression you need for benchmarking")
+  })
+
+  bench_obj[["compression"]] <- unique(unlist(compress_vectors))
+
+  bench_obj
+}
+
+
+#' Add thread count to the benchmark
+#'
+#' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param ... One or more numerical vectors defining the number of threads to use for benchmarking
+#'
+#' @return An updated benchmark definition object
+#' @export
+bench_threads <- function(bench_obj, ...) {
+
+  thread_vectors <- list(...)
+
+  # verify table streamers
+  lapply(thread_vectors, function(x) {
+    if (!is.numeric(x)) stop("Incorrectly defined number of threads, please use one or more numerical",
+      " vectors to define the number of threads you need for benchmarking")
+  })
+
+  bench_obj[["threads"]] <- unique(unlist(thread_vectors))
+
+  bench_obj
+}
+
+
+#' Compute generic function to start computing a benchmark
+#'
+#' @param bench_obj A benchmark definition created with synthetic_bench()
+#'
+#' @return Benchmark resuls
+#' @export
+compute.benchmark_definition <- function(bench_obj) {  # nolint
+
+  if (is.null(bench_obj$streamers)) {
+    stop("You need to define at least one streamer to benchmark")
   }
 
   # define progress bar
-  if (progress) {
+  if (bench_obj$progress) {
 
-    compression_steps <- length(table_streamers)
+    compression_steps <- length(bench_obj$streamers)
 
-    if (!is.null(compression)) {
+    if (!is.null(bench_obj$compression)) {
       compressors <- 0
-      for (table_streamer in table_streamers) {
+      for (table_streamer in bench_obj$streamers) {
         if (table_streamer$variable_compression) compressors <- compressors + 1
       }
 
-      compression_steps <- compressors * length(compression) + length(table_streamers) - compressors
+      compression_steps <- compressors * length(bench_obj$compression) + length(bench_obj$streamers) - compressors
     }
 
-    nr_of_measurements <- 2 * compression_steps * nr_of_runs * cycle_size * length(nr_of_rows) * length(generators)
-    row_weights <- length(nr_of_rows) * nr_of_rows / sum(nr_of_rows)
+    nr_of_measurements <- 2 * compression_steps * bench_obj$nr_of_runs * bench_obj$cycle_size *
+      length(bench_obj$nr_of_rows) * length(bench_obj$generators)
+    row_weights <- length(bench_obj$nr_of_rows) * bench_obj$nr_of_rows / sum(bench_obj$nr_of_rows)
     measurement_count <- 0
 
     pb <- progress_bar$new("[:bar] :percent remaining: :eta", total = 100)
   }
 
   # create a length 1 vector
+  compression <- bench_obj$compression
   if (is.null(compression)) {
     compression <- -1
   }
 
   results <- NULL
 
-  for (nr_of_rows_index in seq_len(length(nr_of_rows))) {
+  for (nr_of_rows_index in seq_len(length(bench_obj$nr_of_rows))) {
 
-    cur_nr_of_rows <- nr_of_rows[nr_of_rows_index]
+    cur_nr_of_rows <- bench_obj$nr_of_rows[nr_of_rows_index]
 
-    for (run_id in seq_len(nr_of_runs)) {
+    for (run_id in seq_len(bench_obj$nr_of_runs)) {
 
       # loop over compression settings
       for (compress_count in seq_len(length(compression))) {
@@ -184,26 +253,26 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
         if (write_compression == -1) write_compression <- NULL
 
         # write cycle_size files
-        for (id in seq_len(cycle_size)) {
+        for (id in seq_len(bench_obj$cycle_size)) {
 
           # loop over datasets
-          for (generator_count in seq_len(length(generators))) {
+          for (generator_count in seq_len(length(bench_obj$generators))) {
 
-            generator <- generators[[generator_count]]
+            generator <- bench_obj$generators[[generator_count]]
 
             # generate dataset once for all generators
             x <- generator$generator(cur_nr_of_rows)
 
             # disk warmup (to avoid a sleeping disk after data creation)
-            saveRDS("warmup disk", paste0(result_folder, "/", "warmup.rds"))
+            saveRDS("warmup disk", paste0(bench_obj$result_folder, "/", "warmup.rds"))
 
             # iterate
-            for (table_streamer in table_streamers[sample(seq_len(length(table_streamers)))]) {
+            for (table_streamer in bench_obj$streamers[sample(seq_len(length(bench_obj$streamers)))]) {
 
               # don't repeat identical measurements
               if (!table_streamer$variable_compression && compress_count > 1) next
 
-              file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_",
+              file_name <- paste0(bench_obj$result_folder, "/", "dataset_", table_streamer$id, "_",
                 generator_count, "_", id)
 
               # Only a single iteration is used to avoid disk caching effects
@@ -216,7 +285,7 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
               results <- observation(results, "write", table_streamer$id, generator$id,
                 compression[compress_count], file.info(file_name)$size, res$time, cur_nr_of_rows, object.size(x))
 
-              if (progress) {
+              if (bench_obj$progress) {
                 measurement_count <- measurement_count + row_weights[nr_of_rows_index]
                 pb$update(measurement_count / nr_of_measurements - 0.0001)
               }
@@ -224,20 +293,20 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
           }
         }
 
-        for (id in seq_len(cycle_size)) {
+        for (id in seq_len(bench_obj$cycle_size)) {
 
           # loop over datasets
-          for (generator_count in seq_len(length(generators))) {
+          for (generator_count in seq_len(length(bench_obj$generators))) {
 
-            generator <- generators[[generator_count]]
+            generator <- bench_obj$generators[[generator_count]]
 
             # iterate
-            for (table_streamer in table_streamers[sample(seq_len(length(table_streamers)))]) {
+            for (table_streamer in bench_obj$streamers[sample(seq_len(length(bench_obj$streamers)))]) {
 
               # don't repeat identical measurements
               if (!table_streamer$variable_compression && compress_count > 1) next
 
-              file_name <- paste0(result_folder, "/", "dataset_", table_streamer$id, "_",
+              file_name <- paste0(bench_obj$result_folder, "/", "dataset_", table_streamer$id, "_",
                 generator_count, "_", id)
 
               res <- microbenchmark({
@@ -248,7 +317,7 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
               results <- observation(results, "read", table_streamer$id, generator$id,
                 compression[compress_count], file.info(file_name)$size, res$time, cur_nr_of_rows, object.size(y))
 
-              if (progress) {
+              if (bench_obj$progress) {
                 measurement_count <- measurement_count + row_weights[nr_of_rows_index]
                 pb$update(measurement_count / nr_of_measurements - 0.0001)
               }
@@ -259,7 +328,7 @@ synthetic_bench <- function(generators, table_streamers, nr_of_rows,
     }
   }
 
-  if (progress) {
+  if (bench_obj$progress) {
     pb$update(1)
   }
 

@@ -40,6 +40,17 @@ parguet_streamer <- table_streamer(
   variable_compression = FALSE
 )
 
+# arrow streamer
+arrow_streamer <- table_streamer(
+  id = "arrow",
+  table_writer = function(x, file_name, compress) {
+    arrow::write_arrow(x, file_name)
+  },
+  table_reader = function(x) read_arrow(x),
+  can_select_threads = FALSE,
+  variable_compression = FALSE
+)
+
 # feather streamer
 feather_streamer <- table_streamer(
   id = "feather",

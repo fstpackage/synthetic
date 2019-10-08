@@ -2,9 +2,10 @@
 require(testthat)
 require(fst)
 require(arrow)
+require(dplyr)
 
 
-context("synthetic bench")
+context("synth bench class")
 
 
 # defines streamers for fst, feather, parguet and rds
@@ -14,91 +15,141 @@ source("streamers.R")
 source("generators.R")
 
 
-test_that("benchmark single streamer", {
+test_that("constructor", {
+
+  x <- synthetic_bench()
+  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress"))
+})
+
+
+test_that("generators", {
+
+  x <- synthetic_bench(1, 1)
+
+  # check class
+  expect_error(x %>% bench_generators("incorrect class"), "Incorrectly defined generator")
+
+  # single
+  x <- x %>% bench_generators(sparse_generator)
+  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators"))
 
   # single streamer
-  x <- synthetic_bench(sparse_generator, fst_streamer, 10, 1, 1, 1)
+  x <- x %>%
+    bench_streamers(fst_streamer) %>%
+    bench_rows(10)
 
-  expect_equal(x$ID, c("fst", "fst"))
-  expect_equal(x$Mode, c("write", "read"))
+  res <- x %>%
+    compute()
+
+  expect_equal(res$ID, c("fst", "fst"))
+  expect_equal(res$Mode, c("write", "read"))
+
+  # multiple
+  res <- x %>%
+    bench_generators(random_generator, sparse_generator) %>%
+    compute()
+
+  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators",
+    "streamers", "nr_of_rows"))
+  expect_equal(res$ID, rep("fst", 4))
+  expect_equal(res$Mode, c("write", "write", "read", "read"))
 })
 
 
-test_that("benchmark multiple streamers", {
+test_that("streamers", {
 
-  expect_error(
-    synthetic_bench(sparse_generator, "incorrect streamer", 100, 1, 2, 5),
-    "Expected a single tablestreamer object"
-  )
+  x <- synthetic_bench(1, 1) %>%
+    bench_generators(sparse_generator) %>%
+    bench_rows(10)
 
-  x <- synthetic_bench(sparse_generator, list(
-    rds_streamer,
-    fst_streamer,
-    parguet_streamer,
-    feather_streamer
-    ), 10, 2, 2, 1)
+  # check class
+  expect_error(x %>% bench_streamers("incorrect class"), "Incorrectly defined streamer")
 
-  expect_equal(sort(unique(x$ID)), c("feather", "fst", "parguet", "rds"))
-  expect_equal(x$Mode, c(rep("write", 8), rep("read", 8), rep("write", 8), rep("read", 8)))
+  # multiple
+  x <- x %>%
+    bench_streamers(fst_streamer, arrow_streamer, parguet_streamer, feather_streamer)
+
+  res <- x %>%
+    compute()
+
+  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators",
+    "nr_of_rows", "streamers"))
+  expect_equal(sort(unique(res$ID)), c("arrow", "feather", "fst", "parguet"))
+  expect_equal(res$Mode, c(rep("write", 4), rep("read", 4)))
 })
 
 
-test_that("benchmark multiple datasets", {
+test_that("compression", {
 
-  expect_error(
-    synthetic_bench("incorrect argument", fst_streamer, 10, 1, 2, 5),
-    "generators should be a single generator or a list of generators"
-  )
+  x <- synthetic_bench(1, 1) %>%
+    bench_generators(sparse_generator)
 
-  x <- synthetic_bench(list(
-    sparse_generator,
-    random_generator),
-    fst_streamer, 10, 2, 2, 1)
+  # compression error
+  expect_error(x %>% bench_compression("incorrect type"), "Incorrectly defined compression")
 
-  expect_equal(unique(x$ID), "fst")
-  expect_equal(x$Mode, rep(c(rep("write", 4), rep("read", 4)), 2))
+  # single value
+  x <- x %>% bench_compression(1)
+  expect_equal(x$compression, 1)
+
+  # vector
+  x <- x %>% bench_compression(1:5)
+  expect_equal(x$compression, 1:5)
+
+  # multiple vectors
+  x <- x %>% bench_compression(1:5, 7)
+  expect_equal(x$compression, c(1:5, 7))
+
+  # duplicate elements
+  x <- x %>% bench_compression(5:1, 7, 3)
+  expect_equal(x$compression, c(5:1, 7))
+
+  x <- x %>% bench_compression(1, 50)
+  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators", "compression"))
+
+  res <- x %>%
+    bench_streamers(fst_streamer) %>%
+    bench_rows(10) %>%
+    compute()
+
+  expect_equal(res$ID, rep("fst", 4))
+  expect_equal(res$Mode, c("write", "read", "write", "read"))
+  expect_equal(res$Compression, c(1, 1, 50, 50))
 })
 
 
-test_that("benchmark multiple nr_of_rows", {
+test_that("threads", {
 
-  # multiple sizes
-  x <- synthetic_bench(sparse_generator, fst_streamer, c(10, 20), 2, 2, 1)
+  x <- synthetic_bench(1, 1) %>%
+    bench_generators(sparse_generator)
 
-  expect_equal(unique(x$ID), "fst")
-  expect_equal(x$Mode, rep(c(rep("write", 2), rep("read", 2)), 4))
+  # number of threads
+  x <- x %>% bench_threads(5:1, 7, 3)
+  expect_equal(x$threads, c(5:1, 7))
+  expect_error(x %>% bench_threads("incorrect type"), "Incorrectly defined number of threads")
 })
 
 
-test_that("benchmark multiple compression", {
+test_that("rows", {
 
-  # empty compression argument
-  x <- synthetic_bench(sparse_generator, fst_streamer, 10, 2, 2, c(1, 50))
+  x <- synthetic_bench(1, 1) %>%
+    bench_generators(sparse_generator)
 
-  # multiple compression
-  x <- synthetic_bench(sparse_generator, fst_streamer, 10, 2, 2, c(1, 50))
-
-  expect_equal(unique(x$ID), "fst")
-  expect_equal(x$Mode, rep(c(rep("write", 2), rep("read", 2)), 4))
+  # number of rows
+  x <- x %>% bench_rows(5:1, 7, 3)
+  expect_equal(x$nr_of_rows, c(5:1, 7))
+  expect_error(x %>% bench_rows("incorrect type"), "Incorrectly defined number of rows")
 })
 
 
-test_that("multiple datasets, streamers, compression and number of rows", {
+test_that("compute", {
 
-  x <- synthetic_bench(list(
-      sparse_generator,
-      random_generator
-    ),
-    list(
-      rds_streamer,
-      fst_streamer
-    ),
-    c(10, 20),  # number of rows
-    1,  # number of runs
-    2,  # cycle size
-    c(1, 50)  # multiple compression
-  )
+  x <- synthetic_bench(1, 1) %>%
+    bench_generators(random_generator, sparse_generator) %>%
+    bench_streamers(fst_streamer, arrow_streamer) %>%
+    bench_compression(1, 50) %>%
+    bench_rows(10, 20) %>%
+    bench_threads(2, 4, 6) %>%
+    compute()
 
-  expect_equal(sort(unique(x$ID)), c("fst", "rds"))
-  expect_equal(sum(x$Mode == "write"), 24)
+  expect_equal(colnames(x), c("Mode", "ID", "DataID", "Compression", "Size", "Time", "NrOfRows", "OrigSize"))
 })

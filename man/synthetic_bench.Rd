@@ -2,25 +2,15 @@
 % Please edit documentation in R/synthetic_bench.R
 \name{synthetic_bench}
 \alias{synthetic_bench}
-\title{Runs benchmarks}
+\title{Define a benchmark}
 \usage{
-synthetic_bench(generators, table_streamers, nr_of_rows, nr_of_runs = 10,
-  cycle_size = 10, compression = NULL, result_folder = "results",
-  progress = TRUE)
+synthetic_bench(nr_of_runs = 10, cycle_size = 10,
+  result_folder = "results", progress = TRUE)
 }
 \arguments{
-\item{generators}{function f(nr_of_rows) that generates the data.frame}
-
-\item{table_streamers}{a single tablestreamer object generated with table_streamer().
-Could also be a list of tablestreamer objects to benchmark various streamers.}
-
-\item{nr_of_rows}{vector of number of rows values to use in the benchmark}
-
 \item{nr_of_runs}{repeat the benchmark for statistics}
 
-\item{cycle_size}{create cycly_size files before overwriting}
-
-\item{compression}{vector of compression values to use for benchmarking}
+\item{cycle_size}{create cycle_size files before overwriting}
 
 \item{result_folder}{folder to use for temporal storage of results}
 
@@ -28,8 +18,8 @@ Could also be a list of tablestreamer objects to benchmark various streamers.}
 remaining time for the benchmark}
 }
 \value{
-benchmarks results
+A synth_bench class that can be used in pipes
 }
 \description{
-Runs benchmarks
+Define a benchmark
 }
