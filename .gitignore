@@ -9,3 +9,4 @@
 /tests/testthat/*.arrow
 /tests/testthat/*.feather
 /tests/testthat/*.fst
+/results/*

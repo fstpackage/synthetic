@@ -59,9 +59,6 @@ library(syntheticbench)
 library(fst)
 library(arrow)
 
-# medium sized dataset
-nr_of_rows <- 1e7
-
 # generator for 'fst benchmark' dataset
 generator <- table_generator(
   "fst benchmark",
@@ -93,14 +90,17 @@ fst_streamer <- table_streamer(
 )
 ```
 
-Do some
-benchmarking:
+Do some benchmarking:
 
 ``` r
-bench_result <- syntheticbench::synthetic_bench(generator, fst_streamer, 1e7)
+benchmark <- synthetic_bench() %>%
+  bench_generators(generator) %>%
+  bench_streamers(fst_streamer) %>%
+  bench_rows(1e5) %>%
+  compute()
 ```
 
-Congratulations, thats your first structured benchmark :-)
+Congratulations, that’s your first structured benchmark :-)
 
 Now, let´s add a second *streamer* and allow for two different sizes of
 datasets:
@@ -117,11 +117,11 @@ parguet_streamer <- table_streamer(
   variable_compression = FALSE
 )
 
-bench_result <- syntheticbench::synthetic_bench(
-  generator,
-  list(fst_streamer, parguet_streamer),  # two streamers
-  c(1e7, 5e7)  # two sizes
-)
+benchmark <- synthetic_bench() %>%
+  bench_generators(generator) %>%
+  bench_streamers(fst_streamer, parguet_streamer) %>%  # two streamers
+  bench_rows(1e5) %>%
+  compute()
 ```
 
 As you can see, although benchmarking two solutions at different sizes
@@ -154,13 +154,11 @@ feather_streamer <- table_streamer(
   variable_compression = FALSE
 )
 
-table_streamers <- list(rds_streamer, fst_streamer, parguet_streamer, feather_streamer)
 
-
-bench_result <- synthetic_bench(
-  generator,
-  table_streamers,
-  c(1e7, 5e7),
-  compression = c(50, 80)
-)
+benchmark <- synthetic_bench() %>%
+  bench_generators(generator) %>%
+  bench_streamers(rds_streamer, fst_streamer, parguet_streamer, feather_streamer) %>%
+  bench_rows(1e7, 5e7) %>%
+  bench_compression(50, 80) %>%
+  compute()
 ```

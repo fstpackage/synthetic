@@ -44,7 +44,7 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 #'
 #' @return A synth_bench class that can be used in pipes
 #' @export
-synthetic_bench <- function(nr_of_runs = 10, cycle_size = 10, result_folder = "results", progress = TRUE) {
+synthetic_bench <- function(nr_of_runs = 3, cycle_size = 3, result_folder = "results", progress = TRUE) {
 
   if (!dir.exists(result_folder)) {
     dir.create(result_folder)
