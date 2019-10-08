@@ -10,26 +10,9 @@ context("synthetic bench")
 # defines streamers for fst, feather, parguet and rds
 source("streamers.R")
 
+# defines several generators
+source("generators.R")
 
-# test table with sparse integers
-sparse_generator <- table_generator(
-  "integer sparse",
-  function(nr_of_rows) {
-  data.frame(
-    Integers = sample_integer(nr_of_rows, 1, 10)
-    )
-  }
-)
-
-# test table with sparse integers
-random_generator <- table_generator(
-  "integer random",
-  function(nr_of_rows) {
-    data.frame(
-      Integers = sample_integer(nr_of_rows, 1, nr_of_rows)
-    )
-  }
-)
 
 test_that("benchmark single streamer", {
 

@@ -34,6 +34,68 @@ observation <- function(bench, mode, format_id, data_id, compression, size, time
 }
 
 
+#' Constructs a synth_bench class
+#'
+#' @param nr_of_runs repeat the benchmark for statistics
+#' @param cycle_size create cycly_size files before overwriting
+#' @param result_folder folder to use for temporal storage of results
+#' @param progress if TRUE, a progress bar is displayed with the progress and estimated
+#' remaining time for the benchmark
+#'
+#' @return A synth_bench class
+#' @export
+construct_synth_bench <- function(nr_of_runs = 10, cycle_size = 10, result_folder = "results", progress = TRUE) {
+
+  if (!dir.exists(result_folder)) {
+    dir.create(result_folder)
+  }
+
+  bench_obj <- list(
+    nr_of_runs = nr_of_runs,
+    cycle_size = cycle_size,
+    result_folder = normalizePath(result_folder),
+    progress = TRUE
+  )
+
+  class(bench_obj) <- "benchmark_definition"
+
+  bench_obj
+}
+
+
+#' Print details of synthetic benchmark
+#'
+#' @param x synt_bench object
+#' @export
+print.benchmark_definition <- function(x) {
+  cat("Synthetic benchmark using:\n")
+  cat("number of runs: ", x$nr_of_runs, "\n")
+  cat("cycle size: ", x$cycle_size, "\n")
+  cat("result folder: ", x$result_folder, "\n")
+  cat("show progress: ", x$progress, "\n")
+
+  if (!is.null(x$generators)) {
+    cat("synthetic datasets: '",
+      paste0(sapply(x$generators, function(generator) {generator$id}), collapse ="', '"), "'", sep = "")
+  }
+}
+
+
+#' Add dataset generators to the benchmark
+#'
+#' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param ... One or more generators created with table_generator()
+#'
+#' @return An updated benchmark definition object
+#' @export
+bench_generators <- function(bench_obj, ...) {
+
+  generators <- list(...)
+  bench_obj[["generators"]] <- generators
+
+  bench_obj
+}
+
 #' Runs benchmarks
 #'
 #' @param generators function f(nr_of_rows) that generates the data.frame
