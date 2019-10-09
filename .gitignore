@@ -10,3 +10,4 @@
 /tests/testthat/*.feather
 /tests/testthat/*.fst
 /results/*
+/bench_runs/*

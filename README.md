@@ -17,8 +17,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](htt
 
 The `syntheticbenchmark` package provides tooling to greatly symplify
 benchmarking of serialization solutions such as `fst`, `arrow`,
-`feather` or `sqlite`. By using a standardized method of benchmarking,
-results become more reliable and more easy to compare.
+`feather`, `fread/fwrite` or `sqlite`. By using a standardized method of
+benchmarking, results become more reliable and more easy to compare.
 
 ## Features
 
@@ -46,11 +46,13 @@ But most importantly, with the use of `syntheticbench`, complex
 benchmarks are reduced to a few simple statements, increasing your
 productivity and reproducibility\!
 
-## Walkthrough: reproduce benchmarks shown on fst homepage
+## Walkthrough: setting up a benchmark
 
-A lot of statements are made on the performance of serializers and
-databases, but the thruth is that all solutions have their own strenghts
+A lot of claims are made on the performance of serializers and
+databases, but the truth is that all solutions have their own strenghts
 and weaknesses.
+
+*some more text here*
 
 Define the template of a test dataset:
 
@@ -93,7 +95,9 @@ fst_streamer <- table_streamer(
 Do some benchmarking:
 
 ``` r
-benchmark <- synthetic_bench() %>%
+library(dplyr)
+
+synthetic_bench() %>%
   bench_generators(generator) %>%
   bench_streamers(fst_streamer) %>%
   bench_rows(1e5) %>%
@@ -117,7 +121,7 @@ parguet_streamer <- table_streamer(
   variable_compression = FALSE
 )
 
-benchmark <- synthetic_bench() %>%
+synthetic_bench() %>%
   bench_generators(generator) %>%
   bench_streamers(fst_streamer, parguet_streamer) %>%  # two streamers
   bench_rows(1e5) %>%
@@ -155,7 +159,7 @@ feather_streamer <- table_streamer(
 )
 
 
-benchmark <- synthetic_bench() %>%
+synthetic_bench() %>%
   bench_generators(generator) %>%
   bench_streamers(rds_streamer, fst_streamer, parguet_streamer, feather_streamer) %>%
   bench_rows(1e7, 5e7) %>%
