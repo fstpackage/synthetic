@@ -18,7 +18,8 @@ Suggests:
     testthat,
     lintr,
     fst,
-    arrow
+    arrow,
+    dplyr
 RoxygenNote: 6.1.1
 URL: https://fstpackage.github.io/syntheticbench
 BugReports: https://github.com/fstpackage/syntheticbench/issues

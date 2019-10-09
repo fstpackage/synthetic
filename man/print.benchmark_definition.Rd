@@ -4,7 +4,7 @@
 \alias{print.benchmark_definition}
 \title{Print details of synthetic benchmark}
 \usage{
-\method{print}{benchmark_definition}(x)
+\method{print}{benchmark_definition}(x, ...)
 }
 \arguments{
 \item{x}{synt_bench object}

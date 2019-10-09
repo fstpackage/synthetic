@@ -67,7 +67,7 @@ synthetic_bench <- function(nr_of_runs = 3, cycle_size = 3, result_folder = "res
 #'
 #' @param x synt_bench object
 #' @export
-print.benchmark_definition <- function(x) {
+print.benchmark_definition <- function(x, ...) {
   cat("Synthetic benchmark using:\n")
   cat("number of runs: ", x$nr_of_runs, "\n")
   cat("cycle size: ", x$cycle_size, "\n")

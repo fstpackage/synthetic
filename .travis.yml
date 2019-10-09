@@ -15,6 +15,7 @@ matrix:
 
 r_packages:
   - covr
+  - dplyr
   - testthat
   - lintr
   - data.table
