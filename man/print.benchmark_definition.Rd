@@ -8,6 +8,8 @@
 }
 \arguments{
 \item{x}{synt_bench object}
+
+\item{...}{other arguments to print}
 }
 \description{
 Print details of synthetic benchmark
