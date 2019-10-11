@@ -20,7 +20,7 @@
 #  - syntheticbench R package source repository : https://github.com/fstpackage/syntheticbench
 
 
-#' @importFrom crayon cyan
+#' @importFrom crayon cyan red
 #' @importFrom utils packageVersion object.size
 #' @importFrom data.table rbindlist data.table
 #' @importFrom microbenchmark microbenchmark
