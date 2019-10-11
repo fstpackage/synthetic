@@ -2,9 +2,9 @@
 
 S3method(print,benchmark_definition)
 export(bench_compression)
-export(bench_generators)
 export(bench_rows)
 export(bench_streamers)
+export(bench_tables)
 export(bench_threads)
 export(compute.benchmark_definition)
 export(sample_integer)

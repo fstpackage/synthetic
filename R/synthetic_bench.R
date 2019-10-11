@@ -85,14 +85,15 @@ print.benchmark_definition <- function(x, ...) {
 }
 
 
-#' Add dataset generators to the benchmark
+#' Add datasets or dataset generators to the benchmark
 #'
 #' @param bench_obj A benchmark definition created with synthetic_bench()
-#' @param ... One or more generators created with table_generator()
+#' @param ... One or more synthetic_table or data.frame objects. A synthetic_table can be created
+#' using method synthetic_table().
 #'
 #' @return An updated benchmark definition object
 #' @export
-bench_generators <- function(bench_obj, ...) {
+bench_tables <- function(bench_obj, ...) {
 
   generators <- list(...)
 

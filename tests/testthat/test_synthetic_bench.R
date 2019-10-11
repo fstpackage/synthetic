@@ -27,10 +27,10 @@ test_that("generators", {
   x <- synthetic_bench(1, 1)
 
   # check class
-  expect_error(x %>% bench_generators("incorrect class"), "Incorrectly defined generator")
+  expect_error(x %>% bench_tables("incorrect class"), "Incorrectly defined generator")
 
   # single
-  x <- x %>% bench_generators(sparse_generator)
+  x <- x %>% bench_tables(sparse_generator)
   expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators"))
 
   # single streamer
@@ -46,7 +46,7 @@ test_that("generators", {
 
   # multiple
   res <- x %>%
-    bench_generators(random_generator, sparse_generator) %>%
+    bench_tables(random_generator, sparse_generator) %>%
     compute()
 
   expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators",
@@ -59,7 +59,7 @@ test_that("generators", {
 test_that("streamers", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_generators(sparse_generator) %>%
+    bench_tables(sparse_generator) %>%
     bench_rows(10)
 
   # check class
@@ -82,7 +82,7 @@ test_that("streamers", {
 test_that("compression", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_generators(sparse_generator)
+    bench_tables(sparse_generator)
 
   # compression error
   expect_error(x %>% bench_compression("incorrect type"), "Incorrectly defined compression")
@@ -120,7 +120,7 @@ test_that("compression", {
 test_that("threads", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_generators(sparse_generator)
+    bench_tables(sparse_generator)
 
   # number of threads
   x <- x %>% bench_threads(5:1, 7, 3)
@@ -132,7 +132,7 @@ test_that("threads", {
 test_that("rows", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_generators(sparse_generator)
+    bench_tables(sparse_generator)
 
   # number of rows
   x <- x %>% bench_rows(5:1, 7, 3)
@@ -144,7 +144,7 @@ test_that("rows", {
 test_that("compute", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_generators(random_generator, sparse_generator) %>%
+    bench_tables(random_generator, sparse_generator) %>%
     bench_streamers(fst_streamer, arrow_streamer) %>%
     bench_compression(1, 50) %>%
     bench_rows(10, 20) %>%
