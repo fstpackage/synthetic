@@ -70,12 +70,12 @@ synthetic_bench <- function(nr_of_runs = 3, cycle_size = 3, result_folder = "res
 #'
 #' @export
 print.benchmark_definition <- function(x, ...) {
-  cat("Synthetic benchmark using:\n")
-  cat("number of runs: ", x$nr_of_runs, "\n")
-  cat("cycle size: ", x$cycle_size, "\n")
-  cat("result folder: ", x$result_folder, "\n")
-  cat("show progress: ", x$progress, "\n")
-
+  cat(cyan("Synthetic benchmark"), "\n")
+  cat(cyan("number of runs: "), x$nr_of_runs, "\n")
+  cat(cyan("cycle size    : "), x$cycle_size, "\n")
+  cat(cyan("result folder : "), x$result_folder, "\n")
+  cat(cyan("show progress : "), x$progress, "\n")
+  
   if (!is.null(x$generators)) {
     cat("synthetic datasets: '",
       paste0(sapply(x$generators, function(generator) {
