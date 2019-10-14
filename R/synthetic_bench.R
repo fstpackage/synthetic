@@ -72,20 +72,41 @@ synthetic_bench <- function(nr_of_runs = 3, cycle_size = 3, result_folder = "res
 print.benchmark_definition <- function(x, ...) {
 
   cat(cyan("Synthetic benchmark"), "\n")
-  cat(cyan("number of runs: "), x$nr_of_runs, "\n", sep = "")
-  cat(cyan("cycle size    : "), x$cycle_size, "\n", sep = "")
-  cat(cyan("result folder : "), x$result_folder, "\n", sep = "")
-  cat(cyan("show progress : "), x$progress, "\n", sep = "")
-
-  cat(cyan("datasets      : "))
+  cat(cyan("number of runs    : "), x$nr_of_runs, "\n", sep = "")
+  cat(cyan("cycle size        : "), x$cycle_size, "\n", sep = "")
+  cat(cyan("result folder     : "), x$result_folder, "\n", sep = "")
+  cat(cyan("show progress     : "), x$progress, "\n", sep = "")
+  cat(cyan("datasets          : "))
 
   if (!is.null(x$generators)) {
     cat(paste0(sapply(x$generators, function(generator) {
         generator$id
       }), collapse = "', '"), "'", sep = "")
   } else {
-    cat(red("not defined yet"))
+    cat(red("not defined yet"), "\n")
   }
+
+  col_mode <- x$column_mode
+
+  if (length(x$nr_of_columns) == 0) {
+    if (col_mode == "all") {
+      nr_of_cols_str <- "all"
+    }
+  } else {
+    nr_of_cols_str <- paste0(head(x$nr_of_columns, 5), collapse = ", ")
+    if (length(x$nr_of_columns) > 5) {
+      nr_of_cols_str <- paste(nr_of_cols_str, "...")
+    }
+  }
+
+
+  cat(cyan("number of columns : "), nr_of_cols_str, "\n", sep = "")
+
+  if (is.null(col_mode)) {
+    col_mode <- "all"
+  }
+
+  cat(cyan("column mode       : "), col_mode, "\n", sep = "")
 }
 
 
@@ -107,6 +128,7 @@ bench_tables <- function(bench_obj, ...) {
       " table_generator() to create generators")
   })
 
+  # add to definition
   bench_obj[["generators"]] <- generators
 
   bench_obj
@@ -131,6 +153,38 @@ bench_rows <- function(bench_obj, ...) {
   })
 
   bench_obj[["nr_of_rows"]] <- unique(as.integer(unlist(row_vectors)))
+
+  bench_obj
+}
+
+
+#' Add table size to the benchmark
+#'
+#' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param column_mode Mode to use for benchmarking columns. The default 'all' just used the complete
+#' table, 'single' benchmarks each column separately and 'type' separates the columns in groups of
+#' a single type (integer, double, etc.)
+#' @param ... One or more numerical vectors defining the number of columns to use in the benchmarks.
+#' For values larger than the number of columns in the dataset, columns are recycled using the
+#' appropriate column definition (generator).
+#' @return An updated benchmark definition object
+#' @export
+bench_columns <- function(bench_obj, column_mode = "all", ...) {
+
+  if (!(column_mode %in% c("all", "single", "type"))) {
+    stop("Parameter column_mode should be one of 'all' (default), 'single' or 'type'")
+  }
+
+  col_vectors <- list(...)
+
+  # verify table streamers
+  lapply(col_vectors, function(x) {
+    if (!is.numeric(x)) stop("Incorrectly defined number of columns, please use one or more numerical",
+      " vectors to define the number of columns you need for benchmarking")
+  })
+
+  bench_obj[["columns_mode"]] <- column_mode
+  bench_obj[["nr_of_columns"]] <- unique(as.integer(unlist(col_vectors)))
 
   bench_obj
 }
