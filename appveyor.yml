@@ -35,6 +35,7 @@ build_script:
   - travis-tool.sh r_install covr
   - travis-tool.sh r_install data.table
   - travis-tool.sh r_install fst
+  - travis-tool.sh r_install dplyr
   - travis-tool.sh r_install arrow
   - travis-tool.sh r_install microbenchmark
   - travis-tool.sh r_install crayon

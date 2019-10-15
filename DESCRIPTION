@@ -1,11 +1,11 @@
 Package: syntheticbench
 Type: Package
-Title: A package for benchmarking serialization of data frames and equivalents
+Title: Benchmarking serialization of synthetic datasets
 Version: 0.0.3
-Date: 2019-08-29
+Date: 2019-10-15
 Authors@R: c(
     person("Mark", "Klik", email = "markklik@gmail.com", role = c("aut", "cre", "cph")))
-Description: Package for benchmarking serialization of data frames and equivalents.
+Description: Package for benchmarking of the various serialization options available in the R ecosystem.
 Depends:
     R (>= 3.5.0)
 License: AGPL-3 | file LICENSE

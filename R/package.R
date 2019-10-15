@@ -26,4 +26,5 @@
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
 #' @importFrom stats rnorm runif
+#' @importFrom utils head
 NULL
