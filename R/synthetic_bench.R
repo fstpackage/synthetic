@@ -52,6 +52,7 @@ synthetic_bench <- function(nr_of_runs = 3, cycle_size = 3, result_folder = "res
 
   bench_obj <- list(
     nr_of_runs = nr_of_runs,
+    column_mode = "all",
     cycle_size = cycle_size,
     result_folder = normalizePath(result_folder),
     progress = TRUE
@@ -76,6 +77,9 @@ print.benchmark_definition <- function(x, ...) {
   cat(cyan("cycle size        : "), x$cycle_size, "\n", sep = "")
   cat(cyan("result folder     : "), x$result_folder, "\n", sep = "")
   cat(cyan("show progress     : "), x$progress, "\n", sep = "")
+
+  # datasets
+
   cat(cyan("datasets          : "))
 
   if (!is.null(x$generators)) {
@@ -86,27 +90,29 @@ print.benchmark_definition <- function(x, ...) {
     cat(red("not defined yet"), "\n")
   }
 
-  col_mode <- x$column_mode
+  # columns
 
-  if (length(x$nr_of_columns) == 0) {
-    if (col_mode == "all") {
-      nr_of_cols_str <- "all"
-    }
-  } else {
+  if (length(x$nr_of_columns) != 0) {
     nr_of_cols_str <- paste0(head(x$nr_of_columns, 5), collapse = ", ")
     if (length(x$nr_of_columns) > 5) {
       nr_of_cols_str <- paste(nr_of_cols_str, "...")
     }
+    
+    cat(cyan("number of columns : "), nr_of_cols_str, "\n", sep = "")
   }
 
+  # column mode
 
-  cat(cyan("number of columns : "), nr_of_cols_str, "\n", sep = "")
+  cat(cyan("column mode       : "), x$column_mode, "\n", sep = "")
 
-  if (is.null(col_mode)) {
-    col_mode <- "all"
+  # rows
+
+  if (is.null(x$nr_of_rows)) {
+    # TODO: determine from dataset
+    cat(cyan("number of rows    : "), red("not defined yet"), "\n", sep = "")
+  } else {
+    cat(cyan("number of rows    : "), x$nr_of_rows, "\n", sep = "")
   }
-
-  cat(cyan("column mode       : "), col_mode, "\n", sep = "")
 }
 
 
