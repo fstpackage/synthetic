@@ -113,6 +113,32 @@ print.benchmark_definition <- function(x, ...) {
   } else {
     cat(cyan("number of rows    : "), x$nr_of_rows, "\n", sep = "")
   }
+
+  # compression
+
+  if (length(x$compression) != 0) {
+    compression_str <- paste0(head(x$compression, 5), collapse = ", ")
+    if (length(x$compression) > 5) {
+      compression_str <- paste(compression_str, "...")
+    }
+
+    cat(cyan("compression       : "), compression_str, "\n", sep = "")
+  } else {
+    cat(cyan("compression       : "), "default", "\n", sep = "")
+  }
+
+  # threads
+
+  if (length(x$threads) != 0) {
+    threads_str <- paste0(head(x$threads, 5), collapse = ", ")
+    if (length(x$threads) > 5) {
+      threads_str <- paste(threads_str, "...")
+    }
+
+    cat(cyan("number of threads : "), threads_str, "\n", sep = "")
+  } else {
+    cat(cyan("number of threads : "), "default", "\n", sep = "")
+  }
 }
 
 
