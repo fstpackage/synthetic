@@ -93,7 +93,7 @@ print.benchmark_definition <- function(x, ...) {
   # columns
 
   if (length(x$nr_of_columns) != 0) {
-    nr_of_cols_str <- paste0(head(x$nr_of_columns, 5), collapse = ", ")
+    nr_of_cols_str <- paste0(head(sort(x$nr_of_columns), 5), collapse = ", ")
     if (length(x$nr_of_columns) > 5) {
       nr_of_cols_str <- paste(nr_of_cols_str, "...")
     }
@@ -105,19 +105,23 @@ print.benchmark_definition <- function(x, ...) {
 
   cat(cyan("column mode       : "), x$column_mode, "\n", sep = "")
 
-  # rows
+  # number of rows
 
-  if (is.null(x$nr_of_rows)) {
-    # TODO: determine from dataset
-    cat(cyan("number of rows    : "), red("not defined yet"), "\n", sep = "")
+  if (!is.null(x$nr_of_rows)) {
+    nr_of_rows_str <- paste0(head(sort(x$nr_of_rows), 5), collapse = ", ")
+    if (length(x$nr_of_rows) > 5) {
+      nr_of_rows_str <- paste(nr_of_rows_str, "...")
+    }
+
+    cat(cyan("number of rows    : "), nr_of_rows_str, "\n", sep = "")
   } else {
-    cat(cyan("number of rows    : "), x$nr_of_rows, "\n", sep = "")
+    cat(cyan("number of rows    : "), red("not defined yet"), "\n", sep = "")
   }
-
+  
   # compression
 
   if (length(x$compression) != 0) {
-    compression_str <- paste0(head(x$compression, 5), collapse = ", ")
+    compression_str <- paste0(head(sort(x$compression), 5), collapse = ", ")
     if (length(x$compression) > 5) {
       compression_str <- paste(compression_str, "...")
     }
@@ -130,7 +134,7 @@ print.benchmark_definition <- function(x, ...) {
   # threads
 
   if (length(x$threads) != 0) {
-    threads_str <- paste0(head(x$threads, 5), collapse = ", ")
+    threads_str <- paste0(head(sort(x$threads), 5), collapse = ", ")
     if (length(x$threads) > 5) {
       threads_str <- paste(threads_str, "...")
     }
