@@ -3,14 +3,10 @@
 
 <!-- <img src="logo.png" align="right" /> -->
 
-[![Linux/OSX Build
-Status](https://travis-ci.org/fstpackage/syntheticbench.svg?branch=develop)](https://travis-ci.org/fstpackage/syntheticbench)
-[![Windows Build
-status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/syntheticbench)
-[![License: AGPL
-v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Linux/OSX Build Status](https://travis-ci.org/fstpackage/syntheticbench.svg?branch=develop)](https://travis-ci.org/fstpackage/syntheticbench)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/syntheticbench)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![codecov](https://codecov.io/gh/fstpackage/syntheticbench/branch/develop/graph/badge.svg)](https://codecov.io/gh/fstpackage/syntheticbench)
 
 ## Overview
@@ -74,33 +70,15 @@ generator <- table_generator(
 )
 ```
 
-Define a *streamer* for `fst`:
-
-``` r
-# fst streamer
-fst_streamer <- table_streamer(
-  id = "fst",
-  table_writer = function(x, file_name, compress) {
-    if (is.null(compress)) {
-      return(fst::write_fst(x, file_name))
-    }
-    fst::write_fst(x, file_name, compress)
-  },
-  table_reader = function(x) read_fst(x),
-  can_select_threads = TRUE,
-  variable_compression = TRUE
-)
-```
-
-Do some benchmarking:
+Do some benchmarking on the *fst* format:
 
 ``` r
 library(dplyr)
 
 synthetic_bench() %>%
   bench_generators(generator) %>%
-  bench_streamers(fst_streamer) %>%
-  bench_rows(1e5) %>%
+  bench_streamers(streamer_fst()) %>%
+  bench_rows(1e7) %>%
   compute()
 ```
 
@@ -110,21 +88,10 @@ Now, let´s add a second *streamer* and allow for two different sizes of
 datasets:
 
 ``` r
-# parguet streamer
-parguet_streamer <- table_streamer(
-  id = "parguet",
-  table_writer = function(x, file_name, compress) {
-    arrow::write_parquet(x, file_name)
-  },
-  table_reader = function(x) read_parquet(x),
-  can_select_threads = FALSE,
-  variable_compression = FALSE
-)
-
 synthetic_bench() %>%
   bench_generators(generator) %>%
-  bench_streamers(fst_streamer, parguet_streamer) %>%  # two streamers
-  bench_rows(1e5) %>%
+  bench_streamers(streamer_fst(), streamer_parguet()) %>%  # two streamers
+  bench_rows(1e7, 5e7) %>%
   compute()
 ```
 
@@ -135,33 +102,9 @@ is more complex than the single solution benchmark, with
 Let´s add two more *streamers* and add compression settings to the mix:
 
 ``` r
-# baseR streamer
-rds_streamer <- table_streamer(
-  id = "rds",
-  table_writer = function(x, file_name, compress) {
-    saveRDS(x, file_name)
-  },
-  table_reader = function(x) readRDS(x),
-  can_select_threads = FALSE,
-  variable_compression = FALSE
-)
-
-
-# feather streamer
-feather_streamer <- table_streamer(
-  id = "feather",
-  table_writer = function(x, file_name, compress) {
-    arrow::write_feather(x, file_name)
-  },
-  table_reader = function(x) read_feather(x),
-  can_select_threads = FALSE,
-  variable_compression = FALSE
-)
-
-
 synthetic_bench() %>%
   bench_generators(generator) %>%
-  bench_streamers(rds_streamer, fst_streamer, parguet_streamer, feather_streamer) %>%
+  bench_streamers(streamer_rds(), streamer_fst(), streamer_parguet(), streamer_feather()) %>%
   bench_rows(1e7, 5e7) %>%
   bench_compression(50, 80) %>%
   compute()

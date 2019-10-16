@@ -5,7 +5,7 @@ Version: 0.0.3
 Date: 2019-10-15
 Authors@R: c(
     person("Mark", "Klik", email = "markklik@gmail.com", role = c("aut", "cre", "cph")))
-Description: Package for benchmarking of the various serialization options available in the R ecosystem.
+Description: Package for benchmarking the various serialization options available in the R ecosystem.
 Depends:
     R (>= 3.5.0)
 License: AGPL-3 | file LICENSE
@@ -18,7 +18,6 @@ Imports:
 Suggests:
     testthat,
     lintr,
-    fst,
     arrow,
     dplyr
 RoxygenNote: 6.1.1

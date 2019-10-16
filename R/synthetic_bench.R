@@ -21,8 +21,8 @@
 
 
 # Add an observation to benchmark results
-observation <- function(bench, mode, format_id, data_id, compression, size, time, nr_of_rows, orig_size) {
-  rbindlist(list(bench, data.table(
+observation <- function(observations, mode, format_id, data_id, compression, size, time, nr_of_rows, orig_size) {
+  rbindlist(list(observations, data.table(
     Mode = mode,
     ID = format_id,
     DataID = data_id,

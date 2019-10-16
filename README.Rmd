@@ -70,33 +70,15 @@ generator <- table_generator(
 )
 ```
 
-Define a _streamer_ for `fst`:
-
-```{r, eval = FALSE}
-# fst streamer
-fst_streamer <- table_streamer(
-  id = "fst",
-  table_writer = function(x, file_name, compress) {
-    if (is.null(compress)) {
-      return(fst::write_fst(x, file_name))
-    }
-    fst::write_fst(x, file_name, compress)
-  },
-  table_reader = function(x) read_fst(x),
-  can_select_threads = TRUE,
-  variable_compression = TRUE
-)
-```
-
-Do some benchmarking:
+Do some benchmarking on the _fst_ format:
 
 ```{r, eval = FALSE}
 library(dplyr)
 
 synthetic_bench() %>%
   bench_generators(generator) %>%
-  bench_streamers(fst_streamer) %>%
-  bench_rows(1e5) %>%
+  bench_streamers(streamer_fst()) %>%
+  bench_rows(1e7) %>%
   compute()
 ```
 
@@ -105,21 +87,10 @@ Congratulations, that's your first structured benchmark :-)
 Now, let´s add a second _streamer_ and allow for two different sizes of datasets:
 
 ```{r, eval = FALSE}
-# parguet streamer
-parguet_streamer <- table_streamer(
-  id = "parguet",
-  table_writer = function(x, file_name, compress) {
-    arrow::write_parquet(x, file_name)
-  },
-  table_reader = function(x) read_parquet(x),
-  can_select_threads = FALSE,
-  variable_compression = FALSE
-)
-
 synthetic_bench() %>%
   bench_generators(generator) %>%
-  bench_streamers(fst_streamer, parguet_streamer) %>%  # two streamers
-  bench_rows(1e5) %>%
+  bench_streamers(streamer_fst(), streamer_parguet()) %>%  # two streamers
+  bench_rows(1e7, 5e7) %>%
   compute()
 ```
 
@@ -128,33 +99,9 @@ As you can see, although benchmarking two solutions at different sizes is more c
 Let´s add two more _streamers_ and add compression settings to the mix:
 
 ```{r, eval = FALSE}
-# baseR streamer
-rds_streamer <- table_streamer(
-  id = "rds",
-  table_writer = function(x, file_name, compress) {
-    saveRDS(x, file_name)
-  },
-  table_reader = function(x) readRDS(x),
-  can_select_threads = FALSE,
-  variable_compression = FALSE
-)
-
-
-# feather streamer
-feather_streamer <- table_streamer(
-  id = "feather",
-  table_writer = function(x, file_name, compress) {
-    arrow::write_feather(x, file_name)
-  },
-  table_reader = function(x) read_feather(x),
-  can_select_threads = FALSE,
-  variable_compression = FALSE
-)
-
-
 synthetic_bench() %>%
   bench_generators(generator) %>%
-  bench_streamers(rds_streamer, fst_streamer, parguet_streamer, feather_streamer) %>%
+  bench_streamers(streamer_rds(), streamer_fst(), streamer_parguet(), streamer_feather()) %>%
   bench_rows(1e7, 5e7) %>%
   bench_compression(50, 80) %>%
   compute()
