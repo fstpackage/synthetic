@@ -8,9 +8,6 @@ require(dplyr)
 context("synth bench class")
 
 
-# defines streamers for fst, feather, parguet and rds
-source("streamers.R")
-
 # defines several generators
 source("generators.R")
 
@@ -18,7 +15,7 @@ source("generators.R")
 test_that("constructor", {
 
   x <- synthetic_bench()
-  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress"))
+  expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder", "progress"))
 })
 
 
@@ -31,11 +28,11 @@ test_that("generators", {
 
   # single
   x <- x %>% bench_tables(sparse_generator)
-  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators"))
+  expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder", "progress", "generators"))
 
   # single streamer
   x <- x %>%
-    bench_streamers(fst_streamer) %>%
+    bench_streamers(streamer_fst()) %>%
     bench_rows(10)
 
   res <- x %>%
@@ -49,7 +46,7 @@ test_that("generators", {
     bench_tables(random_generator, sparse_generator) %>%
     compute()
 
-  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators",
+  expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder", "progress", "generators",
     "streamers", "nr_of_rows"))
   expect_equal(res$ID, rep("fst", 4))
   expect_equal(res$Mode, c("write", "write", "read", "read"))
@@ -67,12 +64,12 @@ test_that("streamers", {
 
   # multiple
   x <- x %>%
-    bench_streamers(fst_streamer, arrow_streamer, parguet_streamer, feather_streamer)
+    bench_streamers(streamer_fst(), streamer_arrow(), streamer_parguet(), streamer_feather())
 
   res <- x %>%
     compute()
 
-  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators",
+  expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder", "progress", "generators",
     "nr_of_rows", "streamers"))
   expect_equal(sort(unique(res$ID)), c("arrow", "feather", "fst", "parguet"))
   expect_equal(res$Mode, c(rep("write", 4), rep("read", 4)))
@@ -104,10 +101,11 @@ test_that("compression", {
   expect_equal(x$compression, c(5:1, 7))
 
   x <- x %>% bench_compression(1, 50)
-  expect_equal(names(x), c("nr_of_runs", "cycle_size", "result_folder", "progress", "generators", "compression"))
+  expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder",
+    "progress", "generators", "compression"))
 
   res <- x %>%
-    bench_streamers(fst_streamer) %>%
+    bench_streamers(streamer_fst()) %>%
     bench_rows(10) %>%
     compute()
 
@@ -145,7 +143,7 @@ test_that("compute", {
 
   x <- synthetic_bench(1, 1) %>%
     bench_tables(random_generator, sparse_generator) %>%
-    bench_streamers(fst_streamer, arrow_streamer) %>%
+    bench_streamers(streamer_fst(), streamer_arrow()) %>%
     bench_compression(1, 50) %>%
     bench_rows(10, 20) %>%
     bench_threads(2, 4, 6) %>%

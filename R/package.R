@@ -23,6 +23,7 @@
 #' @importFrom crayon cyan red
 #' @importFrom utils packageVersion object.size
 #' @importFrom data.table rbindlist data.table
+#' @importFrom fst read_fst write_fst
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
 #' @importFrom stats rnorm runif

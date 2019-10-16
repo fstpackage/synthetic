@@ -97,7 +97,7 @@ print.benchmark_definition <- function(x, ...) {
     if (length(x$nr_of_columns) > 5) {
       nr_of_cols_str <- paste(nr_of_cols_str, "...")
     }
-    
+
     cat(cyan("number of columns : "), nr_of_cols_str, "\n", sep = "")
   }
 
@@ -117,7 +117,7 @@ print.benchmark_definition <- function(x, ...) {
   } else {
     cat(cyan("number of rows    : "), red("not defined yet"), "\n", sep = "")
   }
-  
+
   # compression
 
   if (length(x$compression) != 0) {

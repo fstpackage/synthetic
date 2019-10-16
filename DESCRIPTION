@@ -13,7 +13,8 @@ Imports:
     crayon,
     data.table,
     microbenchmark,
-    progress
+    progress,
+    fst
 Suggests:
     testthat,
     lintr,

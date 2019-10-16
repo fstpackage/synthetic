@@ -8,9 +8,6 @@ require(dplyr)
 context("bench columns")
 
 
-# defines streamers for fst, feather, parguet and rds
-source("streamers.R")
-
 # defines several generators
 source("generators.R")
 
