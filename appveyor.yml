@@ -16,9 +16,8 @@ environment:
     WARNINGS_ARE_ERRORS: 1
     USE_RTOOLS: true
     GCC_PATH: mingw_64
-# Default GCC_PATH appears to be gcc-4.6.3 which is now unsupported as from Rtools.exe v3.4
-    R_CHECK_ARGS: --no-manual
 # R_CHECK_ARGS specified in order to turn off --as-cran as that can be slow
+    R_CHECK_ARGS: --no-manual
 
   matrix:
   - R_VERSION: release
@@ -26,7 +25,7 @@ environment:
 
   - R_VERSION: devel
     R_ARCH: x64
-
+    PKGTYPE: both
 
 build_script:
   - set _R_CHECK_FORCE_SUGGESTS_=false
