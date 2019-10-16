@@ -7,7 +7,7 @@ echo 'options(repos = "https://cloud.r-project.org", install.packages.compile.fr
 export R_PROFILE=~/.Rprofile.site &&
 
 Rscript.exe -e 'sessionInfo()' &&
-Rscript.exe -e 'install.packages("devtools", "covr", "dplyr", "testthat", "lintr", "data.table", "arrow", "fst", "crayon", "microbenchmark", "progress", dependencies = TRUE);if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}' &&
+Rscript.exe -e 'install.packages(c("devtools", "covr", "dplyr", "testthat", "lintr", "data.table", "arrow", "fst", "crayon", "microbenchmark", "progress"), dependencies = TRUE);if (!all("devtools" %in% installed.packages())) { q(status = 1, save = "no")}' &&
 Rscript.exe -e 'deps <- devtools::dev_package_deps(dependencies = TRUE); inst <- installed.packages(); install.packages(deps$package[!deps$package %in% inst[,"Package"]])' &&
 Rscript.exe -e 'devtools::session_info(installed.packages()[, "Package"])' &&
 
