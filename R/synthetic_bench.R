@@ -27,10 +27,10 @@ observation <- function(observations, mode, format_id, data_id, compression, siz
     ID = format_id,
     DataID = data_id,
     Compression = compression,
-    Size = size,
+    Size = as.numeric(size),
     Time = time,
     NrOfRows = nr_of_rows,
-    OrigSize = orig_size)))
+    OrigSize = as.numeric(orig_size))))
 }
 
 
@@ -429,5 +429,6 @@ compute.benchmark_definition <- function(bench_obj) {  # nolint
     pb$update(1)
   }
 
-  results
+  results %>%
+    mutate(SpeedMBs = 1000 * OrigSize / Time)
 }

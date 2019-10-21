@@ -142,7 +142,7 @@ streamer_vroom <- function(id = "vroom") {
   table_streamer(
     id = id,
     table_writer = function(x, file_name, compress) vroom::vroom_write(x, file_name),
-    table_reader = function(x) vroom::vroom("vroom-fst.csv", altrep_opts = FALSE),
+    table_reader = function(x) vroom::vroom("vroom-fst.csv", altrep_opts = FALSE, progress = FALSE),
     can_select_threads = FALSE,
     variable_compression = FALSE
   )

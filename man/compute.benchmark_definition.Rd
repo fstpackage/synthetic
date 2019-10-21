@@ -4,7 +4,7 @@
 \alias{compute.benchmark_definition}
 \title{Compute generic function to start computing a benchmark}
 \usage{
-compute.benchmark_definition(bench_obj)
+\method{compute}{benchmark_definition}(bench_obj)
 }
 \arguments{
 \item{bench_obj}{A benchmark definition created with synthetic_bench()}

@@ -21,7 +21,7 @@
 
 
 #' @importFrom crayon cyan red
-#' @importFrom dplyr %>%
+#' @importFrom dplyr %>% compute
 #' @importFrom utils packageVersion object.size
 #' @importFrom data.table rbindlist data.table
 #' @importFrom fst read_fst write_fst
@@ -34,3 +34,7 @@ NULL
 
 #' @export
 dplyr::`%>%`
+
+
+#' @export
+dplyr::compute
