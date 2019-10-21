@@ -21,6 +21,7 @@
 
 
 #' @importFrom crayon cyan red
+#' @importFrom dplyr %>%
 #' @importFrom utils packageVersion object.size
 #' @importFrom data.table rbindlist data.table
 #' @importFrom fst read_fst write_fst
@@ -29,3 +30,7 @@
 #' @importFrom stats rnorm runif
 #' @importFrom utils head
 NULL
+
+
+#' @export
+dplyr::`%>%`
