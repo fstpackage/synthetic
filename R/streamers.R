@@ -25,6 +25,7 @@
 #' @param id Identifier to mark the streamer in benchmarks (default: 'rds')
 #'
 #' @return A table streamer that uses the rds format
+#' @export
 streamer_rds <- function(id = "rds") {
   table_streamer(
     id = id,
@@ -43,6 +44,7 @@ streamer_rds <- function(id = "rds") {
 #' @param id Identifier to mark the streamer in benchmarks (default: 'fst')
 #'
 #' @return A table streamer that uses the fst format
+#' @export
 streamer_fst <- function(id = "fst") {
   table_streamer(
     id = id,
@@ -64,6 +66,7 @@ streamer_fst <- function(id = "fst") {
 #' @param id Identifier to mark the streamer in benchmarks (default: 'parguet')
 #'
 #' @return A table streamer that uses the parguet format
+#' @export
 streamer_parguet <- function(id = "parguet") {
 
   if (!requireNamespace("arrow", quietly = TRUE)) {
@@ -72,9 +75,7 @@ streamer_parguet <- function(id = "parguet") {
 
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) {
-      arrow::write_parquet(x, file_name)
-    },
+    table_writer = function(x, file_name, compress) arrow::write_parquet(x, file_name),
     table_reader = function(x) arrow::read_parquet(x),
     can_select_threads = FALSE,
     variable_compression = FALSE
@@ -87,6 +88,7 @@ streamer_parguet <- function(id = "parguet") {
 #' @param id Identifier to mark the streamer in benchmarks (default: 'arrow')
 #'
 #' @return A table streamer that uses the arrow format
+#' @export
 streamer_arrow <- function(id = "arrow") {
 
   if (!requireNamespace("arrow", quietly = TRUE)) {
@@ -95,9 +97,7 @@ streamer_arrow <- function(id = "arrow") {
 
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) {
-      arrow::write_arrow(x, file_name)
-    },
+    table_writer = function(x, file_name, compress) arrow::write_arrow(x, file_name),
     table_reader = function(x) arrow::read_arrow(x),
     can_select_threads = FALSE,
     variable_compression = FALSE
@@ -110,6 +110,7 @@ streamer_arrow <- function(id = "arrow") {
 #' @param id Identifier to mark the streamer in benchmarks (default: 'feather')
 #'
 #' @return A table streamer that uses the feather format
+#' @export
 streamer_feather <- function(id = "feather") {
 
   if (!requireNamespace("arrow", quietly = TRUE)) {
@@ -118,10 +119,30 @@ streamer_feather <- function(id = "feather") {
 
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) {
-      arrow::write_feather(x, file_name)
-    },
+    table_writer = function(x, file_name, compress) arrow::write_feather(x, file_name),
     table_reader = function(x) arrow::read_feather(x),
+    can_select_threads = FALSE,
+    variable_compression = FALSE
+  )
+}
+
+
+#' vroom streamer
+#'
+#' @param id Identifier to mark the streamer in benchmarks (default: 'vroom')
+#'
+#' @return A table streamer that uses vroom to read and write the csv format
+#' @export
+streamer_vroom <- function(id = "vroom") {
+  
+  if (!requireNamespace("vroom", quietly = TRUE)) {
+    stop("Please install package vroom to use the vroom streamer")
+  }
+
+  table_streamer(
+    id = id,
+    table_writer = function(x, file_name, compress) vroom::vroom_write(x, file_name),
+    table_reader = function(x) vroom::vroom("vroom-fst.csv", altrep_opts = FALSE),
     can_select_threads = FALSE,
     variable_compression = FALSE
   )
