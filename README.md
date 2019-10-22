@@ -3,10 +3,14 @@
 
 <!-- <img src="logo.png" align="right" /> -->
 
-[![Linux/OSX Build Status](https://travis-ci.org/fstpackage/syntheticbench.svg?branch=develop)](https://travis-ci.org/fstpackage/syntheticbench)
-[![Windows Build status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/syntheticbench)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Linux/OSX Build
+Status](https://travis-ci.org/fstpackage/syntheticbench.svg?branch=develop)](https://travis-ci.org/fstpackage/syntheticbench)
+[![Windows Build
+status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/syntheticbench)
+[![License: AGPL
+v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![codecov](https://codecov.io/gh/fstpackage/syntheticbench/branch/develop/graph/badge.svg)](https://codecov.io/gh/fstpackage/syntheticbench)
 
 ## Overview
@@ -79,7 +83,7 @@ synthetic_bench() %>%
   bench_generators(generator) %>%
   bench_streamers(streamer_fst()) %>%
   bench_rows(1e7) %>%
-  compute()
+  collect()
 ```
 
 Congratulations, that’s your first structured benchmark :-)
@@ -92,7 +96,7 @@ synthetic_bench() %>%
   bench_generators(generator) %>%
   bench_streamers(streamer_fst(), streamer_parguet()) %>%  # two streamers
   bench_rows(1e7, 5e7) %>%
-  compute()
+  collect()
 ```
 
 As you can see, although benchmarking two solutions at different sizes
@@ -107,5 +111,5 @@ synthetic_bench() %>%
   bench_streamers(streamer_rds(), streamer_fst(), streamer_parguet(), streamer_feather()) %>%
   bench_rows(1e7, 5e7) %>%
   bench_compression(50, 80) %>%
-  compute()
+  collect()
 ```

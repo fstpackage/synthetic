@@ -298,10 +298,11 @@ bench_threads <- function(bench_obj, ...) {
 #' Compute generic function to start computing a benchmark
 #'
 #' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param ...
 #'
 #' @return Benchmark resuls
 #' @export
-compute.benchmark_definition <- function(bench_obj) {  # nolint
+collect.benchmark_definition <- function(bench_obj, ...) {  # nolint
 
   if (is.null(bench_obj$streamers)) {
     stop("You need to define at least one streamer to benchmark")
@@ -428,6 +429,9 @@ compute.benchmark_definition <- function(bench_obj) {  # nolint
   if (bench_obj$progress) {
     pb$update(1)
   }
+
+  # avoid note in R CMD check
+  OrigSize <- Time <- 0  # nolint
 
   results %>%
     mutate(SpeedMBs = 1000 * OrigSize / Time)

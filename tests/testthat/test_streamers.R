@@ -18,7 +18,8 @@ test_that("test all streamers", {
     bench_tables(random_generator) %>%
     bench_streamers(streamer_fst(), streamer_arrow(), streamer_feather(), streamer_parguet(), streamer_rds()) %>%
     bench_rows(10) %>%
-    compute()
+    collect()
 
-  expect_equal(colnames(x), c("Mode", "ID", "DataID", "Compression", "Size", "Time", "NrOfRows", "OrigSize"))
+  expect_equal(colnames(x), c("Mode", "ID", "DataID", "Compression", "Size", "Time", "NrOfRows",
+    "OrigSize", "SpeedMBs"))
 })
