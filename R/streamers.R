@@ -148,7 +148,7 @@ streamer_vroom <- function(id = "vroom", altrep_opts = FALSE) {
     id = id,
     table_writer = function(x, file_name, compress) vroom::vroom_write(x, file_name),
     table_reader = function(x) {
-      suppressMessages(vroom::vroom("vroom-fst.csv", altrep_opts = altrep_opts, progress = FALSE))
+      suppressMessages(vroom::vroom(x, altrep_opts = altrep_opts, progress = FALSE))
     },
     can_select_threads = FALSE,
     variable_compression = FALSE
