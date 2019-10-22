@@ -4,10 +4,16 @@
 \alias{streamer_vroom}
 \title{vroom streamer}
 \usage{
-streamer_vroom(id = "vroom")
+streamer_vroom(id = "vroom", altrep_opts = FALSE)
 }
 \arguments{
 \item{id}{Identifier to mark the streamer in benchmarks (default: 'vroom')}
+
+\item{altrep_opts}{Set ALTREP options for method `vroom::vroom()`. See that
+functions description of the meaning of this parameter. Beware that enabling
+ALTREP functionality for vroom can lead to incomparable benchmarks as the
+dataset returned from `vroom` is not materialized in memory for types that use
+ALTREP. In effect, part of the deserialization is postponed to a later time.}
 }
 \value{
 A table streamer that uses vroom to read and write the csv format

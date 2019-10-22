@@ -130,10 +130,15 @@ streamer_feather <- function(id = "feather") {
 #' vroom streamer
 #'
 #' @param id Identifier to mark the streamer in benchmarks (default: 'vroom')
+#' @param altrep_opts Set ALTREP options for method `vroom::vroom()`. See that
+#' functions description of the meaning of this parameter. Beware that enabling
+#' ALTREP functionality for vroom can lead to incomparable benchmarks as the
+#' dataset returned from `vroom` is not materialized in memory for types that use
+#' ALTREP. In effect, part of the deserialization is postponed to a later time.
 #'
 #' @return A table streamer that uses vroom to read and write the csv format
 #' @export
-streamer_vroom <- function(id = "vroom") {
+streamer_vroom <- function(id = "vroom", altrep_opts = FALSE) {
   
   if (!requireNamespace("vroom", quietly = TRUE)) {
     stop("Please install package vroom to use the vroom streamer")
@@ -143,7 +148,7 @@ streamer_vroom <- function(id = "vroom") {
     id = id,
     table_writer = function(x, file_name, compress) vroom::vroom_write(x, file_name),
     table_reader = function(x) {
-      suppressMessages(vroom::vroom("vroom-fst.csv", altrep_opts = FALSE, progress = FALSE))
+      suppressMessages(vroom::vroom("vroom-fst.csv", altrep_opts = altrep_opts, progress = FALSE))
     },
     can_select_threads = FALSE,
     variable_compression = FALSE
