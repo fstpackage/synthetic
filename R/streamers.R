@@ -53,9 +53,46 @@ streamer_fst <- function(id = "fst") {
       write_fst(x, file_name, compress)
     },
     table_reader = function(x, custom_parameters) read_fst(x),
-    set_threads = function(nr_of_threads, custom_parameters) {threads_fst(nr_of_threads)},
+    set_threads = function(nr_of_threads, custom_parameters) {
+      threads_fst(nr_of_threads)
+    },
     can_select_threads = TRUE,
     variable_compression = TRUE
+  )
+}
+
+
+#' qs streamer
+#'
+#' @param id Identifier to mark the streamer in benchmarks (default: 'qs')
+#' @param preset Use one of the preset compression settings
+#'
+#' @return A table streamer that uses the fst format
+#' @export
+streamer_qs <- function(id = "qs", preset = "high") {
+
+  # check parameter algorithm
+  if (!(preset %in% c("fast", "high", "archive", "uncompressed"))) {
+    stop("parameter preset must be one of 'fast', 'high', 'archive', or 'uncompressed'")
+  }
+
+  threads <- NULL  # disable global variable warning
+
+  table_streamer(
+    id = id,
+    table_writer = function(x, file_name, compress, custom_parameters) {
+      qsave(x, file_name, custom_parameters$preset, nthreads = custom_parameters$threads[1, 1])
+    },
+    table_reader = function(x, custom_parameters) qread(x, nthreads = custom_parameters$threads[1, 1]),
+    set_threads = function(nr_of_threads, custom_parameters) {
+      custom_parameters$threads[1, threads := nr_of_threads]
+    },
+    can_select_threads = TRUE,
+    variable_compression = FALSE,
+    custom_parameters = list(
+      preset = preset,
+      threads = data.table(threads = 1)  # default setting
+    )
   )
 }
 
@@ -141,7 +178,7 @@ streamer_feather <- function(id = "feather") {
 #' @return A table streamer that uses data.table's fread/fwrite to read and write the csv format
 #' @export
 streamer_datatable <- function(id = "data.table") {
-  
+
   table_streamer(
     id = id,
     table_writer = function(x, file_name, compress, custom_parameters) {
@@ -167,7 +204,7 @@ streamer_datatable <- function(id = "data.table") {
 #' @return A table streamer that uses vroom to read and write the csv format
 #' @export
 streamer_vroom <- function(id = "vroom", altrep_opts = FALSE) {
-  
+
   if (!requireNamespace("vroom", quietly = TRUE)) {
     stop("Please install package vroom to use the vroom streamer")
   }

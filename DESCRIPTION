@@ -15,6 +15,7 @@ Imports:
     microbenchmark,
     progress,
     fst,
+    qs,
     dplyr
 Suggests:
     testthat,

@@ -149,5 +149,6 @@ test_that("collect", {
     bench_threads(2, 4, 6) %>%
     collect()
 
-  expect_equal(colnames(x), c("Mode", "ID", "DataID", "Compression", "Size", "Time", "NrOfRows", "OrigSize"))
+  expect_equal(colnames(x),
+    c("Mode", "ID", "DataID", "Compression", "Size", "Time", "NrOfRows", "OrigSize", "SpeedMBs"))
 })
