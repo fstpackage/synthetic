@@ -24,6 +24,8 @@ f(x, file_name, compress, threads, custom_parameters). Parameter compression sho
 
 \item{set_threads}{method for specifying the number of threads to use for (de-) serialization, the
 signature must be f(nr_of_threads, custom_parameters).}
+
+\item{custom_parameters}{Additional parameters that are needed for the streamer}
 }
 \value{
 a tablestreamer object

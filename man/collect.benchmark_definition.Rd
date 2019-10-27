@@ -4,10 +4,10 @@
 \alias{collect.benchmark_definition}
 \title{Compute generic function to start computing a benchmark}
 \usage{
-\method{collect}{benchmark_definition}(bench_obj, ...)
+\method{collect}{benchmark_definition}(x, ...)
 }
 \arguments{
-\item{bench_obj}{A benchmark definition created with synthetic_bench()}
+\item{x}{A benchmark definition created with synthetic_bench()}
 
 \item{...}{}
 }

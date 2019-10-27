@@ -297,52 +297,52 @@ bench_threads <- function(bench_obj, ...) {
 
 #' Compute generic function to start computing a benchmark
 #'
-#' @param bench_obj A benchmark definition created with synthetic_bench()
+#' @param x A benchmark definition created with synthetic_bench()
 #' @param ...
 #'
 #' @return Benchmark resuls
 #' @export
-collect.benchmark_definition <- function(bench_obj, ...) {  # nolint
+collect.benchmark_definition <- function(x, ...) {  # nolint
 
-  if (is.null(bench_obj$streamers)) {
+  if (is.null(x$streamers)) {
     stop("You need to define at least one streamer to benchmark")
   }
 
   # define progress bar
-  if (bench_obj$progress) {
+  if (x$progress) {
 
-    compression_steps <- length(bench_obj$streamers)
+    compression_steps <- length(x$streamers)
 
-    if (!is.null(bench_obj$compression)) {
+    if (!is.null(x$compression)) {
       compressors <- 0
-      for (table_streamer in bench_obj$streamers) {
+      for (table_streamer in x$streamers) {
         if (table_streamer$variable_compression) compressors <- compressors + 1
       }
 
-      compression_steps <- compressors * length(bench_obj$compression) + length(bench_obj$streamers) - compressors
+      compression_steps <- compressors * length(x$compression) + length(x$streamers) - compressors
     }
 
-    nr_of_measurements <- 2 * compression_steps * bench_obj$nr_of_runs * bench_obj$cycle_size *
-      length(bench_obj$nr_of_rows) * length(bench_obj$generators)
-    row_weights <- length(bench_obj$nr_of_rows) * bench_obj$nr_of_rows / sum(bench_obj$nr_of_rows)
+    nr_of_measurements <- 2 * compression_steps * x$nr_of_runs * x$cycle_size *
+      length(x$nr_of_rows) * length(x$generators)
+    row_weights <- length(x$nr_of_rows) * x$nr_of_rows / sum(x$nr_of_rows)
     measurement_count <- 0
 
     pb <- progress_bar$new("[:bar] :percent remaining: :eta", total = 100)
   }
 
   # create a length 1 vector
-  compression <- bench_obj$compression
+  compression <- x$compression
   if (is.null(compression)) {
     compression <- -1
   }
 
   results <- NULL
 
-  for (nr_of_rows_index in seq_len(length(bench_obj$nr_of_rows))) {
+  for (nr_of_rows_index in seq_len(length(x$nr_of_rows))) {
 
-    cur_nr_of_rows <- bench_obj$nr_of_rows[nr_of_rows_index]
+    cur_nr_of_rows <- x$nr_of_rows[nr_of_rows_index]
 
-    for (run_id in seq_len(bench_obj$nr_of_runs)) {
+    for (run_id in seq_len(x$nr_of_runs)) {
 
       # loop over compression settings
       for (compress_count in seq_len(length(compression))) {
@@ -351,26 +351,26 @@ collect.benchmark_definition <- function(bench_obj, ...) {  # nolint
         if (write_compression == -1) write_compression <- NULL
 
         # write cycle_size files
-        for (id in seq_len(bench_obj$cycle_size)) {
+        for (id in seq_len(x$cycle_size)) {
 
           # loop over datasets
-          for (generator_count in seq_len(length(bench_obj$generators))) {
+          for (generator_count in seq_len(length(x$generators))) {
 
-            generator <- bench_obj$generators[[generator_count]]
+            generator <- x$generators[[generator_count]]
 
             # generate dataset once for all generators
             x <- generator$generator(cur_nr_of_rows)
 
             # disk warmup (to avoid a sleeping disk after data creation)
-            saveRDS("warmup disk", paste0(bench_obj$result_folder, "/", "warmup.rds"))
+            saveRDS("warmup disk", paste0(x$result_folder, "/", "warmup.rds"))
 
             # iterate
-            for (table_streamer in bench_obj$streamers[sample(seq_len(length(bench_obj$streamers)))]) {
+            for (table_streamer in x$streamers[sample(seq_len(length(x$streamers)))]) {
 
               # don't repeat identical measurements
               if (!table_streamer$variable_compression && compress_count > 1) next
 
-              file_name <- paste0(bench_obj$result_folder, "/", "dataset_", table_streamer$id, "_",
+              file_name <- paste0(x$result_folder, "/", "dataset_", table_streamer$id, "_",
                 generator_count, "_", id)
 
               # Only a single iteration is used to avoid disk caching effects
@@ -383,7 +383,7 @@ collect.benchmark_definition <- function(bench_obj, ...) {  # nolint
               results <- observation(results, "write", table_streamer$id, generator$id,
                 compression[compress_count], file.info(file_name)$size, res$time, cur_nr_of_rows, object.size(x))
 
-              if (bench_obj$progress) {
+              if (x$progress) {
                 measurement_count <- measurement_count + row_weights[nr_of_rows_index]
                 pb$update(measurement_count / nr_of_measurements - 0.0001)
               }
@@ -391,20 +391,20 @@ collect.benchmark_definition <- function(bench_obj, ...) {  # nolint
           }
         }
 
-        for (id in seq_len(bench_obj$cycle_size)) {
+        for (id in seq_len(x$cycle_size)) {
 
           # loop over datasets
-          for (generator_count in seq_len(length(bench_obj$generators))) {
+          for (generator_count in seq_len(length(x$generators))) {
 
-            generator <- bench_obj$generators[[generator_count]]
+            generator <- x$generators[[generator_count]]
 
             # iterate
-            for (table_streamer in bench_obj$streamers[sample(seq_len(length(bench_obj$streamers)))]) {
+            for (table_streamer in x$streamers[sample(seq_len(length(x$streamers)))]) {
 
               # don't repeat identical measurements
               if (!table_streamer$variable_compression && compress_count > 1) next
 
-              file_name <- paste0(bench_obj$result_folder, "/", "dataset_", table_streamer$id, "_",
+              file_name <- paste0(x$result_folder, "/", "dataset_", table_streamer$id, "_",
                 generator_count, "_", id)
 
               res <- microbenchmark({
@@ -415,7 +415,7 @@ collect.benchmark_definition <- function(bench_obj, ...) {  # nolint
               results <- observation(results, "read", table_streamer$id, generator$id,
                 compression[compress_count], file.info(file_name)$size, res$time, cur_nr_of_rows, object.size(y))
 
-              if (bench_obj$progress) {
+              if (x$progress) {
                 measurement_count <- measurement_count + row_weights[nr_of_rows_index]
                 pb$update(measurement_count / nr_of_measurements - 0.0001)
               }
@@ -426,7 +426,7 @@ collect.benchmark_definition <- function(bench_obj, ...) {  # nolint
     }
   }
 
-  if (bench_obj$progress) {
+  if (x$progress) {
     pb$update(1)
   }
 

@@ -32,6 +32,7 @@
 #' @param variable_compression TRUE of FALSE depending on the ability to select compression
 #' @param set_threads method for specifying the number of threads to use for (de-) serialization, the
 #' signature must be f(nr_of_threads, custom_parameters).
+#' @param custom_parameters Additional parameters that are needed for the streamer
 #'
 #' @return a tablestreamer object
 #' @export

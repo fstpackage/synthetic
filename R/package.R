@@ -29,6 +29,7 @@
 #' @importFrom qs qread qsave
 #' @importFrom stats rnorm runif
 #' @importFrom utils head packageVersion object.size
+#' @importFrom vroom vroom vroom_write
 NULL
 
 
