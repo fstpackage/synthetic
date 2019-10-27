@@ -21,14 +21,13 @@
 
 
 #' @importFrom crayon cyan red
+#' @importFrom data.table data.table fread fwrite rbindlist setDTthreads
 #' @importFrom dplyr %>% collect mutate
-#' @importFrom utils packageVersion object.size
-#' @importFrom data.table rbindlist data.table
-#' @importFrom fst read_fst write_fst
+#' @importFrom fst read_fst threads_fst write_fst
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
 #' @importFrom stats rnorm runif
-#' @importFrom utils head
+#' @importFrom utils head packageVersion object.size
 NULL
 
 

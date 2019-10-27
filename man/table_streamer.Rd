@@ -5,20 +5,25 @@
 \title{Define an object of class 'tablestreamer' that defines specific methods for
 serializing of datasets}
 \usage{
-table_streamer(id, table_writer, table_reader, can_select_threads,
-  variable_compression)
+table_streamer(id, table_writer, table_reader,
+  can_select_threads = FALSE, variable_compression = FALSE,
+  set_threads = NULL, custom_parameters = NULL)
 }
 \arguments{
 \item{id}{ID of the table streamer (e.g. 'fst' or 'parguet')}
 
-\item{table_writer}{method for writing with signature f(x, file_name, compress, threads). Parameter
-compression should be a percentage (0.0 to 100.0).}
+\item{table_writer}{method for writing with signature
+f(x, file_name, compress, threads, custom_parameters). Parameter compression should be a percentage
+(0.0 to 100.0).}
 
-\item{table_reader}{method for reading with signature f(file_name, threads)}
+\item{table_reader}{method for reading with signature f(file_name, threads, custom_parameters).}
 
 \item{can_select_threads}{TRUE of FALSE depending on the ability to select the number of threads}
 
 \item{variable_compression}{TRUE of FALSE depending on the ability to select compression}
+
+\item{set_threads}{method for specifying the number of threads to use for (de-) serialization, the
+signature must be f(nr_of_threads, custom_parameters).}
 }
 \value{
 a tablestreamer object

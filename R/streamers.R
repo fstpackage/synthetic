@@ -29,12 +29,10 @@
 streamer_rds <- function(id = "rds") {
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) {
+    table_writer = function(x, file_name, compress, custom_parameters) {
       saveRDS(x, file_name)
     },
-    table_reader = function(x) readRDS(x),
-    can_select_threads = FALSE,
-    variable_compression = FALSE
+    table_reader = function(x, custom_parameters) readRDS(x)
   )
 }
 
@@ -48,13 +46,14 @@ streamer_rds <- function(id = "rds") {
 streamer_fst <- function(id = "fst") {
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) {
+    table_writer = function(x, file_name, compress, custom_parameters) {
       if (is.null(compress)) {
         return(write_fst(x, file_name))
       }
       write_fst(x, file_name, compress)
     },
-    table_reader = function(x) read_fst(x),
+    table_reader = function(x, custom_parameters) read_fst(x),
+    set_threads = function(nr_of_threads, custom_parameters) {threads_fst(nr_of_threads)},
     can_select_threads = TRUE,
     variable_compression = TRUE
   )
@@ -75,8 +74,10 @@ streamer_parguet <- function(id = "parguet") {
 
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) arrow::write_parquet(x, file_name),
-    table_reader = function(x) arrow::read_parquet(x),
+    table_writer = function(x, file_name, compress, custom_parameters) {
+      arrow::write_parquet(x, file_name)
+    },
+    table_reader = function(x, custom_parameters) arrow::read_parquet(x),
     can_select_threads = FALSE,
     variable_compression = FALSE
   )
@@ -97,8 +98,10 @@ streamer_arrow <- function(id = "arrow") {
 
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) arrow::write_arrow(x, file_name),
-    table_reader = function(x) arrow::read_arrow(x),
+    table_writer = function(x, file_name, compress, custom_parameters) {
+      arrow::write_arrow(x, file_name)
+    },
+    table_reader = function(x, custom_parameters) arrow::read_arrow(x),
     can_select_threads = FALSE,
     variable_compression = FALSE
   )
@@ -119,9 +122,34 @@ streamer_feather <- function(id = "feather") {
 
   table_streamer(
     id = id,
-    table_writer = function(x, file_name, compress) arrow::write_feather(x, file_name),
-    table_reader = function(x) arrow::read_feather(x),
+    table_writer = function(x, file_name, compress, custom_parameters) {
+      arrow::write_feather(x, file_name)
+    },
+    table_reader = function(x, custom_parameters) {
+      arrow::read_feather(x)
+    },
     can_select_threads = FALSE,
+    variable_compression = FALSE
+  )
+}
+
+
+#' fread/fwrite streamer
+#'
+#' @param id Identifier to mark the streamer in benchmarks (default: 'data.table')
+#'
+#' @return A table streamer that uses data.table's fread/fwrite to read and write the csv format
+#' @export
+streamer_datatable <- function(id = "data.table") {
+  
+  table_streamer(
+    id = id,
+    table_writer = function(x, file_name, compress, custom_parameters) {
+      fwrite(x, file_name)
+    },
+    table_reader = function(x, custom_parameters) fread(x),
+    set_threads = function(nr_of_threads, custom_parameters) data.table::setDTthreads(nr_of_threads),
+    can_select_threads = TRUE,
     variable_compression = FALSE
   )
 }
