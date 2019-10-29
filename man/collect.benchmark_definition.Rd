@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A benchmark definition created with synthetic_bench()}
 
-\item{...}{}
+\item{...}{other arguments passed on to method}
 }
 \value{
 Benchmark resuls

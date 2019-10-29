@@ -298,7 +298,7 @@ bench_threads <- function(bench_obj, ...) {
 #' Compute generic function to start computing a benchmark
 #'
 #' @param x A benchmark definition created with synthetic_bench()
-#' @param ...
+#' @param ... other arguments passed on to method
 #'
 #' @return Benchmark resuls
 #' @export

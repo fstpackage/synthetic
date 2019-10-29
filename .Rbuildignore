@@ -1,6 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^.*\.yml$
+^.*\.sh$
 ^.*\.Rmd$
 ^.*\.md$
 ^benchmarks
