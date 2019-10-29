@@ -359,7 +359,7 @@ collect.benchmark_definition <- function(x, ...) {  # nolint
             generator <- x$generators[[generator_count]]
 
             # generate dataset once for all generators
-            x <- generator$generator(cur_nr_of_rows)
+            dt <- generator$generator(cur_nr_of_rows)
 
             # disk warmup (to avoid a sleeping disk after data creation)
             saveRDS("warmup disk", paste0(x$result_folder, "/", "warmup.rds"))
@@ -376,7 +376,7 @@ collect.benchmark_definition <- function(x, ...) {  # nolint
               # Only a single iteration is used to avoid disk caching effects
               # Due to caching measured speeds are higher and create a unrealistic benchmark
               res <- microbenchmark({
-                table_streamer$table_writer(x, file_name, write_compression)
+                table_streamer$table_writer(dt, file_name, write_compression)
               },
               times = 1)
 

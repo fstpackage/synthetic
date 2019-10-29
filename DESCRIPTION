@@ -16,7 +16,8 @@ Imports:
     progress,
     fst,
     qs,
-    dplyr
+    dplyr,
+    vroom
 Suggests:
     testthat,
     lintr,
