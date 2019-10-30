@@ -3,6 +3,8 @@
 
 <img src="synthetic.png" align="right" height="221" width="192" />
 
+[![Build
+Status](https://dev.azure.com/fstpackage/synthetic/_apis/build/status/fstpackage.synthetic?branchName=develop)](https://dev.azure.com/fstpackage/synthetic/_build/latest?definitionId=1&branchName=develop)
 [![Linux/OSX Build
 Status](https://travis-ci.org/fstpackage/synthetic.svg?branch=develop)](https://travis-ci.org/fstpackage/synthetic)
 [![Windows Build
