@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-<!-- <img src="logo.png" align="right" /> -->
+<img src="synthetic.png" align="right" height="221" width="192" />
 
 [![Linux/OSX Build
 Status](https://travis-ci.org/fstpackage/synthetic.svg?branch=develop)](https://travis-ci.org/fstpackage/synthetic)
