@@ -1,22 +1,10 @@
-parameters:
-  R_LIBS_USER: '$(Agent.BuildDirectory)/R/library'
-  CRAN: 'https://cloud.r-project.org'
-  coverage: true
-  env: {}
+
+resources:
+  repositories:
+    - repository: synthetic
+      type: github
+      name: fstpackage/synthetic
+      endpoint: r-lib
 
 jobs:
-  - job: 'Windows'
-    variables:
-      CRAN: ${{parameters.CRAN}}
-      R_LIBS_USER: ${{parameters.R_LIBS_USER}}
-      CI: true
-      ${{ insert }}: ${{ parameters.env }}
-    pool:
-      vmImage: 'vs2017-win2016'
-    steps:
-      - template: templates/r-setup-windows.yml
-      - template: templates/pkg-workflow.yml
-        parameters:
-          args: "c('--no-manual', '--no-multiarch')"
-          coverage: false
-          cache: false
+  - template: azure-synthetic.yml@synthetic
