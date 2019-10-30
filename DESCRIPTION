@@ -1,6 +1,6 @@
-Package: syntheticbench
+Package: synthetic
 Type: Package
-Title: Benchmarking serialization of synthetic datasets
+Title: Synthetic dataset creation and serialization benchmarks
 Version: 0.0.3
 Date: 2019-10-15
 Authors@R: c(

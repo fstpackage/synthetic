@@ -1,4 +1,4 @@
-#  syntheticbench - R package for benchmarking of dataset serialization
+#  synthetic - R package for synthetic dataset creation and serialization benchmarks
 #
 #  Copyright (C) 2019-present, Mark AJ Klik
 #
@@ -17,7 +17,7 @@
 #  with the lazyvec R package. If not, see <http://www.gnu.org/licenses/>.
 #
 #  You can contact the author at:
-#  - syntheticbench R package source repository : https://github.com/fstpackage/syntheticbench
+#  - synthetic R package source repository : https://github.com/fstpackage/synthetic
 
 
 .onAttach <- function(libname, pkgname) {  # nolint
@@ -25,8 +25,8 @@
   # executed when attached to search() path such as by library() or require()
   if (!interactive()) return()
 
-  v <- packageVersion("syntheticbench")
-  d <- read.dcf(system.file("DESCRIPTION", package = "syntheticbench"), fields = c("Packaged", "Built"))
+  v <- packageVersion("synthetic")
+  d <- read.dcf(system.file("DESCRIPTION", package = "synthetic"), fields = c("Packaged", "Built"))
 
   if (is.na(d[1])) {
     if (is.na(d[2])) {
@@ -41,7 +41,7 @@
   # version number odd => dev
   dev <- as.integer(v[1, 3]) %% 2 == 1
 
-  packageStartupMessage("syntheticbench package v", v, if (dev) paste0(" IN DEVELOPMENT built ", d))
+  packageStartupMessage("synthetic package v", v, if (dev) paste0(" IN DEVELOPMENT built ", d))
 
   # check for old version
   if (dev && (Sys.Date() - as.Date(d)) > 28)

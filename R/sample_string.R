@@ -1,4 +1,4 @@
-#  syntheticbench - R package for benchmarking of dataset serialization
+#  synthetic - R package for synthetic dataset creation and serialization benchmarks
 #
 #  Copyright (C) 2019-present, Mark AJ Klik
 #
@@ -17,7 +17,7 @@
 #  with the lazyvec R package. If not, see <http://www.gnu.org/licenses/>.
 #
 #  You can contact the author at:
-#  - syntheticbench R package source repository : https://github.com/fstpackage/syntheticbench
+#  - synthetic R package source repository : https://github.com/fstpackage/synthetic
 
 
 # predefined allowed characters

@@ -4,25 +4,27 @@
 <!-- <img src="logo.png" align="right" /> -->
 
 [![Linux/OSX Build
-Status](https://travis-ci.org/fstpackage/syntheticbench.svg?branch=develop)](https://travis-ci.org/fstpackage/syntheticbench)
+Status](https://travis-ci.org/fstpackage/synthetic.svg?branch=develop)](https://travis-ci.org/fstpackage/synthetic)
 [![Windows Build
-status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/syntheticbench)
+status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/synthetic)
 [![License: AGPL
 v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![codecov](https://codecov.io/gh/fstpackage/syntheticbench/branch/develop/graph/badge.svg)](https://codecov.io/gh/fstpackage/syntheticbench)
+[![codecov](https://codecov.io/gh/fstpackage/synthetic/branch/develop/graph/badge.svg)](https://codecov.io/gh/fstpackage/synthetic)
 
 ## Overview
 
-The `syntheticbenchmark` package provides tooling to greatly symplify
+The `synthetic` package provides tooling to greatly symplify
 benchmarking of serialization solutions such as `fst`, `arrow`,
 `feather`, `fread/fwrite` or `sqlite`. By using a standardized method of
-benchmarking, results become more reliable and more easy to compare.
+benchmarking, results become more reliable and more easy to compare. It
+also contains advanced tools for creration of synthetic datasets from
+existing datasets of from pre-defined column generators.
 
 ## Features
 
-Benchmarks performed With `syntheticbench` have the following features:
+Benchmarks performed With `synthetic` have the following features:
 
   - Each measurement of serialization speed uses a unique dataset
     (*avoid disk caching*)
@@ -42,9 +44,9 @@ Benchmarks performed With `syntheticbench` have the following features:
   - Multithreaded solutions are correctly measured (*unlike some
     benchmark techniques*)
 
-But most importantly, with the use of `syntheticbench`, complex
-benchmarks are reduced to a few simple statements, increasing your
-productivity and reproducibility\!
+But most importantly, with the use of `synthetic`, complex benchmarks
+are reduced to a few simple statements, increasing your productivity and
+reproducibility\!
 
 ## Walkthrough: setting up a benchmark
 
@@ -57,7 +59,7 @@ and weaknesses.
 Define the template of a test dataset:
 
 ``` r
-library(syntheticbench)
+library(synthetic)
 library(fst)
 library(arrow)
 
@@ -100,8 +102,8 @@ synthetic_bench() %>%
 ```
 
 As you can see, although benchmarking two solutions at different sizes
-is more complex than the single solution benchmark, with
-`syntheticbench` it´s just a matter of expanding some of the arguments.
+is more complex than the single solution benchmark, with `synthetic`
+it´s just a matter of expanding some of the arguments.
 
 Let´s add two more *streamers* and add compression settings to the mix:
 
