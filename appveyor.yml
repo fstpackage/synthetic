@@ -38,6 +38,8 @@ build_script:
   - travis-tool.sh r_install arrow
   - travis-tool.sh r_install microbenchmark
   - travis-tool.sh r_install crayon
+  - travis-tool.sh r_install qs
+  - travis-tool.sh r_install vroom
   - travis-tool.sh r_install progress
  
 test_script:
