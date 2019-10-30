@@ -1,0 +1,12 @@
+# R package
+# Test an R package
+
+resources:
+  repositories:
+    - repository: synthetic
+      type: github
+      name: fstpackage/synthetic
+      endpoint: fstpackage
+
+jobs:
+  - template: azure-pipelines.yml@synthetic
