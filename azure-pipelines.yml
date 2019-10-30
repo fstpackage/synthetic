@@ -1,10 +1,10 @@
 
 resources:
   repositories:
-    - repository: synthetic
+    - repository: r-azure-pipelines
       type: github
-      name: fstpackage/synthetic
-      endpoint: r-lib
+      name: r-lib/r-azure-pipelines
+      endpoint: fstpackage
 
 jobs:
-  - template: azure-synthetic.yml@synthetic
+  - template: azure-tidyverse.yml@r-azure-pipelines
