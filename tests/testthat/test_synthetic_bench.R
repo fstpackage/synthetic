@@ -8,8 +8,8 @@ require(dplyr)
 context("synth bench class")
 
 
-# defines several generators
-source("generators.R")
+# defines several table definitions
+source("table_definitions.R")
 
 
 test_that("constructor", {

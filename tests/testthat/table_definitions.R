@@ -2,7 +2,7 @@
 # define generators used in tests
 
 # sparse integers
-sparse_generator <- table_generator(
+sparse_generator <- table_definition(
   "integer sparse",
   function(nr_of_rows) {
     data.frame(
@@ -12,7 +12,7 @@ sparse_generator <- table_generator(
 )
 
 # random integers
-random_generator <- table_generator(
+random_generator <- table_definition(
   "integer random",
   function(nr_of_rows) {
     data.frame(

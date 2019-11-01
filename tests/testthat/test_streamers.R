@@ -8,8 +8,8 @@ require(dplyr)
 context("streamers")
 
 
-# defines several generators
-source("generators.R")
+# defines several table definitions
+source("table_definitions.R")
 
 
 test_that("test all streamers", {

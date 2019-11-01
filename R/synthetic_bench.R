@@ -160,8 +160,8 @@ bench_tables <- function(bench_obj, ...) {
 
   # check each element for correct generator class
   lapply(generators, function(x) {
-    if (class(x) != "tablegenerator") stop("Incorrectly defined generator, please use method",
-      " table_generator() to create generators")
+    if (class(x) != "tabledefinition") stop("Incorrectly defined synthetic tables, please use method",
+      " table_definition() to create table definition objects")
   })
 
   # add to definition

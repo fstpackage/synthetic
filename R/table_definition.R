@@ -23,18 +23,21 @@
 #' Define an object of class 'tablegenerator' that defines specific methods for
 #' creation of a dataset
 #'
-#' @param id ID of the table generator (e.g. 'single column sparse')
-#' @param generator method with signature f(nr_of_rows) that generates a data.frame
+#' @param id ID of the dataset (e.g. 'fst homepage dataset')
+#' @param ... 
 #'
-#' @return a tablestreamer object
+#' @return a table definition that can be used to generate synthetic data using generate()
 #' @export
-table_generator <- function(id, generator) {
+table_definition <- function(id, ...) {
+
+  column_definitions <- list(...)
+  
   x <- list(
     id = id,
-    generator = generator
+    columns = column_definitions
   )
 
-  class(x) <- "tablegenerator"
+  class(x) <- "tabledefinition"
 
   x
 }
