@@ -20,7 +20,7 @@
 #  - synthetic R package source repository : https://github.com/fstpackage/synthetic
 
 
-#' @importFrom crayon cyan red
+#' @importFrom crayon cyan italic red
 #' @importFrom data.table data.table fread fwrite rbindlist setDTthreads :=
 #' @importFrom dplyr %>% collect mutate
 #' @importFrom fst read_fst threads_fst write_fst
