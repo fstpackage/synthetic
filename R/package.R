@@ -21,8 +21,8 @@
 
 
 #' @importFrom crayon cyan italic red
-#' @importFrom data.table data.table fread fwrite rbindlist setDTthreads :=
-#' @importFrom dplyr %>% collect mutate
+#' @importFrom data.table data.table fread fwrite rbindlist setDT setDTthreads :=
+#' @importFrom dplyr %>% as_tibble collect mutate select
 #' @importFrom fst read_fst threads_fst write_fst
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar

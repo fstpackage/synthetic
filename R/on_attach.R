@@ -46,4 +46,8 @@
   # check for old version
   if (dev && (Sys.Date() - as.Date(d)) > 28)
     packageStartupMessage("\n!!! This development version of the package is rather old, please update !!!")
+
+  if (is.null(getOption("synthetic_default_table_class"))) {
+    options(synthetic_default_table_class = "data.table")
+  }
 }

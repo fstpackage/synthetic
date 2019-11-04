@@ -31,59 +31,56 @@
 #' @return A vector or table generated from the specified template
 #' @export
 generate <- function(template, size, columns = NULL) {
-
+  
   # column template
-  if ("column_template" %in% class(template)) {
+  if (inherits(template, "vectortemplate")) {
     if (!is.null(columns)) {
       stop("Parameter columns cannot be used with column templates")
+    }
+
+    if (!is.numeric(size) || size < 0) {
+      stop("Please use a numeric value larger than 0 to specify the size")
     }
 
     return(template$generate(template$metadata, size))
   }
 
-  # table template
-  template$generate(template$metadata, size)
-}
-
-
-#' Create a template for creation of a vector with custom distribution
-#'
-#' @param metadata data needed by the generator function to create a synthetic vector
-#' @param generator function with signature f(metadata, length) that generates a
-#' vector from the metadata and the size
-#' @param print_method  function with signature f(metadata) that prints the vector
-#' template description. Will be used when  print() is called.
-#'
-#' @return an object of class 'columntemplate' that can be used with generate() to generate
-#' vectors according to the characteristics stored in metadata
-#' @export
-vector_template <- function(metadata, generator, print_method = NULL) {
-  if (!is.function(generator)) {
-    stop("generator is expected to be a function(metadata, size) that can generate a vector")
+  if (!inherits(template, "tabletemplate"))  {
+    stop("Parameter template must be a vector or table template. Vector templates can be created ",
+      "with one of the template_ methods. Table templates can be created with method synthetic_table().")
   }
 
-  x <- list(
-    metadata = metadata,
-    generator = generator,
-    printer = print_method
-  )
+  table_type <- getOption("synthetic_default_table_class")
 
-  class(x) <- "vectortemplate"
+  # table template with a source table
+  if (!is.null(template$source_table)) {
+    rows <- sample(1:nrow(template$source_table), size, replace = TRUE)
 
-  x
-}
+    x <- template$source_table  # stored as a data.table
 
+    # with column selection
+    if (!is.null(columns)) {
+      x <- x[, columns, with = FALSE]
+    }
 
-#' Print a vector template description
-#'
-#' @param x vector template
-#' @param ... additional parameters (will be discarded)
-#' @export
-print.vectortemplate <- function(x, ...) {
-  if (is.null(x$printer)) {
-    print(x)
-    return()
+    if (!is.null(table_type) && table_type == "data.table") {
+      return(x[rows])
+    }
+
+    x[rows] %>%
+      as_tibble(rows) %>%
+      return()
   }
 
-  x$printer(x$metadata)
+  # table template with vector templates
+  x <- lapply(template$columns, function(vec_template) {
+    generate(vec_template, size)
+  })
+
+  if (table_type == "data.table") {
+    setDT(x)
+    return(x)
+  }
+
+  return(as_tibble(x))
 }

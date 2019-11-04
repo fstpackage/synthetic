@@ -29,36 +29,36 @@
 #'
 #' @return integer vector
 #' @export
-vector_template_integer <- function(min_value = 1 - .Machine$integer.max,
-                                    max_value = .Machine$integer.max, max_distict_values = NULL) {
-  
+template_integer <- function(min_value = 1 - .Machine$integer.max,
+  max_value = .Machine$integer.max, max_distict_values = NULL) {
+
   metadata <- list(
     min_value = as.integer(min_value),
     max_value = as.integer(max_value),
     max_distict_values = max_distict_values
   )
-  
+
   printer <- function(metadata) {
     cat(italic(cyan("integer vector template")), "\n")
     cat(cyan("- values between "), metadata$min_value, cyan(" and "), metadata$max_value, "\n", sep = "")
-    
+
     if (!is.null(metadata$max_distict_values)) {
       cat(cyan("- max number of distinct values : "), metadata$max_distict_values, "\n", sep = "")
     }
   }
-  
+
   if (is.null(max_distict_values)) {
     generator <- function(metadata, length) {
       sample(metadata$min_value:metadata$max_value, length, replace = TRUE)
     }
     return(vector_template(metadata, generator, printer))
   }
-  
+
   # use distinct values
   generator <- function(metadata, length) {
     x <- sample(metadata$min_value:metadata$max_value, metadata$max_distict_values)  # unique values
     sample(x, length, replace = TRUE)
   }
-  
+
   vector_template(metadata, generator, printer)
 }
