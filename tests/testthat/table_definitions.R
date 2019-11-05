@@ -2,21 +2,13 @@
 # define generators used in tests
 
 # sparse integers
-sparse_generator <- table_definition(
-  "integer sparse",
-  function(nr_of_rows) {
-    data.frame(
-      Integers = sample_integer(nr_of_rows, 1, 10)
-    )
-  }
+sparse_ints <- synthetic_table(
+  Integers = template_integer(1, 10),
+  id = "integer sparse"
 )
 
 # random integers
-random_generator <- table_definition(
-  "integer random",
-  function(nr_of_rows) {
-    data.frame(
-      Integers = sample_integer(nr_of_rows, 1, nr_of_rows)
-    )
-  }
+random_ints <- synthetic_table(
+  Integers = template_integer(1, nr_of_rows()),
+  id = "integer random"
 )

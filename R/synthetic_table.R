@@ -57,7 +57,7 @@ synthetic_table <- function(..., id = "synthetic_table", return_type = options("
         " generated with one of the template_ methods")
     }
   })
-  
+
   x <- list(
     id = id,
     columns = column_definitions,

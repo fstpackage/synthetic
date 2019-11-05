@@ -22,7 +22,7 @@
 
 #' Generate a vector or table from a custom template
 #'
-#' @param template column or table template that you want to use to create your vector or 
+#' @param template column or table template that you want to use to create your vector or
 #' table
 #' @param size desired size of the resulting vector or table
 #' @param columns used to select specific columns from a table template. Can be a character
@@ -31,7 +31,7 @@
 #' @return A vector or table generated from the specified template
 #' @export
 generate <- function(template, size, columns = NULL) {
-  
+
   # column template
   if (inherits(template, "vectortemplate")) {
     if (!is.null(columns)) {
@@ -54,7 +54,7 @@ generate <- function(template, size, columns = NULL) {
 
   # table template with a source table
   if (!is.null(template$source_table)) {
-    rows <- sample(1:nrow(template$source_table), size, replace = TRUE)
+    rows <- sample(seq_len(nrow(template$source_table)), size, replace = TRUE)
 
     x <- template$source_table  # stored as a data.table
 

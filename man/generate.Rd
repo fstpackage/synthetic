@@ -7,7 +7,7 @@
 generate(template, size, columns = NULL)
 }
 \arguments{
-\item{template}{column or table template that you want to use to create your vector or 
+\item{template}{column or table template that you want to use to create your vector or
 table}
 
 \item{size}{desired size of the resulting vector or table}

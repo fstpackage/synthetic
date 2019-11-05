@@ -20,6 +20,22 @@
 #  - synthetic R package source repository : https://github.com/fstpackage/synthetic
 
 
+#' Number of rows drop-in
+#'
+#' When defining a template, you can use this method as a drop-in for the unknown number
+#' of rows that the user selects
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' template_integer(1, nr_of_rows())
+nr_of_rows <- function() {
+  x <- list(nr_of_rows = TRUE)
+  class(x) <- "template_special"
+  x
+}
+
 #' Create a template for creation of a vector with custom distribution
 #'
 #' @param metadata data needed by the generator function to create a synthetic vector
