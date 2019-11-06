@@ -25,16 +25,15 @@
 #' When defining a template, you can use this method as a drop-in for the unknown number
 #' of rows that the user selects
 #'
-#' @return
+#' @return a delayed expression for the number of rows
 #' @export
 #'
 #' @examples
 #' template_integer(1, nr_of_rows())
 nr_of_rows <- function() {
-  x <- list(nr_of_rows = TRUE)
-  class(x) <- "template_special"
-  x
+  delayed_expr(`_nr_of_rows`)
 }
+
 
 #' Create a template for creation of a vector with custom distribution
 #'

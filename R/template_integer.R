@@ -33,8 +33,8 @@ template_integer <- function(min_value = 1 - .Machine$integer.max,
   max_value = .Machine$integer.max, max_distict_values = NULL) {
 
   metadata <- list(
-    min_value = as.integer(min_value),
-    max_value = as.integer(max_value),
+    min_value = min_value,
+    max_value = max_value,
     max_distict_values = max_distict_values
   )
 

@@ -6,6 +6,9 @@
 \usage{
 nr_of_rows()
 }
+\value{
+a delayed expression for the number of rows
+}
 \description{
 When defining a template, you can use this method as a drop-in for the unknown number
 of rows that the user selects
