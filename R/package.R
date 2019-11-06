@@ -27,6 +27,7 @@
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
 #' @importFrom qs qread qsave
+#' @importFrom rlang enexpr
 #' @importFrom stats rnorm runif
 #' @importFrom utils head packageVersion object.size
 #' @importFrom vroom vroom vroom_write

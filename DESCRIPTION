@@ -12,16 +12,17 @@ License: AGPL-3 | file LICENSE
 Imports:
     crayon,
     data.table,
+    dplyr,
+    fst,
     microbenchmark,
     progress,
-    fst,
     qs,
-    dplyr,
+    rlang,
     vroom
 Suggests:
-    testthat,
+    arrow,
     lintr,
-    arrow
+    testthat
 RoxygenNote: 6.1.1
 URL: https://fstpackage.github.io/syntheticbench
 BugReports: https://github.com/fstpackage/syntheticbench/issues
