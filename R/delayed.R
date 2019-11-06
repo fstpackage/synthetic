@@ -77,8 +77,8 @@ delayed_eval <- function(delayed_expr) {
     stop("incorrect argument `delayed_expr`, please use method delayed_expr() ",
       "to generate an object of the appropriate class.")
   }
-  
-  eval(delayed_expr$expr)
+
+  eval(delayed_expr$expr, parent.frame())
 }
 
 

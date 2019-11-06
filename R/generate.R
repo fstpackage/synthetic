@@ -32,6 +32,9 @@
 #' @export
 generate <- function(template, size, columns = NULL) {
 
+  # used by the nr_of_rows() delayed expression
+  nr_of_rows_4hsfd3 <- size
+
   # column template
   if (inherits(template, "vectortemplate")) {
     if (!is.null(columns)) {
@@ -42,7 +45,13 @@ generate <- function(template, size, columns = NULL) {
       stop("Please use a numeric value larger than 0 to specify the size")
     }
 
-    return(template$generate(template$metadata, size))
+    # evaluate delayed expression (like nr_of_rows)    
+    metadata <- lapply(template$metadata, function(item) {
+      if (class(item) == "delayed_expr") return(delayed_eval(item))
+      item
+    })
+
+    return(template$generator(metadata, size))
   }
 
   if (!inherits(template, "tabletemplate"))  {
