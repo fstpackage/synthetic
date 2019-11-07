@@ -142,7 +142,7 @@ test_that("rows", {
 test_that("collect", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_tables(random_generator, sparse_generator) %>%
+    bench_tables(random_ints, sparse_ints) %>%
     bench_streamers(streamer_fst(), streamer_arrow()) %>%
     bench_compression(1, 50) %>%
     bench_rows(10, 20) %>%

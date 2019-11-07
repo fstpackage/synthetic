@@ -21,7 +21,7 @@
 
 
 
-#' A wrapped expression that can be used with operators to generate new expressions 
+#' A wrapped expression that can be used with operators to generate new expressions
 #'
 #' @param expr an expression
 #'
@@ -59,7 +59,7 @@ delayed_expr <- function(expr, expr_str) {
 #' This is a convenience method to use when the delayed expression needs to be converted to
 #' a string, for example in the print function of a vector template that allows for methods
 #' like nr_of_rows().
-#' @param delayed_expr delayed expression such as that generated with nr_of_rows() 
+#' @param delayed_expr delayed expression such as that generated with nr_of_rows()
 #'
 #' @return well formatted string representation of the delayed expression
 #' @export
@@ -93,7 +93,7 @@ delayed_to_str <- function(delayed_expr) {
 #' size = 0.1
 #' delayed_eval(y)
 delayed_eval <- function(delayed_expr) {
-  
+
   # test appropriate class
   if (class(delayed_expr) != "delayed_expr") {
     stop("incorrect argument `delayed_expr`, please use method delayed_expr() ",
@@ -121,7 +121,7 @@ delayed_operation <- function(f, x, y, operator_str) {
     class(res) <- "delayed_expr"
     return(res)
   }
-  
+
   # x is a delayed expression
   if (class(x) == "delayed_expr") {
     res <- list(
@@ -131,7 +131,7 @@ delayed_operation <- function(f, x, y, operator_str) {
     class(res) <- "delayed_expr"
     return(res)
   }
-  
+
   # y is a delayed expression
   res <- list(
     expr = substitute(f(x, y), list(f = f, x = x, y = y$expr)),
@@ -175,13 +175,13 @@ delayed_operation <- function(f, x, y, operator_str) {
 
 
 #' @export
-`&.delayed_expr` <- function(x, y) {
+`&.delayed_expr` <- function(x, y) {  # nolint
   delayed_operation(`&`, x, y, "&")
 }
 
 
 #' @export
-`&&.delayed_expr` <- function(x, y) {
+`&&.delayed_expr` <- function(x, y) {  # nolint
   delayed_operation(`&&`, x, y, "&&")
 }
 

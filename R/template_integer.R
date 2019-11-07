@@ -25,7 +25,7 @@ template_integer_printer <- function(metadata) {
   cat(italic(cyan("integer vector template")), "\n")
   cat(cyan("- values between "), delayed_to_str(metadata$min_value), cyan(" and "),
       delayed_to_str(metadata$max_value), "\n", sep = "")
-  
+
   if (!is.null(metadata$max_distict_values)) {
     cat(cyan("- max number of distinct values : "),
         delayed_to_str(metadata$max_distict_values), "\n", sep = "")
