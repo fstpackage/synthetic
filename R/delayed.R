@@ -43,10 +43,32 @@
 #' # calculates expression y using size
 #' size = 0.1
 #' delayed_eval(y)
-delayed_expr <- function(expr) {
-  x <- list(expr = enexpr(expr))
+delayed_expr <- function(expr, expr_str) {
+  x <- list(
+    expr = enexpr(expr),
+    expr_str = expr_str
+  )
+
   class(x) <- "delayed_expr"
   x
+}
+
+
+#' Textual representation of a delayed expression
+#'
+#' This is a convenience method to use when the delayed expression needs to be converted to
+#' a string, for example in the print function of a vector template that allows for methods
+#' like nr_of_rows().
+#' @param delayed_expr delayed expression such as that generated with nr_of_rows() 
+#'
+#' @return well formatted string representation of the delayed expression
+#' @export
+#'
+#' @examples
+#' delayed_to_str(nr_of_rows())
+delayed_to_str <- function(delayed_expr) {
+  if (class(delayed_expr) == "delayed_expr") return(delayed_expr$expr_str)
+  as.character(delayed_expr)
 }
 
 
@@ -82,29 +104,39 @@ delayed_eval <- function(delayed_expr) {
 }
 
 
+#' @export
 print.delayed_expr <- function(x, ...) {
-  print(x$expr)
+  print(x$expr_str)
 }
 
 
-delayed_operation <- function(f, x, y) {
+delayed_operation <- function(f, x, y, operator_str) {
 
   # both x and y are delayed expressions
   if (class(x) == "delayed_expr" && class(y) == "delayed_expr") {
-    res <- list(expr = substitute(f(x, y), list(f = f, x = x$expr, y = y$expr)))
+    res <- list(
+      expr = substitute(f(x, y), list(f = f, x = x$expr, y = y$expr)),
+      expr_str = paste0("(", x$expr_str, " ", operator_str, " ", y$expr_str, ")")
+    )
     class(res) <- "delayed_expr"
     return(res)
   }
   
   # x is a delayed expression
   if (class(x) == "delayed_expr") {
-    res <- list(expr = substitute(f(x, y), list(f = f, x = x$expr, y = y)))
+    res <- list(
+      expr = substitute(f(x, y), list(f = f, x = x$expr, y = y)),
+      expr_str = paste0("(", x$expr_str, " ", operator_str, " ", y, ")")
+    )
     class(res) <- "delayed_expr"
     return(res)
   }
   
   # y is a delayed expression
-  res <- list(expr = substitute(f(x, y), list(f = f, x = x, y = y$expr)))
+  res <- list(
+    expr = substitute(f(x, y), list(f = f, x = x, y = y$expr)),
+    expr_str = paste0("(", x, " ", operator_str, " ", y$expr_str, ")")
+  )
   class(res) <- "delayed_expr"
   res
 }
@@ -112,46 +144,55 @@ delayed_operation <- function(f, x, y) {
 
 # operator overrides
 
+#' @export
 `+.delayed_expr` <- function(x, y) {
-  delayed_operation(`+`, x, y)
+  delayed_operation(`+`, x, y, "+")
 }
 
 
+#' @export
 `-.delayed_expr` <- function(x, y) {
-  delayed_operation(`-`, x, y)
+  delayed_operation(`-`, x, y, "-")
 }
 
 
+#' @export
 `*.delayed_expr` <- function(x, y) {
-  delayed_operation(`*`, x, y)
+  delayed_operation(`*`, x, y, "*")
 }
 
 
+#' @export
 `/.delayed_expr` <- function(x, y) {
-  delayed_operation(`/`, x, y)
+  delayed_operation(`/`, x, y, "/")
 }
 
 
+#' @export
 `|.delayed_expr` <- function(x, y) {
-  delayed_operation(`|`, x, y)
+  delayed_operation(`|`, x, y, "|")
 }
 
 
+#' @export
 `&.delayed_expr` <- function(x, y) {
-  delayed_operation(`&`, x, y)
+  delayed_operation(`&`, x, y, "&")
 }
 
 
+#' @export
 `&&.delayed_expr` <- function(x, y) {
-  delayed_operation(`&&`, x, y)
+  delayed_operation(`&&`, x, y, "&&")
 }
 
 
+#' @export
 `||.delayed_expr` <- function(x, y) {
-  delayed_operation(`||`, x, y)
+  delayed_operation(`||`, x, y, "||")
 }
 
 
+#' @export
 `==.delayed_expr` <- function(x, y) {
-  delayed_operation(`==`, x, y)
+  delayed_operation(`==`, x, y, "==")
 }

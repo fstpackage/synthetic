@@ -33,7 +33,7 @@
 generate <- function(template, size, columns = NULL) {
 
   # used by the nr_of_rows() delayed expression
-  nr_of_rows_4hsfd3 <- size
+  `_nr_of_rows_4hsfd3` <- size
 
   # column template
   if (inherits(template, "vectortemplate")) {

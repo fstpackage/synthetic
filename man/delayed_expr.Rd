@@ -4,7 +4,7 @@
 \alias{delayed_expr}
 \title{A wrapped expression that can be used with operators to generate new expressions}
 \usage{
-delayed_expr(expr)
+delayed_expr(expr, expr_str)
 }
 \arguments{
 \item{expr}{an expression}
