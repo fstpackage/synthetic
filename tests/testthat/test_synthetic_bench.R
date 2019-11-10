@@ -24,7 +24,7 @@ test_that("generators", {
   x <- synthetic_bench(1, 1)
 
   # check class
-  expect_error(x %>% bench_tables("incorrect class"), "Incorrectly defined generator")
+  expect_error(x %>% bench_tables("incorrect class"), "Incorrectly defined synthetic tables")
 
   # single
   x <- x %>% bench_tables(sparse_ints)
@@ -43,7 +43,7 @@ test_that("generators", {
 
   # multiple
   res <- x %>%
-    bench_tables(random_generator, sparse_ints) %>%
+    bench_tables(random_ints, sparse_ints) %>%
     collect()
 
   expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder", "progress", "generators",
