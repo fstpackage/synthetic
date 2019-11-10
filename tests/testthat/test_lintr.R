@@ -12,6 +12,7 @@ test_that("Package Style", {
     lints <- with_defaults(
       line_length_linter = line_length_linter(120),
       cyclocomp_linter = cyclocomp_linter(200))
+    lints[["object_usage_linter"]] <- NULL  # does not work with delayed expressions
   } else {
     lints <- with_defaults(
       line_length_linter = line_length_linter(120))

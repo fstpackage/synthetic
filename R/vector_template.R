@@ -32,7 +32,7 @@
 #' template_integer(1, nr_of_rows())
 nr_of_rows <- function() {
   # use obfuscated variable to reduce the chance of variable clashes
-  `_nr_of_rows_4hsfd3` <- NULL
+  `_nr_of_rows_4hsfd3` <- NULL  # nolint
   delayed_expr(`_nr_of_rows_4hsfd3`, "nr_of_rows()")  # nolint
 }
 

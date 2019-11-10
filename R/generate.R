@@ -33,7 +33,7 @@
 generate <- function(template, size, columns = NULL) {
 
   # used by the nr_of_rows() delayed expression
-  nr_of_rows_4hsfd3 <- size
+  `_nr_of_rows_4hsfd3` <- size  # nolint
 
   # column template
   if (inherits(template, "vectortemplate")) {
@@ -50,8 +50,6 @@ generate <- function(template, size, columns = NULL) {
       if (class(item) == "delayed_expr") return(delayed_eval(item))
       item
     })
-
-    nr_of_rows_4hsfd3 <- NULL
 
     return(template$generator(metadata, size))
   }

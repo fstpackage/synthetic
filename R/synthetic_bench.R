@@ -72,20 +72,31 @@ synthetic_bench <- function(nr_of_runs = 3, cycle_size = 3, result_folder = "res
 #' @export
 print.benchmark_definition <- function(x, ...) {
 
-  cat(cyan("Synthetic benchmark"), "\n")
+  cat(cyan(italic("Synthetic benchmark")), "\n")
   cat(cyan("number of runs    : "), x$nr_of_runs, "\n", sep = "")
   cat(cyan("cycle size        : "), x$cycle_size, "\n", sep = "")
   cat(cyan("result folder     : "), x$result_folder, "\n", sep = "")
   cat(cyan("show progress     : "), x$progress, "\n", sep = "")
 
+  # streamers
+
+  cat(cyan("serializers       : "))
+
+  if (!is.null(x$streamers)) {
+    cat("'", paste0(sapply(x$streamers, function(streamer) {
+      streamer$id
+    }), collapse = "', '"), "'\n", sep = "")
+  } else {
+    cat(red("not defined yet"), "\n")
+  }
   # datasets
 
   cat(cyan("datasets          : "))
 
   if (!is.null(x$generators)) {
-    cat(paste0(sapply(x$generators, function(generator) {
+    cat("'", paste0(sapply(x$generators, function(generator) {
         generator$id
-      }), collapse = "', '"), "'", sep = "")
+      }), collapse = "', '"), "'\n", sep = "")
   } else {
     cat(red("not defined yet"), "\n")
   }
@@ -160,7 +171,7 @@ bench_tables <- function(bench_obj, ...) {
 
   # check each element for correct generator class
   lapply(generators, function(x) {
-    if (class(x) != "tabledefinition") stop("Incorrectly defined synthetic tables, please use method",
+    if (class(x) != "tabletemplate") stop("Incorrectly defined synthetic tables, please use method",
       " table_definition() to create table definition objects")
   })
 
@@ -357,9 +368,10 @@ collect.benchmark_definition <- function(x, ...) {  # nolint
           for (generator_count in seq_len(length(x$generators))) {
 
             generator <- x$generators[[generator_count]]
+            print(generator)
 
             # generate dataset once for all generators
-            dt <- generator$generator(cur_nr_of_rows)
+            dt <- generate(generator, cur_nr_of_rows)
 
             # disk warmup (to avoid a sleeping disk after data creation)
             saveRDS("warmup disk", paste0(x$result_folder, "/", "warmup.rds"))
