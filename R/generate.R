@@ -47,7 +47,10 @@ generate <- function(template, size, columns = NULL) {
 
     # evaluate delayed expression (like nr_of_rows)
     metadata <- lapply(template$metadata, function(item) {
-      if (class(item) == "delayed_expr") return(delayed_eval(item))
+      print("before")
+      if (!is.null(item) && class(item) == "delayed_expr") return(delayed_eval(item))
+      print(item)
+      print("after")
       item
     })
 

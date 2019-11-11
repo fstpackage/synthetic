@@ -4,7 +4,7 @@
 \alias{synthetic_table}
 \title{Create the blueprints of a synthetic table}
 \usage{
-synthetic_table(..., id = "synthetic_table",
+synthetic_table(..., id = "synthetic table",
   return_type = options("synthetic_return_type"))
 }
 \arguments{

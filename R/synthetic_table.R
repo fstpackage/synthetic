@@ -27,7 +27,7 @@
 #'
 #' @return a synthetic table template that can be used to generate synthetic data using generate()
 #' @export
-synthetic_table <- function(..., id = "synthetic_table", return_type = options("synthetic_return_type")) {
+synthetic_table <- function(..., id = "synthetic table", return_type = options("synthetic_return_type")) {
 
   column_definitions <- list(...)
 

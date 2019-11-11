@@ -368,7 +368,6 @@ collect.benchmark_definition <- function(x, ...) {  # nolint
           for (generator_count in seq_len(length(x$generators))) {
 
             generator <- x$generators[[generator_count]]
-            print(generator)
 
             # generate dataset once for all generators
             dt <- generate(generator, cur_nr_of_rows)
