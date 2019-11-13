@@ -32,9 +32,6 @@
 #' @export
 generate <- function(template, size, columns = NULL) {
 
-  # used by the nr_of_rows() delayed expression
-  `_nr_of_rows_4hsfd3` <- size  # nolint
-
   # column template
   if (inherits(template, "vectortemplate")) {
     if (!is.null(columns)) {
@@ -45,12 +42,12 @@ generate <- function(template, size, columns = NULL) {
       stop("Please use a numeric value larger than 0 to specify the size")
     }
 
+    # used by the nr_of_rows() delayed expression
+    `_nr_of_rows_4hsfd3` <- size  # nolint
+
     # evaluate delayed expression (like nr_of_rows)
     metadata <- lapply(template$metadata, function(item) {
-      print("before")
       if (!is.null(item) && class(item) == "delayed_expr") return(delayed_eval(item))
-      print(item)
-      print("after")
       item
     })
 
@@ -75,8 +72,6 @@ generate <- function(template, size, columns = NULL) {
       x <- x[, columns, with = FALSE]
     }
 
-    nr_of_rows_4hsfd3 <- NULL
-
     if (!is.null(table_type) && table_type == "data.table") {
       return(x[rows])
     }
@@ -91,13 +86,10 @@ generate <- function(template, size, columns = NULL) {
     generate(vec_template, size)
   })
 
-  if (table_type == "data.table") {
+  if (!is.null(table_type) && table_type == "data.table") {
     setDT(x)
-    `_nr_of_rows_4hsfd3` <- NULL  # nolint
     return(x)
   }
-
-  nr_of_rows_4hsfd3 <- NULL
 
   return(as_tibble(x))
 }
