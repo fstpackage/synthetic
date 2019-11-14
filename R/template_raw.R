@@ -20,9 +20,9 @@
 #  - synthetic R package source repository : https://github.com/fstpackage/synthetic
 
 
-integer_printer <- function(metadata) {
+raw_printer <- function(metadata) {
 
-  cat(italic(cyan("integer vector template")), "\n")
+  cat(italic(cyan("raw vector template")), "\n")
   cat(cyan("- values between "), delayed_to_str(metadata$min_value), cyan(" and "),
       delayed_to_str(metadata$max_value), "\n", sep = "")
 
@@ -33,17 +33,27 @@ integer_printer <- function(metadata) {
 }
 
 
-#' Define a template for integer vectors with custom distribution and characteristics
+#' Generate a raw vector with custom distribution
 #'
-#' @param length length of the vector
+#' @param min_value minimum value in the returned raw vector
+#' @param max_value maximum value in the returned raw vector
 #' @param max_distict_values maximum number of disctict values in the vector
-#' @param min_value minimum value in the vector
-#' @param max_value maximum value in the vector
 #'
-#' @return integer vector
+#' @return raw vector
 #' @export
-template_integer <- function(min_value = 1 - .Machine$integer.max,
-  max_value = .Machine$integer.max, max_distict_values = NULL) {
+template_raw <- function(min_value = 0, max_value = 255, max_distict_values = NULL) {
+
+  if (min_value < 0) {
+    stop("Parameter min_value should be equal to or larger than 0")
+  }
+
+  if (max_value > 255) {
+    stop("Parameter max_value should be equal to or smaller than 255")
+  }
+
+  if (!is.null(max_distict_values) && max_distict_values > 256) {
+    stop("Parameter max_distinct_values should be in the range 1 to 256 or NULL")
+  }
 
   metadata <- list(
     min_value = min_value,
@@ -53,16 +63,15 @@ template_integer <- function(min_value = 1 - .Machine$integer.max,
 
   if (is.null(max_distict_values)) {
     generator <- function(metadata, length) {
-      sample(metadata$min_value:metadata$max_value, length, replace = TRUE)
+      as.raw(sample(metadata$min_value:metadata$max_value, length, replace = TRUE))
     }
-    return(vector_template(metadata, generator, integer_printer))
+  } else {
+    generator <- function(metadata, length) {
+      max_distict_values <- min(metadata$max_distict_values, 1 + metadata$max_value - metadata$min_value)
+      x <- sample(metadata$min_value:metadata$max_value, max_distict_values)  # unique values
+      as.raw(sample(x, length, replace = TRUE))
+    }
   }
 
-  # use distinct values
-  generator <- function(metadata, length) {
-    x <- sample(metadata$min_value:metadata$max_value, metadata$max_distict_values)  # unique values
-    sample(x, length, replace = TRUE)
-  }
-
-  vector_template(metadata, generator, integer_printer)
+  return(vector_template(metadata, generator, raw_printer))
 }
