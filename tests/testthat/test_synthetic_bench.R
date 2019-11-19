@@ -8,8 +8,8 @@ require(dplyr)
 context("synth bench class")
 
 
-# defines several generators
-source("generators.R")
+# defines several table definitions
+source("table_definitions.R")
 
 
 test_that("constructor", {
@@ -24,10 +24,10 @@ test_that("generators", {
   x <- synthetic_bench(1, 1)
 
   # check class
-  expect_error(x %>% bench_tables("incorrect class"), "Incorrectly defined generator")
+  expect_error(x %>% bench_tables("incorrect class"), "Incorrectly defined synthetic tables")
 
   # single
-  x <- x %>% bench_tables(sparse_generator)
+  x <- x %>% bench_tables(sparse_ints)
   expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder", "progress", "generators"))
 
   # single streamer
@@ -43,7 +43,7 @@ test_that("generators", {
 
   # multiple
   res <- x %>%
-    bench_tables(random_generator, sparse_generator) %>%
+    bench_tables(random_ints, sparse_ints) %>%
     collect()
 
   expect_equal(names(x), c("nr_of_runs", "column_mode", "cycle_size", "result_folder", "progress", "generators",
@@ -56,7 +56,7 @@ test_that("generators", {
 test_that("streamers", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_tables(sparse_generator) %>%
+    bench_tables(sparse_ints) %>%
     bench_rows(10)
 
   # check class
@@ -79,7 +79,7 @@ test_that("streamers", {
 test_that("compression", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_tables(sparse_generator)
+    bench_tables(sparse_ints)
 
   # compression error
   expect_error(x %>% bench_compression("incorrect type"), "Incorrectly defined compression")
@@ -118,7 +118,7 @@ test_that("compression", {
 test_that("threads", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_tables(sparse_generator)
+    bench_tables(sparse_ints)
 
   # number of threads
   x <- x %>% bench_threads(5:1, 7, 3)
@@ -130,7 +130,7 @@ test_that("threads", {
 test_that("rows", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_tables(sparse_generator)
+    bench_tables(sparse_ints)
 
   # number of rows
   x <- x %>% bench_rows(5:1, 7, 3)
@@ -142,7 +142,7 @@ test_that("rows", {
 test_that("collect", {
 
   x <- synthetic_bench(1, 1) %>%
-    bench_tables(random_generator, sparse_generator) %>%
+    bench_tables(random_ints, sparse_ints) %>%
     bench_streamers(streamer_fst(), streamer_arrow()) %>%
     bench_compression(1, 50) %>%
     bench_rows(10, 20) %>%

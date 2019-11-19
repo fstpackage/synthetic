@@ -2,19 +2,19 @@
 #
 #  Copyright (C) 2019-present, Mark AJ Klik
 #
-#  This file is part of the lazyvec R package.
+#  This file is part of the synthetic R package.
 #
-#  The lazyvec R package is free software: you can redistribute it and/or modify it
+#  The synthetic R package is free software: you can redistribute it and/or modify it
 #  under the terms of the GNU Affero General Public License version 3 as
 #  published by the Free Software Foundation.
 #
-#  The lazyvec R package is distributed in the hope that it will be useful, but
+#  The synthetic R package is distributed in the hope that it will be useful, but
 #  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
 #  FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
 #  for more details.
 #
 #  You should have received a copy of the GNU Affero General Public License along
-#  with the lazyvec R package. If not, see <http://www.gnu.org/licenses/>.
+#  with the synthetic R package. If not, see <http://www.gnu.org/licenses/>.
 #
 #  You can contact the author at:
 #  - synthetic R package source repository : https://github.com/fstpackage/synthetic
@@ -72,20 +72,31 @@ synthetic_bench <- function(nr_of_runs = 3, cycle_size = 3, result_folder = "res
 #' @export
 print.benchmark_definition <- function(x, ...) {
 
-  cat(cyan("Synthetic benchmark"), "\n")
+  cat(cyan(italic("Synthetic benchmark")), "\n")
   cat(cyan("number of runs    : "), x$nr_of_runs, "\n", sep = "")
   cat(cyan("cycle size        : "), x$cycle_size, "\n", sep = "")
   cat(cyan("result folder     : "), x$result_folder, "\n", sep = "")
   cat(cyan("show progress     : "), x$progress, "\n", sep = "")
 
+  # streamers
+
+  cat(cyan("serializers       : "))
+
+  if (!is.null(x$streamers)) {
+    cat("'", paste0(sapply(x$streamers, function(streamer) {
+      streamer$id
+    }), collapse = "', '"), "'\n", sep = "")
+  } else {
+    cat(red("not defined yet"), "\n")
+  }
   # datasets
 
   cat(cyan("datasets          : "))
 
   if (!is.null(x$generators)) {
-    cat(paste0(sapply(x$generators, function(generator) {
+    cat("'", paste0(sapply(x$generators, function(generator) {
         generator$id
-      }), collapse = "', '"), "'", sep = "")
+      }), collapse = "', '"), "'\n", sep = "")
   } else {
     cat(red("not defined yet"), "\n")
   }
@@ -160,8 +171,8 @@ bench_tables <- function(bench_obj, ...) {
 
   # check each element for correct generator class
   lapply(generators, function(x) {
-    if (class(x) != "tablegenerator") stop("Incorrectly defined generator, please use method",
-      " table_generator() to create generators")
+    if (class(x) != "tabletemplate") stop("Incorrectly defined synthetic tables, please use method",
+      " table_definition() to create table definition objects")
   })
 
   # add to definition
@@ -359,7 +370,7 @@ collect.benchmark_definition <- function(x, ...) {  # nolint
             generator <- x$generators[[generator_count]]
 
             # generate dataset once for all generators
-            dt <- generator$generator(cur_nr_of_rows)
+            dt <- generate(generator, cur_nr_of_rows)
 
             # disk warmup (to avoid a sleeping disk after data creation)
             saveRDS("warmup disk", paste0(x$result_folder, "/", "warmup.rds"))

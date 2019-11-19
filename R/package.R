@@ -20,14 +20,16 @@
 #  - synthetic R package source repository : https://github.com/fstpackage/synthetic
 
 
-#' @importFrom crayon cyan red
-#' @importFrom data.table data.table fread fwrite rbindlist setDTthreads :=
-#' @importFrom dplyr %>% collect mutate
+#' @importFrom crayon cyan italic red
+#' @importFrom data.table data.table fread fwrite rbindlist setDT setDTthreads :=
+#' @importFrom dplyr %>% as_tibble collect mutate select
 #' @importFrom fst read_fst threads_fst write_fst
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
 #' @importFrom qs qread qsave
+#' @importFrom rlang enexpr
 #' @importFrom stats rnorm runif
+#' @importFrom stringi stri_rand_strings
 #' @importFrom utils head packageVersion object.size
 #' @importFrom vroom vroom vroom_write
 NULL
