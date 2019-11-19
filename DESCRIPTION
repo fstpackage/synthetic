@@ -18,7 +18,8 @@ Imports:
     progress,
     qs,
     rlang,
-    vroom
+    vroom,
+    stringi
 Suggests:
     arrow,
     lintr,
