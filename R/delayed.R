@@ -24,11 +24,14 @@
 #' A wrapped expression that can be used with operators to generate new expressions
 #'
 #' @param expr an expression
+#' @param expr_str text that you want to show when this expression is printed. If NULL,
+#' the expression supplied by parameter 'expr' is used for printing.
 #'
 #' @return A delayed_expr object
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # define a delayed expression
 #' f_delay <- function() {
 #'   delayed_expr(size)
@@ -37,16 +40,36 @@
 #' # create a new expression
 #' y = (1 + f_delay()) == 5
 #'
-#' # generates an error, as size is not defined
+#' # print the unevaluated expression
+#' y
+#'
+#' # evaluation generates an error, as size is not defined
 #' delayed_eval(y)
 #'
-#' # calculates expression y using size
+#' # define size and re-evaluate
 #' size = 0.1
 #' delayed_eval(y)
-delayed_expr <- function(expr, expr_str) {
+#'
+#' # make the expression evaluate to TRUE
+#' size = 4
+#' delayed_eval(y)
+#'
+#'
+#' # custom printing text can be added to the delayed expression
+#' f_delay <- function() {
+#'   delayed_expr(size, "f_delay()")
+#' }
+#'
+#' # create a new expression
+#' y = (1 + f_delay()) == 5
+#'
+#' # print with custom text
+#' y
+#' }
+delayed_expr <- function(expr, expr_str = NULL) {
   x <- list(
     expr = enexpr(expr),
-    expr_str = expr_str
+    expr_str = ifelse(is.null(expr_str), capture.output(print(enexpr(expr))), expr_str)
   )
 
   class(x) <- "delayed_expr"
