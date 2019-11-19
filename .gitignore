@@ -11,3 +11,4 @@
 /tests/testthat/*.fst
 /results/*
 /bench_runs/*
+/docs/*

@@ -30,7 +30,7 @@
 #' @importFrom rlang enexpr
 #' @importFrom stats rnorm runif
 #' @importFrom stringi stri_rand_strings
-#' @importFrom utils head packageVersion object.size
+#' @importFrom utils head packageVersion object.size capture.output
 #' @importFrom vroom vroom vroom_write
 NULL
 

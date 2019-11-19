@@ -31,7 +31,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' # define a delayed expression
 #' f_delay <- function() {
 #'   delayed_expr(size)
@@ -43,8 +42,10 @@
 #' # print the unevaluated expression
 #' y
 #'
+#' \dontrun{
 #' # evaluation generates an error, as size is not defined
 #' delayed_eval(y)
+#' }
 #'
 #' # define size and re-evaluate
 #' size = 0.1
@@ -65,7 +66,6 @@
 #'
 #' # print with custom text
 #' y
-#' }
 delayed_expr <- function(expr, expr_str = NULL) {
   x <- list(
     expr = enexpr(expr),

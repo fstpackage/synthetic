@@ -13,8 +13,6 @@ template_integer(min_value = 1 - .Machine$integer.max,
 \item{max_value}{maximum value in the vector}
 
 \item{max_distict_values}{maximum number of disctict values in the vector}
-
-\item{length}{length of the vector}
 }
 \value{
 integer vector

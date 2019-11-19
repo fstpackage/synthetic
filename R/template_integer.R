@@ -35,7 +35,6 @@ integer_printer <- function(metadata) {
 
 #' Define a template for integer vectors with custom distribution and characteristics
 #'
-#' @param length length of the vector
 #' @param max_distict_values maximum number of disctict values in the vector
 #' @param min_value minimum value in the vector
 #' @param max_value maximum value in the vector

@@ -19,7 +19,6 @@ A delayed_expr object
 A wrapped expression that can be used with operators to generate new expressions
 }
 \examples{
-\dontrun{
 # define a delayed expression
 f_delay <- function() {
   delayed_expr(size)
@@ -31,8 +30,10 @@ y = (1 + f_delay()) == 5
 # print the unevaluated expression
 y
 
+\dontrun{
 # evaluation generates an error, as size is not defined
 delayed_eval(y)
+}
 
 # define size and re-evaluate
 size = 0.1
@@ -53,5 +54,4 @@ y = (1 + f_delay()) == 5
 
 # print with custom text
 y
-}
 }
