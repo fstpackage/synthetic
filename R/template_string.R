@@ -21,11 +21,11 @@
 
 
 string_printer <- function(metadata) {
-  
+
   cat(italic(cyan("string vector template")), "\n")
   cat(cyan("- sizes between "), delayed_to_str(metadata$min_str_size), cyan(" and "),
       delayed_to_str(metadata$max_str_size), "\n", sep = "")
-  
+
   if (!is.null(metadata$max_distict_values)) {
     cat(cyan("- max number of distinct values : "),
         delayed_to_str(metadata$max_distict_values), "\n", sep = "")
@@ -49,9 +49,9 @@ template_string_random <- function(min_str_size = 1, max_str_size = 10, max_dist
     max_distict_values = max_distict_values
   )
 
-  # fully ramdom vector
+  # fully random vector
   if (is.null(max_distict_values)) {
-    
+
     # only a sinlge size of string
     if (min_str_size == max_str_size) {
       generator <- function(metadata, length) {

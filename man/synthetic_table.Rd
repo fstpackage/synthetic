@@ -11,6 +11,8 @@ synthetic_table(..., id = "synthetic table",
 \item{...}{column templates created with the various template_ methods}
 
 \item{id}{ID of the synthetic table (e.g. 'fst homepage dataset')}
+
+\item{return_type}{table type to return, valid options are 'data.table', 'tibble', 'data.frame'}
 }
 \value{
 a synthetic table template that can be used to generate synthetic data using generate()

@@ -24,6 +24,7 @@
 #'
 #' @param id ID of the synthetic table (e.g. 'fst homepage dataset')
 #' @param ... column templates created with the various template_ methods
+#' @param return_type table type to return, valid options are 'data.table', 'tibble', 'data.frame'
 #'
 #' @return a synthetic table template that can be used to generate synthetic data using generate()
 #' @export
