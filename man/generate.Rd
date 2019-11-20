@@ -4,7 +4,8 @@
 \alias{generate}
 \title{Generate a vector or table from a custom template}
 \usage{
-generate(template, size, columns = NULL)
+generate(template, size, columns = NULL,
+  table_type = getOption("synthetic_default_table_class"))
 }
 \arguments{
 \item{template}{column or table template that you want to use to create your vector or
@@ -14,6 +15,8 @@ table}
 
 \item{columns}{used to select specific columns from a table template. Can be a character
 vector with column names or an integer vector with the column index}
+
+\item{table_type}{specific type of table to return, can be one of 'data.table' or 'tibble'}
 }
 \value{
 A vector or table generated from the specified template

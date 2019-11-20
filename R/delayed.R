@@ -203,13 +203,25 @@ delayed_operation <- function(f, x, y, operator_str) {
 }
 
 
+#' And operator override for delayed expressions
+#'
+#' @param x delayed expression or object
+#' @param y delayed expression or object
+#'
 #' @export
+#' @name and
 `&&.delayed_expr` <- function(x, y) {  # nolint
   delayed_operation(`&&`, x, y, "&&")
 }
 
 
+#' Or operator override for delayed expressions
+#'
+#' @param x delayed expression or object
+#' @param y delayed expression or object
+#'
 #' @export
+#' @name or
 `||.delayed_expr` <- function(x, y) {
   delayed_operation(`||`, x, y, "||")
 }

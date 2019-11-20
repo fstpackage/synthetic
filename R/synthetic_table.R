@@ -24,11 +24,10 @@
 #'
 #' @param id ID of the synthetic table (e.g. 'fst homepage dataset')
 #' @param ... column templates created with the various template_ methods
-#' @param return_type table type to return, valid options are 'data.table', 'tibble', 'data.frame'
 #'
 #' @return a synthetic table template that can be used to generate synthetic data using generate()
 #' @export
-synthetic_table <- function(..., id = "synthetic table", return_type = options("synthetic_return_type")) {
+synthetic_table <- function(..., id = "synthetic table") {
 
   column_definitions <- list(...)
 
@@ -40,13 +39,14 @@ synthetic_table <- function(..., id = "synthetic table", return_type = options("
   if (length(column_definitions) == 1) {
     if (inherits(column_definitions[[1]], "data.frame")) {
       setDT(column_definitions[[1]])
-      x <- list(
-        id = id,
-        columns = NULL,
-        source_table = column_definitions[[1]]
+      x <- structure(
+        list(
+          id = id,
+          columns = NULL,
+          source_table = column_definitions[[1]]
+        ), 
+        class = "tabletemplate"
       )
-
-      class(x) <- "tabletemplate"
 
       return(x)
     }

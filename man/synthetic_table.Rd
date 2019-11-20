@@ -4,15 +4,12 @@
 \alias{synthetic_table}
 \title{Create the blueprints of a synthetic table}
 \usage{
-synthetic_table(..., id = "synthetic table",
-  return_type = options("synthetic_return_type"))
+synthetic_table(..., id = "synthetic table")
 }
 \arguments{
 \item{...}{column templates created with the various template_ methods}
 
 \item{id}{ID of the synthetic table (e.g. 'fst homepage dataset')}
-
-\item{return_type}{table type to return, valid options are 'data.table', 'tibble', 'data.frame'}
 }
 \value{
 a synthetic table template that can be used to generate synthetic data using generate()

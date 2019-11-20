@@ -27,10 +27,11 @@
 #' @param size desired size of the resulting vector or table
 #' @param columns used to select specific columns from a table template. Can be a character
 #' vector with column names or an integer vector with the column index
+#' @param table_type specific type of table to return, can be one of 'data.table' or 'tibble'
 #'
 #' @return A vector or table generated from the specified template
 #' @export
-generate <- function(template, size, columns = NULL) {
+generate <- function(template, size, columns = NULL, table_type = getOption("synthetic_default_table_class")) {
 
   # column template
   if (inherits(template, "vectortemplate")) {
@@ -59,8 +60,6 @@ generate <- function(template, size, columns = NULL) {
       "with one of the template_ methods. Table templates can be created with method synthetic_table().")
   }
 
-  table_type <- getOption("synthetic_default_table_class")
-
   # table template with a source table
   if (!is.null(template$source_table)) {
     rows <- sample(seq_len(nrow(template$source_table)), size, replace = TRUE)
@@ -76,9 +75,7 @@ generate <- function(template, size, columns = NULL) {
       return(x[rows])
     }
 
-    x[rows] %>%
-      as_tibble(rows) %>%
-      return()
+    return(as_tibble(x[rows]))
   }
 
   # table template with vector templates
