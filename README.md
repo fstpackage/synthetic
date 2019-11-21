@@ -15,14 +15,107 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-blue.svg)](htt
 
 ## Overview
 
-The `synthetic` package provides tooling to greatly symplify
-benchmarking of serialization solutions such as `fst`, `arrow`,
-`feather`, `fread/fwrite` or `sqlite`. By using a standardized method of
-benchmarking, results become more reliable and more easy to compare. It
-also contains advanced tools for creration of synthetic datasets from
-existing datasets of from pre-defined column generators.
+The `synthetic` package provides tooling to greatly symplify the
+creation of synthetic datasets for testing purposes. It’s features
+include:
 
-## Features
+  - Creation of *dataset templates* that can be used to generate
+    arbitrary large datasets
+  - Creation of *column templates* that can be used to define column
+    data with custom range and distribution
+  - Automatic creation of dataset templates from existing datasets
+  - Many pre-defined templates to help you generate synthetic datasets
+    with little effort
+  - Extented benchmark framework to help test the performance of
+    serialization options such as `fst`, `arrow`, `fread` / `fwrite`,
+    `sqlite`, etc.
+
+By using a standardized method of serialization benchmarking, benchmark
+results become more reliable and more easy to compare over various
+solutions, as can be seen further down in this introduction.
+
+## Synthetic datasets
+
+Most `R` users will probably be familiar with the *iris* dataset as it’s
+widely used in package examples and tutorials:
+
+``` r
+library(dplyr)
+
+iris %>%
+  as_tibble()
+#> # A tibble: 150 x 5
+#>    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+#>           <dbl>       <dbl>        <dbl>       <dbl> <fct>  
+#>  1          5.1         3.5          1.4         0.2 setosa 
+#>  2          4.9         3            1.4         0.2 setosa 
+#>  3          4.7         3.2          1.3         0.2 setosa 
+#>  4          4.6         3.1          1.5         0.2 setosa 
+#>  5          5           3.6          1.4         0.2 setosa 
+#>  6          5.4         3.9          1.7         0.4 setosa 
+#>  7          4.6         3.4          1.4         0.3 setosa 
+#>  8          5           3.4          1.5         0.2 setosa 
+#>  9          4.4         2.9          1.4         0.2 setosa 
+#> 10          4.9         3.1          1.5         0.1 setosa 
+#> # ... with 140 more rows
+```
+
+But what if you need a dataset of a million rows? The `synthetic`
+package makes that straightforward. Simply define a *dataset template*
+using `synthetic_table()`:
+
+``` r
+library(synthetic)
+
+# define a synthetic table
+synt_table <- synthetic_table(iris)
+```
+
+and generate a custom number of rows:
+
+``` r
+synt_table %>%
+  generate(1e6) # a million rows
+#> # A tibble: 1,000,000 x 5
+#>    Sepal.Length Sepal.Width Petal.Length Petal.Width Species   
+#>           <dbl>       <dbl>        <dbl>       <dbl> <fct>     
+#>  1          5.1         2.5          3           1.1 versicolor
+#>  2          5.7         3            4.2         1.2 versicolor
+#>  3          6.8         2.8          4.8         1.4 versicolor
+#>  4          5           3.5          1.6         0.6 setosa    
+#>  5          5.6         2.8          4.9         2   virginica 
+#>  6          5.4         3.7          1.5         0.2 setosa    
+#>  7          6.4         3.2          5.3         2.3 virginica 
+#>  8          6.5         3            5.2         2   virginica 
+#>  9          4.6         3.4          1.4         0.3 setosa    
+#> 10          6.9         3.1          5.4         2.1 virginica 
+#> # ... with 999,990 more rows
+```
+
+You can also select specific columns:
+
+``` r
+synt_table %>%
+  generate(1e6, "Species")  # single column
+#> # A tibble: 1,000,000 x 1
+#>    Species   
+#>    <fct>     
+#>  1 versicolor
+#>  2 virginica 
+#>  3 versicolor
+#>  4 setosa    
+#>  5 versicolor
+#>  6 setosa    
+#>  7 versicolor
+#>  8 versicolor
+#>  9 versicolor
+#> 10 virginica 
+#> # ... with 999,990 more rows
+```
+
+## Building templates from existing datasets
+
+## Benchmarking serialization
 
 Benchmarks performed With `synthetic` have the following features:
 

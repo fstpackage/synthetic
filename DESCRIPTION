@@ -25,5 +25,5 @@ Suggests:
     lintr,
     testthat
 RoxygenNote: 6.1.1
-URL: https://fstpackage.github.io/syntheticbench
+URL: https://www.fstpackage.org/synthetic
 BugReports: https://github.com/fstpackage/syntheticbench/issues

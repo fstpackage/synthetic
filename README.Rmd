@@ -25,10 +25,57 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-The `synthetic` package provides tooling to greatly symplify benchmarking of serialization solutions such as `fst`, `arrow`, `feather`, `fread/fwrite` or `sqlite`. By using a standardized method of benchmarking, results become more reliable and more easy to compare. It also contains advanced tools for creration of synthetic datasets from existing datasets of from pre-defined column generators.
+The `synthetic` package provides tooling to greatly symplify the creation of synthetic datasets for testing purposes. It's features include:
+
+* Creation of _dataset templates_ that can be used to generate arbitrary large datasets
+* Creation of _column templates_ that can be used to define column data with custom range and distribution
+* Automatic creation of dataset templates from existing datasets
+* Many pre-defined templates to help you generate synthetic datasets with little effort
+* Extented benchmark framework to help test the performance of serialization options such as `fst`, `arrow`, `fread` / `fwrite`, `sqlite`, etc.
+
+By using a standardized method of serialization benchmarking, benchmark results become more reliable and more easy to compare over various solutions, as can be seen further down in this introduction.
+
+## Synthetic datasets
+
+Most `R` users will probably be familiar with the _iris_ dataset as it's widely used in package examples and tutorials:
+
+```{r, message = FALSE}
+library(dplyr)
+
+iris %>%
+  as_tibble()
+```
+
+But what if you need a dataset of a million rows? The `synthetic` package makes that straightforward. Simply define a _dataset template_ using `synthetic_table()`:
+
+```{r}
+library(synthetic)
+
+# define a synthetic table
+synt_table <- synthetic_table(iris)
+```
+
+and generate a custom number of rows:
+
+```{r}
+synt_table %>%
+  generate(1e6) # a million rows
+```
+
+You can also select specific columns:
+
+```{r}
+synt_table %>%
+  generate(1e6, "Species")  # single column
+```
+
+## Building templates from existing datasets
 
 
-## Features
+
+
+
+## Benchmarking serialization
 
 Benchmarks performed With `synthetic` have the following features:
 
