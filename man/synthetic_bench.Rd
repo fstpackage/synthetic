@@ -4,8 +4,12 @@
 \alias{synthetic_bench}
 \title{Define a benchmark}
 \usage{
-synthetic_bench(nr_of_runs = 3, cycle_size = 3,
-  result_folder = "results", progress = TRUE)
+synthetic_bench(
+  nr_of_runs = 3,
+  cycle_size = 3,
+  result_folder = "results",
+  progress = TRUE
+)
 }
 \arguments{
 \item{nr_of_runs}{repeat the benchmark for statistics}

@@ -5,7 +5,7 @@
 \alias{&&.delayed_expr}
 \title{And operator override for delayed expressions}
 \usage{
-"&&.delayed_expr"(x, y)
+`&&.delayed_expr`(x, y)
 }
 \arguments{
 \item{x}{delayed expression or object}

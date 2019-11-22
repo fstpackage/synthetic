@@ -4,8 +4,7 @@
 \alias{template_numerical_normal}
 \title{Generate a numerical vector with normal distribution}
 \usage{
-template_numerical_normal(mean = 0, sd = 1,
-  max_distict_values = NULL)
+template_numerical_normal(mean = 0, sd = 1, max_distict_values = NULL)
 }
 \arguments{
 \item{mean}{mean of the distribution}

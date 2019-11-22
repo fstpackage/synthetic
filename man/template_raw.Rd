@@ -4,8 +4,7 @@
 \alias{template_raw}
 \title{Generate a raw vector with custom distribution}
 \usage{
-template_raw(min_value = 0, max_value = 255,
-  max_distict_values = NULL)
+template_raw(min_value = 0, max_value = 255, max_distict_values = NULL)
 }
 \arguments{
 \item{min_value}{minimum value in the returned raw vector}

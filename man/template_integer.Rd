@@ -4,8 +4,11 @@
 \alias{template_integer}
 \title{Define a template for integer vectors with custom distribution and characteristics}
 \usage{
-template_integer(min_value = 1 - .Machine$integer.max,
-  max_value = .Machine$integer.max, max_distict_values = NULL)
+template_integer(
+  min_value = 1 - .Machine$integer.max,
+  max_value = .Machine$integer.max,
+  max_distict_values = NULL
+)
 }
 \arguments{
 \item{min_value}{minimum value in the vector}

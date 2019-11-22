@@ -4,8 +4,11 @@
 \alias{template_string_random}
 \title{Generate a character vector with certain distribution of string lengths}
 \usage{
-template_string_random(min_str_size = 1, max_str_size = 10,
-  max_distict_values = NULL)
+template_string_random(
+  min_str_size = 1,
+  max_str_size = 10,
+  max_distict_values = NULL
+)
 }
 \arguments{
 \item{min_str_size}{minimum string length}

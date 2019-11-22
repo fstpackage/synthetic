@@ -4,8 +4,11 @@
 \alias{template_numerical_uniform}
 \title{Generate a numerical vector with uniform distribution}
 \usage{
-template_numerical_uniform(min_value = 0, max_value = 1,
-  max_distict_values = NULL)
+template_numerical_uniform(
+  min_value = 0,
+  max_value = 1,
+  max_distict_values = NULL
+)
 }
 \arguments{
 \item{min_value}{minimum value in the vector}

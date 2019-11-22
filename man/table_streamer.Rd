@@ -5,9 +5,15 @@
 \title{Define an object of class 'tablestreamer' that defines specific methods for
 serializing of datasets}
 \usage{
-table_streamer(id, table_writer, table_reader,
-  can_select_threads = FALSE, variable_compression = FALSE,
-  set_threads = NULL, custom_parameters = NULL)
+table_streamer(
+  id,
+  table_writer,
+  table_reader,
+  can_select_threads = FALSE,
+  variable_compression = FALSE,
+  set_threads = NULL,
+  custom_parameters = NULL
+)
 }
 \arguments{
 \item{id}{ID of the table streamer (e.g. 'fst' or 'parguet')}
