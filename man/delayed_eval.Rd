@@ -22,8 +22,10 @@ x <- delayed_expr(size * 5 + 1)
 # create a new expression
 y = 1 + x + 5 * x - x
 
+\dontrun{
 # generates an error, as size is not defined
 delayed_eval(y)
+}
 
 # calculates expression y using size
 size = 0.1
