@@ -29,7 +29,7 @@
 #' @importFrom qs qread qsave
 #' @importFrom rlang enexpr
 #' @importFrom stats rnorm runif
-#' @importFrom stringi stri_rand_strings
+#' @importFrom stringi stri_rand_strings stri_rand_lipsum
 #' @importFrom utils head packageVersion object.size capture.output
 #' @importFrom vroom vroom vroom_write
 NULL

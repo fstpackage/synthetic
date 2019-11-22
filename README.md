@@ -6,7 +6,7 @@
 [![Linux/OSX Build
 Status](https://travis-ci.org/fstpackage/synthetic.svg?branch=develop)](https://travis-ci.org/fstpackage/synthetic)
 [![Windows Build
-status](https://ci.appveyor.com/api/projects/status/rng88laj6o2fj2dy?svg=true)](https://ci.appveyor.com/project/fstpackage/synthetic)
+status](https://ci.appveyor.com/api/projects/status/o983hmredcg3ww91/branch/develop?svg=true)](https://ci.appveyor.com/project/fstpackage/synthetic/branch/develop)
 [![License: AGPL
 v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![Lifecycle:
@@ -79,16 +79,16 @@ synt_table %>%
 #> # A tibble: 1,000,000 x 5
 #>    Sepal.Length Sepal.Width Petal.Length Petal.Width Species   
 #>           <dbl>       <dbl>        <dbl>       <dbl> <fct>     
-#>  1          5.1         2.5          3           1.1 versicolor
-#>  2          5.7         3            4.2         1.2 versicolor
-#>  3          6.8         2.8          4.8         1.4 versicolor
-#>  4          5           3.5          1.6         0.6 setosa    
-#>  5          5.6         2.8          4.9         2   virginica 
-#>  6          5.4         3.7          1.5         0.2 setosa    
-#>  7          6.4         3.2          5.3         2.3 virginica 
-#>  8          6.5         3            5.2         2   virginica 
-#>  9          4.6         3.4          1.4         0.3 setosa    
-#> 10          6.9         3.1          5.4         2.1 virginica 
+#>  1          5.7         3.8          1.7         0.3 setosa    
+#>  2          5.8         2.7          5.1         1.9 virginica 
+#>  3          6.1         2.8          4           1.3 versicolor
+#>  4          5.1         3.5          1.4         0.2 setosa    
+#>  5          7.2         3.6          6.1         2.5 virginica 
+#>  6          6           2.2          5           1.5 virginica 
+#>  7          6.8         3            5.5         2.1 virginica 
+#>  8          6.2         3.4          5.4         2.3 virginica 
+#>  9          7.1         3            5.9         2.1 virginica 
+#> 10          6.4         2.8          5.6         2.2 virginica 
 #> # ... with 999,990 more rows
 ```
 
@@ -102,13 +102,13 @@ synt_table %>%
 #>    <fct>     
 #>  1 versicolor
 #>  2 virginica 
-#>  3 versicolor
-#>  4 setosa    
+#>  3 setosa    
+#>  4 versicolor
 #>  5 versicolor
-#>  6 setosa    
+#>  6 virginica 
 #>  7 versicolor
 #>  8 versicolor
-#>  9 versicolor
+#>  9 setosa    
 #> 10 virginica 
 #> # ... with 999,990 more rows
 ```

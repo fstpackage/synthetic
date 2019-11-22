@@ -21,6 +21,10 @@
 
 
 combine_text <- function(y, nchar1, nchar2, size) {
+
+  Text <- NULL
+  Length <- NULL
+  
   v <- y[Length == nchar1, Text] %>%
     sample(size, replace = TRUE)
   
