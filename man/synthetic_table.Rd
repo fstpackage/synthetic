@@ -4,12 +4,19 @@
 \alias{synthetic_table}
 \title{Create the blueprints of a synthetic table}
 \usage{
-synthetic_table(..., id = "synthetic table")
+synthetic_table(..., id = "synthetic table", construct_model = FALSE)
 }
 \arguments{
-\item{...}{column templates created with the various template_ methods}
+\item{...}{column templates created with the various template_ methods or a single dataset}
 
 \item{id}{ID of the synthetic table (e.g. 'fst homepage dataset')}
+
+\item{construct_model}{If parameter ... is a table, this parameter is used to determine how
+the table model is generated. When `construct_model = TRUE`, the columns from the table
+are used to construct an approximation of the column's distribution. This approximation
+is used to generate the actual data. When `construct_model = FALSE`, the whole table is
+stored and generation of new columns is done by taking random samples from the original
+table.}
 }
 \value{
 a synthetic table template that can be used to generate synthetic data using generate()

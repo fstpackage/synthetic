@@ -50,7 +50,7 @@ iris %>%
   as_tibble()
 ```
 
-But what if you need a dataset of a million rows? The `synthetic` package makes that straightforward. Simply define a _dataset template_ using `synthetic_table()`:
+But what if you need a a million row dataset for your purposes? The `synthetic` package makes that straightforward. Simply define a _dataset template_ using `synthetic_table()`:
 
 ```{r}
 library(synthetic)
@@ -59,7 +59,7 @@ library(synthetic)
 synt_table <- synthetic_table(iris)
 ```
 
-and generate a custom number of rows:
+with the template, you can generate any number of rows:
 
 ```{r}
 synt_table %>%
@@ -73,10 +73,23 @@ synt_table %>%
   generate(1e6, "Species")  # single column
 ```
 
-## Building templates from existing datasets
+## Creating your own template
 
+If you want to generate a dataset with specific characteristics of it's columns, you can use _column templates_ to specify each column directly:
 
+```{r}
+# define a custom template
+synt_table <- synthetic_table(
+  Logical = template_logical(true_false_na_ratio = c(85, 10, 5)),
+  Integer = template_integer(max_value = 100L),
+  Real    = template_numerical_uniform(0.01, 100, max_distict_values = 20)
+  # ,
+  # Factor  = template_string_random(5, 8, ))
+)
 
+synt_table %>%
+  generate(10)
+```
 
 
 ## Benchmarking serialization
@@ -103,23 +116,6 @@ _some more text here_
 
 Define the template of a test dataset:
 
-```{r, eval = FALSE}
-library(synthetic)
-library(fst)
-library(arrow)
-
-# generator for 'fst benchmark' dataset
-generator <- table_generator(
-  "fst benchmark",
-  function(nr_of_rows) {
-    data.frame(
-      Logical = sample_logical(nr_of_rows, true_false_na_ratio = c(85, 10, 5)),
-      Integer = sample_integer(nr_of_rows, max_value = 100L),
-      Real    = sample_integer(nr_of_rows, 1, 10000, max_distict_values = 20) / 100,
-      Factor  = as.factor(sample(labels(UScitiesD), nr_of_rows, replace = TRUE))
-    )}
-)
-```
 
 Do some benchmarking on the _fst_ format:
 
