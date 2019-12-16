@@ -1,0 +1,130 @@
+---
+title: "Simulating data with package synthetic"
+author: "Mark Klik"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulating data with package synthetic}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Normally distributed column values
+
+```{r loadPackages}
+library(synthetic)
+library(ggplot2)
+```
+
+```{r plotter, echo = FALSE, fig.width = 7, fig.height = 5}
+set.seed(234)
+
+plot_dist <- function(column, from = 1, to = length(column),
+  large_bins = FALSE, small_bins = FALSE, show_points = FALSE) {
+
+  size <- length(column)
+  bin_size <- size / 100
+  bin_start <- (from - 1) %/% bin_size
+  bin_end <- 1 + (to - 1) %/% bin_size
+
+  y <- ggplot(data.frame(X = from:to - 0.5, Values = sort(column)[from:to])) +
+    geom_line(aes(X, Values))
+  
+  if (show_points) {
+    y <- y +
+      geom_point(aes(X, Values))
+  }
+
+  if (small_bins) {
+    y <- y +
+      geom_vline(
+        data = data.frame(X = trunc(bin_start * bin_size):(1 + ceiling(bin_end * bin_size))),
+        aes(xintercept = X),
+        linetype = 3) +
+      theme(panel.grid.minor = element_blank())
+  }
+
+  if (large_bins) {
+    y <- y +
+    geom_vline(
+      data = data.frame(X = bin_start:bin_end * bin_size),
+      aes(xintercept = X),
+      linetype = 1)
+  }
+
+  y + xlab("Ordered points")
+}
+```
+
+Suppose we have some numerical vector with a normal distribution:
+
+```{r normal_distribution, fig.width = 7, fig.height = 5}
+x <- rnorm(800, 7, 4)
+
+ggplot(data.frame(X = x)) +
+  geom_histogram(aes(X), bins = 50)
+```
+
+When we sort the vector, we can display it as a monotone function:
+
+```{r sorted, fig.width = 7, fig.height = 5}
+ggplot(data.frame(X = 1:length(x), Y = sort(x))) +
+  geom_line(aes(X, Y))
+```
+
+For randomly selected values from the horizontal axis, the distribution of the corresponding value at the vertical axis follows the distribution shown above. Therefore, we can use a model of this monotonic function to simulate data from the original vector.
+
+The simplest (and fastest) way to do that is by splitting the data in a certain amount of bins and calculate the mean for each bin. The resulting values can be used as an approximation of the original curve. If we use 100 bins, we can take the mean value of 16 adjacent bins (one 'bin group').
+
+In the image below, the mean value of these bin groups are shown using large dots.
+
+```{r mean_points, fig.width = 7, fig.height = 5}
+mean_points <- data.frame(
+  X = c(12, 20),
+  Y = c(mean(sort(x)[9:16]), mean(sort(x)[17:24]))
+)
+
+means <- plot_dist(x, 7, 27, TRUE, TRUE, TRUE) + coord_cartesian(c(8, 25)) +
+  geom_point(data = mean_points, aes(X, Y), size = 5)
+
+means
+```
+
+The lines between means are a first approximation of the original curve:
+
+```{r begin, fig.width = 7, fig.height = 5}
+means + geom_line(data = mean_points, aes(X, Y), color = "blue", size = 1)
+```
+
+This gives us the following total curve:
+
+```{r full_curve, fig.width = 7, fig.height = 5}
+y <- synthetic:::dbl_template_from_column(x)$metadata$values
+
+approximation <- data.frame(X = -12 + 8 * (1:length(y)), Y = y)
+
+plot_dist(x) +
+  geom_line(data = approximation, aes(X, Y), color = "blue", size = 0.5)
+```
+
+In the wild, we will generally have bin group sizes that aren't exact integer sizes. Any bin that partly belongs to two bin groups because of this, will contribute it's (weighted) value to both groups. 
+
+```{r full_curve, fig.width = 7, fig.height = 5}
+x <- rnorm(734, 7, 4)
+y <- synthetic:::dbl_template_from_column(x)$metadata$values
+
+bin_size <- 734 / 100
+
+approximation <- data.frame(X = -1.5 * bin_size + bin_size * (1:length(y)), Y = y)
+
+boundary_points <- data.frame(X = c(29.5, 36.5), Y = sort(x)[c(30, 37)])
+
+plot_dist(x, small_bins = TRUE, large_bins = TRUE, show_points = TRUE) +
+  geom_point(data = boundary_points, aes(X, Y), color = "red", size = 6, shape = 1) +
+  geom_line(data = approximation, aes(X, Y), color = "blue", size = 0.5) +
+  geom_point(data = approximation, aes(X, Y), color = "blue", size = 3) +
+  coord_cartesian(c(24, 38), c(-1, 0.5))
+```

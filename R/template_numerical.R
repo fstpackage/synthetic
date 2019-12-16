@@ -108,3 +108,73 @@ template_numerical_normal <- function(mean = 0, sd = 1, max_distict_values = NUL
 
   vector_template(metadata, generator, numerical_normal_printer)
 }
+
+
+#' Create a numerical column template from a source vector
+#'
+#' @param column numerical vector
+#'
+#' @return a numerical column template
+dbl_template_from_column <- function(column) {
+
+  model_size <- 100
+  size <- length(column)
+  block_size <- size / model_size
+
+  # implement this part in C for speed
+
+  # numeric columns
+  column <- sort(column)
+
+  # no last element
+  x <- sapply(0:(model_size - 2), function(group) {
+    
+    from <- group * block_size
+    to <- (group + 1) * block_size
+    
+    # parts
+    pre_remainder  <- 1 + floor(from) - from
+    post_remainder <- to - floor(to)
+    before <- pre_remainder  * column[1 + floor(from)]
+    after  <- post_remainder * column[1 + floor(to)]
+    
+    tot <- 0
+    if (floor(to) > (1 + floor(from))) {
+      tot <- sum(column[(2 + floor(from)):floor(to)])
+    }
+    
+    return ((tot + before + after) / block_size)
+  })
+
+  # last element    
+  from <- (model_size - 1) * block_size
+
+  pre_remainder  <- 1 + floor(from) - from
+  before <- pre_remainder  * column[1 + floor(from)]
+
+  tot <- 0
+  if (size > (1 + floor(from))) {
+    tot <- sum(column[(2 + floor(from)):size])
+  }
+
+  # estimate mean at p = -0.005
+  first <- 2 * x[1] - x[2]
+  last <- 2 * ((tot + before) / block_size) - x[model_size - 1]
+
+  x <- c(first, x, (tot + before) / block_size, last)
+  d <- x[2:(model_size + 2)] - x[1:(model_size + 1)]
+
+  metadata <- list(
+    values = x,
+    derivatives = d,
+    model_size = model_size
+  )
+
+  generator <- function(metadata, length) {
+    dist <- runif(length, 0, metadata$model_size)
+    metadata$values[floor(dist + 0.5) + 1] +
+      ((dist + 0.5) %% 1) * metadata$derivatives[floor(dist + 0.5) + 1]
+  }
+  
+  vector_template(metadata, generator, numerical_model_printer)
+}
