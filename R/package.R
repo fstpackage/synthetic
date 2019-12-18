@@ -20,6 +20,7 @@
 #  - synthetic R package source repository : https://github.com/fstpackage/synthetic
 
 
+#' @useDynLib synthetic, .registration = TRUE
 #' @importFrom crayon cyan italic red
 #' @importFrom data.table data.table fread fwrite rbindlist setDT setDTthreads :=
 #' @importFrom dplyr %>% as_tibble collect mutate select
@@ -32,6 +33,7 @@
 #' @importFrom stringi stri_rand_strings stri_rand_lipsum
 #' @importFrom utils head packageVersion object.size capture.output
 #' @importFrom vroom vroom vroom_write
+#' @importFrom Rcpp evalCpp
 NULL
 
 

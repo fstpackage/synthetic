@@ -10,6 +10,7 @@ Depends:
     R (>= 3.5.0)
 License: AGPL-3 | file LICENSE
 Imports:
+    Rcpp (>= 1.0.3),
     crayon,
     data.table,
     dplyr,
@@ -27,3 +28,4 @@ Suggests:
 RoxygenNote: 7.0.2
 URL: https://www.fstpackage.org/synthetic
 BugReports: https://github.com/fstpackage/syntheticbench/issues
+LinkingTo: Rcpp
