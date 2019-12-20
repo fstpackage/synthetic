@@ -26,7 +26,6 @@ SEXP cubic_spline(SEXP double_values, SEXP estimates)
   double* resp = REAL(res);
 
   // Now we can evaluate the spline wherever we please.
-  std::mt19937 gen;
   boost::random::uniform_real_distribution<double> absissa(0, size * step);
   for (size_t i = 0; i < (size_t) estimate_size; ++i)
   {
