@@ -1,6 +1,7 @@
 
 // [[Rcpp::depends(BH)]]
 
+#include <boost/random/uniform_real_distribution.hpp>
 #include <boost/math/interpolators/cardinal_cubic_b_spline.hpp>  
 
 #include <Rcpp.h>
