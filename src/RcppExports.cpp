@@ -5,19 +5,20 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _synthetic_rcpp_hello_world() {
+// cubic_spline
+void cubic_spline(SEXP double_values, SEXP estimates);
+RcppExport SEXP _synthetic_cubic_spline(SEXP double_valuesSEXP, SEXP estimatesSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
-    return rcpp_result_gen;
+    Rcpp::traits::input_parameter< SEXP >::type double_values(double_valuesSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type estimates(estimatesSEXP);
+    cubic_spline(double_values, estimates);
+    return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_synthetic_rcpp_hello_world", (DL_FUNC) &_synthetic_rcpp_hello_world, 0},
+    {"_synthetic_cubic_spline", (DL_FUNC) &_synthetic_cubic_spline, 2},
     {NULL, NULL, 0}
 };
 

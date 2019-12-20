@@ -28,4 +28,4 @@ Suggests:
 RoxygenNote: 7.0.2
 URL: https://www.fstpackage.org/synthetic
 BugReports: https://github.com/fstpackage/syntheticbench/issues
-LinkingTo: Rcpp
+LinkingTo: Rcpp, BH
