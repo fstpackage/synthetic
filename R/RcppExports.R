@@ -2,6 +2,6 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 cubic_spline <- function(double_values, estimates) {
-    invisible(.Call(`_synthetic_cubic_spline`, double_values, estimates))
+    .Call(`_synthetic_cubic_spline`, double_values, estimates)
 }
 

@@ -6,14 +6,15 @@
 using namespace Rcpp;
 
 // cubic_spline
-void cubic_spline(SEXP double_values, SEXP estimates);
+SEXP cubic_spline(SEXP double_values, SEXP estimates);
 RcppExport SEXP _synthetic_cubic_spline(SEXP double_valuesSEXP, SEXP estimatesSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type double_values(double_valuesSEXP);
     Rcpp::traits::input_parameter< SEXP >::type estimates(estimatesSEXP);
-    cubic_spline(double_values, estimates);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(cubic_spline(double_values, estimates));
+    return rcpp_result_gen;
 END_RCPP
 }
 
