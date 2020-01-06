@@ -6,14 +6,14 @@
 using namespace Rcpp;
 
 // cubic_spline
-SEXP cubic_spline(SEXP double_values, SEXP estimates);
-RcppExport SEXP _synthetic_cubic_spline(SEXP double_valuesSEXP, SEXP estimatesSEXP) {
+SEXP cubic_spline(SEXP double_values, SEXP nr_of_knots);
+RcppExport SEXP _synthetic_cubic_spline(SEXP double_valuesSEXP, SEXP nr_of_knotsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type double_values(double_valuesSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type estimates(estimatesSEXP);
-    rcpp_result_gen = Rcpp::wrap(cubic_spline(double_values, estimates));
+    Rcpp::traits::input_parameter< SEXP >::type nr_of_knots(nr_of_knotsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cubic_spline(double_values, nr_of_knots));
     return rcpp_result_gen;
 END_RCPP
 }

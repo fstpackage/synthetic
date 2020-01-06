@@ -37,33 +37,10 @@ template_from_column <- function(column) {
   if (typeof(column) == "double") {
     return(dbl_template_from_column(column))
   }
-  
+
   stop("Unknown column format")
 }
 
-  
-# library(ggplot2)
-# 
-# length = 10000
-# dist <- sort(runif(length))
-# distr <- data.frame(X = 1:10000, Y = dist)
-# ggplot(distr) +
-#   geom_line(aes(x = X, y = Y))
-# 
-# distr <- data.frame(X = 0.5 + 0:2339, Y = column)
-# means <- data.frame(X = 0.5 * block_size + block_size * 0:99, Y = x)
-# 
-# ggplot(distr[1:100, ]) +
-#   geom_line(aes(x = X, y = Y)) +
-#   geom_point(data = means[1:5, ], aes(x = X, y = Y))
-# 
-# ggplot(distr) +
-#   geom_line(aes(x = X, y = Y)) +
-#   geom_point(data = means, aes(x = X, y = Y))
-# 
-# template_from_table <- function(dt) {
-#     
-# }
 
 #' Create the blueprints of a synthetic table
 #'
