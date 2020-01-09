@@ -5,48 +5,22 @@
 
 using namespace Rcpp;
 
-// random_dbl_std
-SEXP random_dbl_std(SEXP nr_of_draws, SEXP seed_dbl);
-RcppExport SEXP _synthetic_random_dbl_std(SEXP nr_of_drawsSEXP, SEXP seed_dblSEXP) {
+// rspline
+SEXP rspline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl);
+RcppExport SEXP _synthetic_rspline(SEXP control_valuesSEXP, SEXP nr_of_drawsSEXP, SEXP seed_dblSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type control_values(control_valuesSEXP);
     Rcpp::traits::input_parameter< SEXP >::type nr_of_draws(nr_of_drawsSEXP);
     Rcpp::traits::input_parameter< SEXP >::type seed_dbl(seed_dblSEXP);
-    rcpp_result_gen = Rcpp::wrap(random_dbl_std(nr_of_draws, seed_dbl));
-    return rcpp_result_gen;
-END_RCPP
-}
-// random_dbl_boost
-SEXP random_dbl_boost(SEXP nr_of_draws, SEXP seed_dbl);
-RcppExport SEXP _synthetic_random_dbl_boost(SEXP nr_of_drawsSEXP, SEXP seed_dblSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type nr_of_draws(nr_of_drawsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type seed_dbl(seed_dblSEXP);
-    rcpp_result_gen = Rcpp::wrap(random_dbl_boost(nr_of_draws, seed_dbl));
-    return rcpp_result_gen;
-END_RCPP
-}
-// cubic_spline
-SEXP cubic_spline(SEXP double_values, SEXP nr_of_draws, SEXP seed_dbl);
-RcppExport SEXP _synthetic_cubic_spline(SEXP double_valuesSEXP, SEXP nr_of_drawsSEXP, SEXP seed_dblSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type double_values(double_valuesSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type nr_of_draws(nr_of_drawsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type seed_dbl(seed_dblSEXP);
-    rcpp_result_gen = Rcpp::wrap(cubic_spline(double_values, nr_of_draws, seed_dbl));
+    rcpp_result_gen = Rcpp::wrap(rspline(control_values, nr_of_draws, seed_dbl));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_synthetic_random_dbl_std", (DL_FUNC) &_synthetic_random_dbl_std, 2},
-    {"_synthetic_random_dbl_boost", (DL_FUNC) &_synthetic_random_dbl_boost, 2},
-    {"_synthetic_cubic_spline", (DL_FUNC) &_synthetic_cubic_spline, 3},
+    {"_synthetic_rspline", (DL_FUNC) &_synthetic_rspline, 3},
     {NULL, NULL, 0}
 };
 

@@ -12,56 +12,10 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-SEXP random_dbl_std(SEXP nr_of_draws, SEXP seed_dbl)
+SEXP rspline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl)
 {
-  int draw_size = *INTEGER(nr_of_draws);
-  SEXP res = PROTECT(Rf_allocVector(REALSXP, draw_size));
-  double* res_p = REAL(res);
-
-  uint64_t seed = *((uint64_t*) (REAL(seed_dbl)));
-
-  std::random_device rd;  //Will be used to obtain a seed for the random number engine
-  std::mt19937 gen(seed); //Standard mersenne_twister_engine seeded with rd()
-  std::uniform_real_distribution<> dis(0.0, 1.0);
-
-  for (int i = 0; i < draw_size; ++i) {
-    res_p[i] = dis(gen);
-  }
-
-  UNPROTECT(1);
-
-  return res;
-}
-
-
-// [[Rcpp::export]]
-SEXP random_dbl_boost(SEXP nr_of_draws, SEXP seed_dbl)
-{
-  int draw_size = *INTEGER(nr_of_draws);
-  SEXP res = PROTECT(Rf_allocVector(REALSXP, draw_size));
-  double* res_p = REAL(res);
-
-  uint64_t seed = *((uint64_t*) (REAL(seed_dbl)));
-
-  boost::mt19937 gen;
-  gen.seed(seed);
-  boost::random::uniform_real_distribution<double> dis(0.0, 1.0);
-
-  for (int i = 0; i < draw_size; ++i) {
-    res_p[i] = dis(gen);
-  }
-  
-  UNPROTECT(1);
-  
-  return res;
-}
-
-
-// [[Rcpp::export]]
-SEXP cubic_spline(SEXP double_values, SEXP nr_of_draws, SEXP seed_dbl)
-{
-  double* values = REAL(double_values);
-  int size = LENGTH(double_values);
+  double* values = REAL(control_values);
+  int size = LENGTH(control_values);
 
   int draw_size = *INTEGER(nr_of_draws);
   uint64_t seed = *((uint64_t*) (REAL(seed_dbl)));
@@ -79,6 +33,8 @@ SEXP cubic_spline(SEXP double_values, SEXP nr_of_draws, SEXP seed_dbl)
 
   double* resp = REAL(res);
 
+  // TODO: try loop unrolling here for performance
+  
   // evaluate at random points
   for (size_t i = 0; i < (size_t) draw_size; ++i)
   {
