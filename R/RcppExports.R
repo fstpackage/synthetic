@@ -5,8 +5,8 @@ random_dbl_std <- function(nr_of_draws, seed_dbl) {
     .Call(`_synthetic_random_dbl_std`, nr_of_draws, seed_dbl)
 }
 
-new_random3 <- function(nr_of_draws, seed_dbl) {
-    .Call(`_synthetic_new_random3`, nr_of_draws, seed_dbl)
+random_dbl_boost <- function(nr_of_draws, seed_dbl) {
+    .Call(`_synthetic_random_dbl_boost`, nr_of_draws, seed_dbl)
 }
 
 cubic_spline <- function(double_values, nr_of_draws, seed_dbl) {

@@ -35,7 +35,7 @@ SEXP random_dbl_std(SEXP nr_of_draws, SEXP seed_dbl)
 
 
 // [[Rcpp::export]]
-SEXP new_random3(SEXP nr_of_draws, SEXP seed_dbl)
+SEXP random_dbl_boost(SEXP nr_of_draws, SEXP seed_dbl)
 {
   int draw_size = *INTEGER(nr_of_draws);
   SEXP res = PROTECT(Rf_allocVector(REALSXP, draw_size));
