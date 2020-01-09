@@ -22,13 +22,13 @@
 
 combine_text <- function(y, nchar1, nchar2, size) {
 
-  Text <- NULL
-  Length <- NULL
+  text <- NULL
+  length <- NULL
 
-  v <- y[Length == nchar1, Text] %>%
+  v <- y[length == nchar1, text] %>%
     sample(size, replace = TRUE)
 
-  w <- y[Length == nchar2, Text] %>%
+  w <- y[length == nchar2, text] %>%
     sample(size, replace = TRUE)
 
   paste0(v, w)
@@ -80,7 +80,7 @@ lorum_dictionary <- function() {
 
   x <- unique(c(x, l2, l3, s4, l4))
 
-  y <- data.table(Text = x, Length = nchar(x))
+  y <- data.table(text = x, length = nchar(x))
 
   x <- c(x,
         combine_text(y, 2, 3, 990),

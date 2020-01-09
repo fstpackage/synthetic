@@ -46,6 +46,19 @@ numerical_normal_printer <- function(metadata) {
 }
 
 
+numerical_custom_printer <- function(metadata) {
+
+  cat(italic(cyan("normal numerical vector template")), "\n")
+  cat(cyan("mean                  : "), delayed_to_str(metadata$mean), "\n")
+  cat(cyan("sd                    : "), delayed_to_str(metadata$sd), "\n")
+
+  if (!is.null(metadata$max_distict_values)) {
+    cat(cyan("nr of distinct values : "),
+        delayed_to_str(metadata$max_distict_values), "\n", sep = "")
+  }
+}
+
+
 #' Generate a numerical vector with uniform distribution
 #'
 #' @param min_value minimum value in the vector
@@ -121,24 +134,24 @@ dbl_template_from_column <- function(column) {
 
   model_size <- min(1000L, length(column) - 1)
   bin_size <- (length(column) - 1) / model_size
-  bins <- floor(1 + 0:model_size * bin_size)
+  sample_points <- floor(1 + 0:model_size * bin_size)
 
-  sorted <- sort(column)[bins]  # include first and last value
-  
+  sorted <- sort(column)[sample_points]  # include first and last value
+
   fit <- splinefun(sorted, method = "hyman")
-  
+
   nr_of_sim_points <- 100
-  sim_size <- (length(bins) + 1 / bin_size - 1.0) / nr_of_sim_points
+  sim_size <- (length(sample_points) + 1 / bin_size - 1.0) / nr_of_sim_points
+
   points <- 1 - (0.5 / bin_size) + 0:nr_of_sim_points * sim_size
 
+  # store the fitted simulation points
   metadata <- list(
     fit = fit(points)
   )
 
-  generator <- function(metadata, length) {
-    dist <- runif(length, 0, metadata$model_size)
-    metadata$values[floor(dist + 0.5) + 1] +
-      ((dist + 0.5) %% 1) * metadata$derivatives[floor(dist + 0.5) + 1]
+  generator <- function(metadata, nr_of_points) {
+    cubic_spline(metadata$fit, as.integer(nr_of_points))
   }
 
   vector_template(metadata, generator, numerical_model_printer)

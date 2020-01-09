@@ -68,17 +68,17 @@ synthetic_table <- function(..., id = "synthetic table", construct_model = FALSE
     if (inherits(column_definitions[[1]], "data.frame")) {
       setDT(column_definitions[[1]])
 
-      # small tables just get stored      
+      # small tables just get stored
       if (!construct_model) {
         x <- structure(
           list(
             id = id,
             columns = NULL,
             source_table = column_definitions[[1]]
-          ), 
+          ),
           class = "tabletemplate"
         )
-        
+
         return(x)
       }
 
@@ -87,10 +87,10 @@ synthetic_table <- function(..., id = "synthetic table", construct_model = FALSE
           id = id,
           columns = template_from_table(column_definitions[[1]]),
           source_table = NULL
-        ), 
+        ),
         class = "tabletemplate"
       )
-      
+
       return(x)
     }
   }
