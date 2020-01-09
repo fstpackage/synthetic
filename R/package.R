@@ -24,7 +24,7 @@
 #' @importFrom crayon cyan italic red
 #' @importFrom data.table data.table fread fwrite rbindlist setDT setDTthreads :=
 #' @importFrom dplyr %>% as_tibble collect mutate select
-#' @importFrom fst read_fst threads_fst write_fst
+#' @importFrom fst read_fst threads_fst write_fst hash_fst
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
 #' @importFrom qs qread qsave

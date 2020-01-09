@@ -5,22 +5,22 @@
 
 using namespace Rcpp;
 
-// rspline
-SEXP rspline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl);
-RcppExport SEXP _synthetic_rspline(SEXP control_valuesSEXP, SEXP nr_of_drawsSEXP, SEXP seed_dblSEXP) {
+// random_spline
+SEXP random_spline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl);
+RcppExport SEXP _synthetic_random_spline(SEXP control_valuesSEXP, SEXP nr_of_drawsSEXP, SEXP seed_dblSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type control_values(control_valuesSEXP);
     Rcpp::traits::input_parameter< SEXP >::type nr_of_draws(nr_of_drawsSEXP);
     Rcpp::traits::input_parameter< SEXP >::type seed_dbl(seed_dblSEXP);
-    rcpp_result_gen = Rcpp::wrap(rspline(control_values, nr_of_draws, seed_dbl));
+    rcpp_result_gen = Rcpp::wrap(random_spline(control_values, nr_of_draws, seed_dbl));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_synthetic_rspline", (DL_FUNC) &_synthetic_rspline, 3},
+    {"_synthetic_random_spline", (DL_FUNC) &_synthetic_random_spline, 3},
     {NULL, NULL, 0}
 };
 

@@ -12,7 +12,7 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-SEXP rspline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl)
+SEXP random_spline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl)
 {
   double* values = REAL(control_values);
   int size = LENGTH(control_values);

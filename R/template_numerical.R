@@ -151,7 +151,7 @@ dbl_template_from_column <- function(column) {
   )
 
   generator <- function(metadata, nr_of_points) {
-    cubic_spline(metadata$fit, as.integer(nr_of_points))
+    random_spline(metadata$fit, as.integer(nr_of_points), 0.11)
   }
 
   vector_template(metadata, generator, numerical_model_printer)

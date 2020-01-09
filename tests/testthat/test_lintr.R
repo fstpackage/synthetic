@@ -6,6 +6,9 @@ library(lintr)
 
 test_that("Package Style", {
 
+  # lintr can throws valgrind warnings and updates to lintr should not affect CRAN builds
+  skip_on_cran()
+
   major_lintr_version <- strsplit(as.character(packageVersion("lintr")), ".", fixed = TRUE)[[1]]
 
   if (as.integer(major_lintr_version[1]) >= 2) {
