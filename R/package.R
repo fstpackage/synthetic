@@ -28,12 +28,12 @@
 #' @importFrom microbenchmark microbenchmark
 #' @importFrom progress progress_bar
 #' @importFrom qs qread qsave
-#' @importFrom rlang enexpr
-#' @importFrom stats rnorm runif
-#' @importFrom stringi stri_rand_strings stri_rand_lipsum
-#' @importFrom utils head packageVersion object.size capture.output
-#' @importFrom vroom vroom vroom_write
 #' @importFrom Rcpp evalCpp
+#' @importFrom rlang enexpr
+#' @importFrom stats rnorm runif splinefun
+#' @importFrom stringi stri_rand_strings stri_rand_lipsum
+#' @importFrom utils head packageVersion object.size capture.output tail
+#' @importFrom vroom vroom vroom_write
 NULL
 
 
