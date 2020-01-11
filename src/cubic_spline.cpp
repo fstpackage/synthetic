@@ -5,7 +5,7 @@
 
 #include <boost/random/uniform_real_distribution.hpp>
 #include <boost/random/mersenne_twister.hpp>
-#include "fixed_cardinal_cubic_b_spline.hpp"  // modify when boost fix is rolled out
+#include "boost_b_spline.hpp"  // modify when boost fix is rolled out
 
 #include <Rcpp.h>
 
