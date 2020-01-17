@@ -18,9 +18,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// simulate_spline
+SEXP simulate_spline(SEXP control_points, SEXP x_points);
+RcppExport SEXP _synthetic_simulate_spline(SEXP control_pointsSEXP, SEXP x_pointsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type control_points(control_pointsSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type x_points(x_pointsSEXP);
+    rcpp_result_gen = Rcpp::wrap(simulate_spline(control_points, x_points));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_synthetic_random_spline", (DL_FUNC) &_synthetic_random_spline, 3},
+    {"_synthetic_simulate_spline", (DL_FUNC) &_synthetic_simulate_spline, 2},
     {NULL, NULL, 0}
 };
 

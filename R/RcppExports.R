@@ -5,3 +5,7 @@ random_spline <- function(control_values, nr_of_draws, seed_dbl) {
     .Call(`_synthetic_random_spline`, control_values, nr_of_draws, seed_dbl)
 }
 
+simulate_spline <- function(control_points, x_points) {
+    .Call(`_synthetic_simulate_spline`, control_points, x_points)
+}
+

@@ -24,12 +24,25 @@
 #' Random numbers are taken from a distribution which is defined by control points.
 #'
 #' @param n number of observations
-#' @param control_values values describing the ordered distribution
+#' @param control_points values describing the ordered distribution
 #' @param seed single numeric to specify the seed
 #'
 #' @return a vector of random numbers generated from the spline interpolated custom distribution.
 #' @export
-rspline <- function(n, control_values, seed) {
+rspline <- function(n, control_points, seed) {
+  random_spline(as.double(control_points), as.integer(n), as.double(seed[1]))
+}
 
-  random_spline(as.double(control_values), as.integer(n), as.double(seed[1]))
+
+#' Random number generator with custom distribution
+#'
+#' Random numbers are taken from a distribution which is defined by control points.
+#'
+#' @param control_points values describing the ordered distribution
+#' @param values values in the distribution to simulate
+#'
+#' @return a vector of numbers generated from the spline interpolated custom distribution.
+#' @export
+sspline <- function(control_points, values) {
+  simulate_spline(as.double(control_points), as.double(values))
 }
