@@ -28,10 +28,12 @@
 #' @param columns used to select specific columns from a table template. Can be a character
 #' vector with column names or an integer vector with the column index
 #' @param table_type specific type of table to return, can be one of 'data.table' or 'tibble'
+#' @param seed Seed used for generation.
 #'
 #' @return A vector or table generated from the specified template
 #' @export
-generate <- function(template, size, columns = NULL, table_type = getOption("synthetic_default_table_class")) {
+generate <- function(template, size, columns = NULL,
+  table_type = getOption("synthetic_default_table_class"), seed = runif(1)) {
 
   # column template
   if (inherits(template, "vectortemplate")) {

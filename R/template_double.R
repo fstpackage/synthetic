@@ -125,13 +125,24 @@ template_numerical_normal <- function(mean = 0, sd = 1, max_distict_values = NUL
 
 #' Create a numerical column template from a source vector
 #'
-#' @param column numerical vector
+#' @param vec vector to estimate the template from
 #'
 #' @return a numerical column template
-dbl_template_from_column <- function(column) {
+#' @export
+template_double_from_vec <- function(vec) {
 
-  if (length(column) < 10) stop("Too few rows")
+  if (!is.double(vec)) stop("Vector should be of type double")
 
+  # determine NA ratio
+  na_ratio <- sum(is.na(vec)) / length(vec)
+
+  # non-NA vector values
+  column <- sort(vec[!is.na(vec)])
+
+  if (length(column) < 10) stop(
+    "Vector has too few values to build a model from. Please use vectors of at least 10 non-NA values.")
+
+  # determine sample parameters
   model_size <- min(1000L, length(column) - 1)
   bin_size <- (length(column) - 1) / model_size
   sample_points <- floor(1 + 0:model_size * bin_size)
@@ -140,18 +151,22 @@ dbl_template_from_column <- function(column) {
 
   fit <- splinefun(sorted, method = "hyman")
 
-  nr_of_sim_points <- 100
+  nr_of_sim_points <- 100L
   sim_size <- (length(sample_points) + 1 / bin_size - 1.0) / nr_of_sim_points
 
   points <- 1 - (0.5 / bin_size) + 0:nr_of_sim_points * sim_size
-
+  
   # store the fitted simulation points
   metadata <- list(
-    fit = fit(points)
+    na_ratio = na_ratio,
+    fit = fit(points),
+    delta = (0.5 / bin_size) / nr_of_sim_points
   )
 
-  generator <- function(metadata, nr_of_points) {
-    random_spline(metadata$fit, as.integer(nr_of_points), 0.11)
+  generator <- function(metadata, nr_of_points, seed = runif(1)) {
+    n <- as.integer(nr_of_points * (1 - metadata$na_ratio))
+    res <- rspline(n, metadata$fit, seed, metadata$delta)
+    sample(c(res, rep(NA, nr_of_points - n)))
   }
 
   vector_template(metadata, generator, numerical_model_printer)

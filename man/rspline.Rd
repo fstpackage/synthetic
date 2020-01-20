@@ -4,7 +4,7 @@
 \alias{rspline}
 \title{Random number generator with custom distribution}
 \usage{
-rspline(n, control_points, seed)
+rspline(n, control_points, seed, delta = 0)
 }
 \arguments{
 \item{n}{number of observations}
@@ -12,10 +12,18 @@ rspline(n, control_points, seed)
 \item{control_points}{values describing the ordered distribution}
 
 \item{seed}{single numeric to specify the seed}
+
+\item{delta}{Determines the range [-delta, 1 + delta] for the `x` values of the control points.}
 }
 \value{
 a vector of random numbers generated from the spline interpolated custom distribution.
 }
 \description{
-Random numbers are taken from a distribution which is defined by control points.
+Random numbers are taken from a distribution which is defined by control points. The control
+points should be an ordered vector of values which are asumed to be the vertical component of
+a curve in the range [-delta, 1 + delta]. So the first control point is the value at `x = -delta` and
+the last control point contains the value at `1 + delta`. The other control points have an `x` value
+located on equally spaced locations between these two `x` values.
+Random draws from the distribution will be done by generating a random value between 0 and 1 and
+simulating the corresponding value a modelled by the control points. For modelling, splines are used.
 }

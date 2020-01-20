@@ -13,21 +13,23 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-SEXP random_spline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl)
+SEXP random_spline(SEXP control_values, SEXP nr_of_draws, SEXP seed_dbl, SEXP x_overflow)
 {
+  double x_delta = *REAL(x_overflow);
+
   double* values = REAL(control_values);
   int size = LENGTH(control_values);
 
   int draw_size = *INTEGER(nr_of_draws);
   uint64_t seed = *((uint64_t*) (REAL(seed_dbl)));
 
-  double step = 1.0 / ((double) (size - 1L));  // step size
+  double step = (1.0 + 2 * x_delta) / ((double) (size - 1L));  // step size
 
   double left_derivative = (values[1] - values[0]) / step;
   double right_derivative = (values[size - 1] - values[size - 2]) / step;
   
   // set the control points and endpoint derivatives
-  boost::math::interpolators::cardinal_cubic_b_spline<double> spline(values, size, 0,
+  boost::math::interpolators::cardinal_cubic_b_spline<double> spline(values, size, -x_delta,
     step, left_derivative, right_derivative);
 
   // output vector

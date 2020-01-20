@@ -8,7 +8,8 @@ generate(
   template,
   size,
   columns = NULL,
-  table_type = getOption("synthetic_default_table_class")
+  table_type = getOption("synthetic_default_table_class"),
+  seed = runif(1)
 )
 }
 \arguments{
@@ -21,6 +22,8 @@ table}
 vector with column names or an integer vector with the column index}
 
 \item{table_type}{specific type of table to return, can be one of 'data.table' or 'tibble'}
+
+\item{seed}{Seed used for generation.}
 }
 \value{
 A vector or table generated from the specified template
